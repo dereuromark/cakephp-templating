@@ -4,7 +4,7 @@ namespace Templating;
 
 use Cake\Core\BasePlugin;
 
-class TemplatePlugin extends BasePlugin {
+class TemplatingPlugin extends BasePlugin {
 
 	/**
 	 * @var bool

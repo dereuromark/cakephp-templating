@@ -1,4 +1,4 @@
-# Template Plugin for CakePHP
+# Templating Plugin for CakePHP
 [![CI](https://github.com/dereuromark/cakephp-templating/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/dereuromark/cakephp-templating/actions/workflows/ci.yml?query=workflow%3ACI+branch%3Amaster)
 [![Coverage Status](https://img.shields.io/codecov/c/github/dereuromark/cakephp-templating/master.svg)](https://app.codecov.io/github/dereuromark/cakephp-templating/tree/master)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.1-8892BF.svg)](https://php.net/)
@@ -20,7 +20,7 @@ composer require dereuromark/cakephp-templating
 ```
 and
 ```
-bin/cake plugin load Template
+bin/cake plugin load Templating
 ```
 
 ## Usage
