@@ -24,7 +24,7 @@ E.g.
 ```php
 'Icon' => [
     'sets' => [
-        'bs' => \Tools\View\Icon\BootstrapIcon::class,
+        'bs' => \Templating\View\Icon\BootstrapIcon::class,
         ...
     ],
 ],
@@ -38,7 +38,7 @@ In this case make sure to use an array instead of just the class string:
 'Icon' => [
     'sets' => [
         'material' => [
-            'class' => \Tools\View\Icon\MaterialIcon::class,
+            'class' => \Templating\View\Icon\MaterialIcon::class,
             'namespace' => 'material-symbols-round',
         ],
         ...
@@ -162,7 +162,7 @@ This requires an IDE that can understand the meta-data (e.g. PHPStorm).
 Just add the `IconRenderTask` shipped with this plugin and you are all set.
 
 ## Demo
-https://sandbox.dereuromark.de/sandbox/template-examples/icons
+https://sandbox.dereuromark.de/sandbox/templating-examples/icons
 
 ## Writing your own class
 You mainly need to set up your own template string and how it should render:
