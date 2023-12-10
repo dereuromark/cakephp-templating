@@ -1,13 +1,13 @@
 {
 	"name": "dereuromark/cakephp-templating",
-	"description": "CakePHP plugin for markup (parsing and displaying)",
+	"description": "CakePHP plugin around templating and (font) icons",
 	"license": "MIT",
 	"type": "cakephp-plugin",
 	"keywords": [
 		"cakephp",
 		"plugin",
-		"markup",
-		"highlighting"
+		"icons",
+		"templating"
 	],
 	"authors": [
 		{
