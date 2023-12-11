@@ -17,6 +17,14 @@ $icon = $this->Icon->render('delete');
 $this->Form->postLink($icon, ['action' => 'delete', $id]);
 ```
 
+Use can also use the `Html` value object directly:
+```php
+use Templating\View\Html\Html;
+
+$html = Html::create('<i>text</i>');
+$this->Html->link($html, '/my/url');
+```
+
 The same goes for any custom snippet of yours, e.g.
 
 ```php
