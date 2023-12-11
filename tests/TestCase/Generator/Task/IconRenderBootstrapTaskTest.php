@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Templating\Test\TestCase\Generator\Task;
 
@@ -42,7 +42,7 @@ class IconRenderBootstrapTaskTest extends TestCase {
 	 */
 	public function testIcon(): void {
 		$result = $this->helper->render('foo-bar');
-		$this->assertTextContains('bi bi-foo-bar', $result);
+		$this->assertTextContains('bi bi-foo-bar', (string)$result);
 	}
 
 	/**

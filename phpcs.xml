@@ -7,4 +7,10 @@
     <file>tests/</file>
 
     <rule ref="PSR2R"/>
+
+	<rule ref="PhpCollective.PHP.DeclareStrictTypes">
+		<properties>
+			<property name="declareOnFirstLine" value="yes"/>
+		</properties>
+	</rule>
 </ruleset>
