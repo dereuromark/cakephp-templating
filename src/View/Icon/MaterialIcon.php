@@ -2,7 +2,7 @@
 
 namespace Templating\View\Icon;
 
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 use Templating\View\Icon\Collector\MaterialIconCollector;
 
 class MaterialIcon extends AbstractIcon {
@@ -33,7 +33,7 @@ class MaterialIcon extends AbstractIcon {
 	 * @param array $options
 	 * @param array $attributes
 	 *
-	 * @return \Templating\View\Html\HtmlStringable
+	 * @return \Templating\View\HtmlStringable
 	 */
 	public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable {
 		if (!empty($this->config['attributes'])) {

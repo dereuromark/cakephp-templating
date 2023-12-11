@@ -3,7 +3,7 @@
 namespace Templating\Test\TestCase\View\Html;
 
 use Cake\TestSuite\TestCase;
-use Templating\View\Html\Html;
+use Templating\View\Html;
 
 class HtmlTest extends TestCase {
 

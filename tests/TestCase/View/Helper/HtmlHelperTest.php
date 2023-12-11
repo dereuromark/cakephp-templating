@@ -6,7 +6,7 @@ use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
 use Templating\View\Helper\HtmlHelper;
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 
 class HtmlHelperTest extends TestCase {
 

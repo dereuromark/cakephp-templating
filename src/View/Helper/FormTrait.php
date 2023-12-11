@@ -2,12 +2,12 @@
 
 namespace Templating\View\Helper;
 
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 
 trait FormTrait {
 
 	/**
-	 * @param \Templating\View\Html\HtmlStringable|string $title
+	 * @param \Templating\View\HtmlStringable|string $title
 	 * @param array<string, mixed> $options
 	 *
 	 * @return string
@@ -22,7 +22,7 @@ trait FormTrait {
 	}
 
 	/**
-	 * @param \Templating\View\Html\HtmlStringable|string $title
+	 * @param \Templating\View\HtmlStringable|string $title
 	 * @param array|string|null $url
 	 * @param array<string, mixed> $options
 	 *
@@ -38,7 +38,7 @@ trait FormTrait {
 	}
 
 	/**
-	 * @param \Templating\View\Html\HtmlStringable|string $title
+	 * @param \Templating\View\HtmlStringable|string $title
 	 * @param array|string $url
 	 * @param array<string, mixed> $options
 	 *

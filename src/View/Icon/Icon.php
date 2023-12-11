@@ -2,7 +2,7 @@
 
 namespace Templating\View\Icon;
 
-use Templating\View\Html\Html;
+use Templating\View\Html;
 
 /**
  * Icon value object

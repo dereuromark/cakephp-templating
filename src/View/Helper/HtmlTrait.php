@@ -2,12 +2,12 @@
 
 namespace Templating\View\Helper;
 
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 
 trait HtmlTrait {
 
 	/**
-	 * @param \Templating\View\Html\HtmlStringable|array|string $title
+	 * @param \Templating\View\HtmlStringable|array|string $title
 	 * @param array|string|null $url
 	 * @param array $options
 	 *
@@ -23,7 +23,7 @@ trait HtmlTrait {
 	}
 
 	/**
-	 * @param \Templating\View\Html\HtmlStringable|string $title
+	 * @param \Templating\View\HtmlStringable|string $title
 	 * @param string $path
 	 * @param array $params
 	 * @param array $options

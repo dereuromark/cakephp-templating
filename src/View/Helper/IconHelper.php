@@ -5,7 +5,7 @@ namespace Templating\View\Helper;
 use Cake\Core\Configure;
 use Cake\View\Helper;
 use Cake\View\View;
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 use Templating\View\Icon\IconCollection;
 
 /**
@@ -60,7 +60,7 @@ class IconHelper extends Helper {
 	 * @param array<string, mixed> $attributes :
 	 * - class, ...
 	 *
-	 * @return \Templating\View\Html\HtmlStringable
+	 * @return \Templating\View\HtmlStringable
 	 */
 	public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable {
 		return $this->collection->render($icon, $options, $attributes);

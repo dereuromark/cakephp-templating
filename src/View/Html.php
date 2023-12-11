@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Templating\View\Html;
+namespace Templating\View;
 
 /**
  * Html value object
@@ -24,7 +24,7 @@ class Html implements HtmlStringable {
 	/**
 	 * @param string $html
 	 *
-	 * @return \Templating\View\Html\HtmlStringable
+	 * @return \Templating\View\HtmlStringable
 	 */
 	public static function create(string $html): HtmlStringable {
 		return new static($html);

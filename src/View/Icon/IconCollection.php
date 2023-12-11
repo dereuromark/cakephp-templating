@@ -5,7 +5,7 @@ namespace Templating\View\Icon;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Utility\Inflector;
 use RuntimeException;
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 
 class IconCollection {
 
@@ -99,7 +99,7 @@ class IconCollection {
 	 * @param array<string, mixed> $attributes :
 	 * - class, ...
 	 *
-	 * @return \Templating\View\Html\HtmlStringable
+	 * @return \Templating\View\HtmlStringable
 	 */
 	public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable {
 		$iconName = null;
