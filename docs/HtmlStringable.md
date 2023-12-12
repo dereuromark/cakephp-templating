@@ -62,6 +62,9 @@ use Templating\View\Helper\HtmlHelperTrait;
 class HtmlHelper extends CoreHtmlHelper {
 
     use HtmlHelperTrait;
+
+    ...
+
 }
 ```
 and
@@ -75,8 +78,12 @@ use Templating\View\Helper\FormHelperTrait;
 class FormHelper extends CoreFormHelper {
 
     use FormHelperTrait;
+
+    ...
+
 }
 ```
+The latter is necessary if you already extended or added any other helper methods.
 
 Note that when using `declare(strict_types=1);` you need to manually cast when passing this to methods that only accept string:
 ```php
