@@ -73,6 +73,11 @@ public function display(string|HtmlStringable $icon, array $options = []): strin
 }
 ```
 
+## Serializing
+The value objects should be safe for serialization using PHP native `serialize()` as well as
+`json_encode()`. As such they should work fine with caching and other forms of transportation
+(e.g. API) through different layers.
+
 ## Security note
 
 Some methods (e.g. for link generation) provide:
