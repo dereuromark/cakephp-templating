@@ -51,11 +51,37 @@ You can use the helpers shipped with this plugin, you can add the traits yoursel
 $this->addHelper('Templating.Html');
 $this->addHelper('Templating.Form');
 ```
+or
+```php
+// in your app's HtmlHelper
+namespace App\View\Helper;
+
+use Cake\View\Helper\HtmlHelper as CoreHtmlHelper;
+use Templating\View\Helper\HtmlHelperTrait;
+
+class HtmlHelper extends CoreHtmlHelper {
+
+    use HtmlHelperTrait;
+}
+```
+and
+```php
+// in your app's FormHelper
+namespace App\View\Helper;
+
+use Cake\View\Helper\FormHelper as CoreFormHelper;
+use Templating\View\Helper\FormHelperTrait;
+
+class FormHelper extends CoreFormHelper {
+
+    use FormHelperTrait;
+}
+```
 
 Note that when using `declare(strict_types=1);` you need to manually cast when passing this to methods that only accept string:
 ```php
 $icon = new SvgIcon($name);
-// CustomHelper::display(string $html) does not accept Stringable
+// CustomHelper::display(string $html) does not accept HtmlStringable
 $this->Custom->display((string)$icon);
 ```
 When not using strict_types this is optional.
