@@ -13,6 +13,14 @@ A CakePHP plugin to
 - provide (font) icons from various libraries out of the box
 - together with IdeHelper also provide auto-complete on those icons
 
+You can use one or many of the following icon sets out of the box:
+- [Bootstrap](https://icons.getbootstrap.com/)
+- [FontAwesome](https://fontawesome.com/icons) v4/v5/v6
+- [Material](https://fonts.google.com/icons)
+- [Feather](https://feathericons.com/)
+
+You can also add your own custom icon set.
+
 This branch is for **CakePHP 5.0+**. See [version map](https://github.com/dereuromark/cakephp-templating/wiki#cakephp-version-map) for details.
 
 ## Setup
