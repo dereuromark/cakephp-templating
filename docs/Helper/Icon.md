@@ -157,9 +157,21 @@ Check out [animations](https://fontawesome.com/docs/web/style/animate) and
 other cool things you can add for FontAwesome icons, which are by far the
 most powerful and most used ones.
 
-Use [IdeHelper plugin](https://github.com/dereuromark/cakephp-ide-helper/) to get full autocomplete for the icon names as input for `render($name)`.
+## Auto-Complete
+Now for the most powerful feature and probably most helpful one:
+Let your IDE (e.g. PHPStorm) provide you the available icons when you type `$this->Icon->render(` and quick-select from the dropdown list.
+
+Use [IdeHelper plugin](https://github.com/dereuromark/cakephp-ide-helper/) here to get full autocomplete for the icon names as input for `render($name)`.
 This requires an IDE that can understand the meta-data (e.g. PHPStorm).
 Just add the `IconRenderTask` shipped with this plugin and you are all set.
+
+```php
+    'IdeHelper' => [
+        ...
+        'generatorTasks' => [
+            \Templating\Generator\Task\IconRenderTask::class,
+        ],
+```
 
 ## Demo
 https://sandbox.dereuromark.de/sandbox/templating-examples/icons
