@@ -2,7 +2,7 @@
 
 namespace Templating\View\Icon;
 
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 
 interface IconInterface {
 
@@ -20,7 +20,7 @@ interface IconInterface {
 	 * @param array<string, mixed> $attributes :
 	 * - class, ...
 	 *
-	 * @return \Templating\View\Html\HtmlStringable
+	 * @return \Templating\View\HtmlStringable
 	 */
 	public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable;
 

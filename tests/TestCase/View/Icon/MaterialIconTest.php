@@ -3,7 +3,7 @@
 namespace Templating\Test\TestCase\View\Icon;
 
 use Cake\TestSuite\TestCase;
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 use Templating\View\Icon\MaterialIcon;
 
 class MaterialIconTest extends TestCase {

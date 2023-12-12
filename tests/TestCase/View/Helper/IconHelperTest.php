@@ -5,7 +5,7 @@ namespace Templating\Test\TestCase\View\Helper;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
 use Templating\View\Helper\IconHelper;
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 use Templating\View\Icon\FeatherIcon;
 use Templating\View\Icon\MaterialIcon;
 

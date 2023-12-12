@@ -4,7 +4,7 @@ namespace Templating\View\Icon;
 
 use Cake\View\StringTemplate;
 use RuntimeException;
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 
 abstract class AbstractIcon implements IconInterface {
 
@@ -44,7 +44,7 @@ abstract class AbstractIcon implements IconInterface {
 	/**
 	 * @param array $options
 	 *
-	 * @return \Templating\View\Html\HtmlStringable
+	 * @return \Templating\View\HtmlStringable
 	 */
 	protected function format(array $options): HtmlStringable {
 		$icon = $this->template->format('icon', $options);
@@ -55,7 +55,7 @@ abstract class AbstractIcon implements IconInterface {
 	/**
 	 * @param string $icon
 	 *
-	 * @return \Templating\View\Html\HtmlStringable
+	 * @return \Templating\View\HtmlStringable
 	 */
 	protected function wrap(string $icon): HtmlStringable {
 		return Icon::create($icon);

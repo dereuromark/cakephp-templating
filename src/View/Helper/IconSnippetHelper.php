@@ -4,7 +4,7 @@ namespace Templating\View\Helper;
 
 use Cake\Utility\Text;
 use Cake\View\Helper;
-use Templating\View\Html\HtmlStringable;
+use Templating\View\HtmlStringable;
 
 /**
  * Font icon rendering.
@@ -39,7 +39,7 @@ class IconSnippetHelper extends Helper {
 	 * @param array<string, mixed> $attributes
 	 * - title, ...
 	 *
-	 * @return \Templating\View\Html\HtmlStringable HTML icon Yes/No
+	 * @return \Templating\View\HtmlStringable HTML icon Yes/No
 	 */
 	public function yesNo($value, array $options = [], array $attributes = []): HtmlStringable {
 		$defaults = [
@@ -71,7 +71,7 @@ class IconSnippetHelper extends Helper {
 	 * @param array<string, mixed> $options
 	 * @param array<string, mixed> $attributes
 	 *
-	 * @return \Templating\View\Html\HtmlStringable
+	 * @return \Templating\View\HtmlStringable
 	 */
 	public function thumbs($value, array $options = [], array $attributes = []): HtmlStringable {
 		$icon = !empty($value) ? 'pro' : 'contra';
