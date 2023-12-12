@@ -71,3 +71,15 @@ public function display(string|HtmlStringable $icon, array $options = []): strin
     return parent::display($icon, $options);
 }
 ```
+
+## Security note
+
+Some methods (e.g. for link generation) provide:
+- `escape` Set to false to disable escaping of title and attributes.
+- `escapeTitle` Set to false to disable escaping of title. Takes precedence over value of `escape`)
+
+Make sure to use `escapeTitle` instead of `escape` where possible here.
+The latter would not escape any elements in your HTML element, including other attributes and can open yourself up
+to XSS vulnerability. The default usage of the above value object is for the main title of the link.
+
+In general also make sure your HTML is safe, and not user-provided in any way without proper sanitization.
