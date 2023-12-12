@@ -6,6 +6,6 @@ use Cake\View\Helper\FormHelper as CoreFormHelper;
 
 class FormHelper extends CoreFormHelper {
 
-	use FormTrait;
+	use FormHelperTrait;
 
 }

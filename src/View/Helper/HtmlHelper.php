@@ -6,6 +6,6 @@ use Cake\View\Helper\HtmlHelper as CoreHtmlHelper;
 
 class HtmlHelper extends CoreHtmlHelper {
 
-	use HtmlTrait;
+	use HtmlHelperTrait;
 
 }

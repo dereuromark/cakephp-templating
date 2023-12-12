@@ -4,7 +4,7 @@ namespace Templating\View\Helper;
 
 use Templating\View\HtmlStringable;
 
-trait FormTrait {
+trait FormHelperTrait {
 
 	/**
 	 * @param \Templating\View\HtmlStringable|string $title
