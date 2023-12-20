@@ -36,5 +36,8 @@ bin/cake plugin load Templating
 
 See [Docs](/docs).
 
+## Demo
+See [sandbox.dereuromark.de/sandbox/templating-examples](https://sandbox.dereuromark.de/sandbox/templating-examples).
+
 ## TODO
 - Add more useful things - help welcome
