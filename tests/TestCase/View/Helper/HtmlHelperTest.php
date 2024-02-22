@@ -49,6 +49,15 @@ class HtmlHelperTest extends TestCase {
 	/**
 	 * @return void
 	 */
+	public function testString(): void {
+		$result = $this->helper->string('<b>Some HTML</b>');
+		$this->assertInstanceOf(HtmlStringable::class, $result);
+		$this->assertEquals('<b>Some HTML</b>', (string)$result);
+	}
+
+	/**
+	 * @return void
+	 */
 	public function testLink() {
 		$icon = new class implements HtmlStringable {
 

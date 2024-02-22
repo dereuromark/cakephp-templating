@@ -17,7 +17,14 @@ $icon = $this->Icon->render('delete');
 $this->Form->postLink($icon, ['action' => 'delete', $id]);
 ```
 
-Use can also use the `Html` value object directly:
+The Html helper can be used to create Html value objects:
+
+```php
+$html = $this->Htmlstring('<i>text</i>');
+$this->Html->link($html, '/my/url');
+```
+
+You can also use the `Html` value object directly:
 
 ```php
 use Templating\View\Html;
@@ -38,6 +45,8 @@ $icon = new SvgIcon($name);
 $this->Html->link($icon, '/my/url');
 ```
 No more `'escapeTitle'` overhead.
+
+In these cases you need a use statement in the template, however.
 
 You can always just echo it, as well:
 ```php

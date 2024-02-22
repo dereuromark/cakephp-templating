@@ -2,6 +2,7 @@
 
 namespace Templating\View\Helper;
 
+use Templating\View\Html;
 use Templating\View\HtmlStringable;
 
 trait HtmlHelperTrait {
@@ -37,6 +38,17 @@ trait HtmlHelperTrait {
 		}
 
 		return parent::linkFromPath($title, $path, $params, $options);
+	}
+
+	/**
+	 * Convenience method to generate a HTML text snippet.
+	 *
+	 * @param string $string
+	 *
+	 * @return \Templating\View\HtmlStringable
+	 */
+	public function string(string $string): HtmlStringable {
+		return Html::create($string);
 	}
 
 }
