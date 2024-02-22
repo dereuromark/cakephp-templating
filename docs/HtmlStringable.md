@@ -20,7 +20,7 @@ $this->Form->postLink($icon, ['action' => 'delete', $id]);
 The Html helper can be used to create Html value objects:
 
 ```php
-$html = $this->Htmlstring('<i>text</i>');
+$html = $this->Html->string('<i>text</i>');
 $this->Html->link($html, '/my/url');
 ```
 
