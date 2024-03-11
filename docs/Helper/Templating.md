@@ -1,4 +1,4 @@
-# IconSnippet Helper
+# Templating Helper
 
 A CakePHP helper to handle some templating use cases. Contains convenience wrappers.
 
