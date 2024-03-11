@@ -13,3 +13,6 @@ Font-icons are one of the most useful elements for such HTML snippets.
 Uses the `Icon` value object internally.
 
 Read [Icon helper docs](Helper/Icon.md) for details.
+
+## Icon Snippets
+Read [IconSnippet helper docs](Helper/IconSnippet.md) for details.
