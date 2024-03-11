@@ -15,7 +15,7 @@ class FontAwesome4IconTest extends TestCase {
 	/**
 	 * @return void
 	 */
-	public function setUp(): void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->icon = new FontAwesome4Icon();
