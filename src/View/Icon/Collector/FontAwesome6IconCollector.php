@@ -38,8 +38,11 @@ class FontAwesome6IconCollector {
 				break;
 			case 'yml':
 				$array = yaml_parse($content);
-				/** @var array<string> $icons */
-				$icons = array_keys($array);
+				if (!$array) {
+					throw new RuntimeException('Cannot parse YML: ' . $filePath);
+				}
+
+				$icons = static::icons($array, $config);
 
 				break;
 			case 'json':

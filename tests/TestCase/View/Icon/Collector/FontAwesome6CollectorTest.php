@@ -73,4 +73,18 @@ class FontAwesome6CollectorTest extends TestCase {
 		$this->assertTrue(in_array('thumbs-up', $result, true));
 	}
 
+	/**
+	 * Show that we are still API compatible/valid.
+	 *
+	 * @return void
+	 */
+	public function testCollectYml(): void {
+		$path = TEST_FILES . 'font_icon' . DS . 'fa6' . DS . 'icons.yml';
+
+		$result = FontAwesome6IconCollector::collect($path);
+
+		$this->assertTrue(count($result) > 1952, 'count of ' . count($result));
+		$this->assertTrue(in_array('thumbs-up', $result, true));
+	}
+
 }
