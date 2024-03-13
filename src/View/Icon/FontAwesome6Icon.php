@@ -14,6 +14,7 @@ class FontAwesome6Icon extends AbstractIcon {
 		$config += [
 			'template' => '<span class="{{class}}"{{attributes}}></span>',
 			'namespace' => 'solid',
+			'aliases' => true,
 		];
 
 		parent::__construct($config);
@@ -25,7 +26,7 @@ class FontAwesome6Icon extends AbstractIcon {
 	public function names(): array {
 		$path = $this->path();
 
-		return FontAwesome6IconCollector::collect($path);
+		return FontAwesome6IconCollector::collect($path, $this->config);
 	}
 
 	/**
