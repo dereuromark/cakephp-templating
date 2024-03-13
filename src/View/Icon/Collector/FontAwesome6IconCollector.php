@@ -20,12 +20,34 @@ class FontAwesome6IconCollector {
 			throw new RuntimeException('Cannot read file: ' . $filePath);
 		}
 
-		$array = json_decode($content, true);
-		if (!$array) {
-			throw new RuntimeException('Cannot parse JSON: ' . $filePath);
+		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
+		switch ($ext) {
+			case 'svg':
+				preg_match_all('/symbol id="([a-z][^"]+)"/', $content, $matches);
+				if (!$matches) {
+					throw new RuntimeException('Cannot parse SVG: ' . $filePath);
+				}
+				$icons = $matches[1];
+
+				break;
+			case 'yml':
+				$array = yaml_parse($content);
+				/** @var array<string> $icons */
+				$icons = array_keys($array);
+
+				break;
+			case 'json':
+				$array = json_decode($content, true);
+				if (!$array) {
+					throw new RuntimeException('Cannot parse JSON: ' . $filePath);
+				}
+				/** @var array<string> $icons */
+				$icons = array_keys($array);
+
+				break;
+			default:
+				throw new RuntimeException('Unknown file extension: ' . $ext);
 		}
-		/** @var array<string> $icons */
-		$icons = array_keys($array);
 
 		return $icons;
 	}
