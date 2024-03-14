@@ -114,9 +114,6 @@ class IconSnippetHelper extends Helper {
 		if (!empty($options['titleField'])) {
 			$titleField = $options['titleField'];
 		}
-		if (!isset($options['escape']) || $options['escape'] === false) {
-			$titleField = h($titleField);
-		}
 
 		$ret = '<div class="next-prev-navi">';
 		if (!empty($neighbors['prev'])) {
