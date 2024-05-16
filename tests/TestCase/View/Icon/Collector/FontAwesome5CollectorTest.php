@@ -26,6 +26,20 @@ class FontAwesome5CollectorTest extends TestCase {
 	 *
 	 * @return void
 	 */
+	public function testCollectAlt(): void {
+		$path = TEST_FILES . 'font_icon' . DS . 'fa5' . DS . 'icons_alt.json';
+
+		$result = FontAwesome5IconCollector::collect($path);
+
+		$this->assertTrue(count($result) > 1456, 'count of ' . count($result));
+		$this->assertTrue(in_array('thumbs-up', $result, true));
+	}
+
+	/**
+	 * Show that we are still API compatible/valid.
+	 *
+	 * @return void
+	 */
 	public function testCollectSvg(): void {
 		$path = TEST_FILES . 'font_icon' . DS . 'fa5' . DS . 'solid.svg';
 

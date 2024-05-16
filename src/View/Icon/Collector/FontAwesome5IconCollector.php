@@ -42,10 +42,7 @@ class FontAwesome5IconCollector {
 					throw new RuntimeException('Cannot parse JSON: ' . $filePath);
 				}
 
-				$icons = [];
-				foreach ($array['icons'] as $row) {
-					$icons[] = $row['name'];
-				}
+				$icons = static::icons($array);
 
 				break;
 			default:
@@ -53,6 +50,25 @@ class FontAwesome5IconCollector {
 		}
 
 		return $icons;
+	}
+
+	/**
+	 * @param array $array
+	 *
+	 * @return array<string>
+	 */
+	protected static function icons(array $array): array {
+		if (!empty($array['icons']) && empty($array['icons']['label'])) {
+			$icons = [];
+			foreach ($array['icons'] as $row) {
+				$icons[] = $row['name'];
+			}
+
+			return $icons;
+		}
+
+		// Legacy style?
+		return array_keys($array);
 	}
 
 }
