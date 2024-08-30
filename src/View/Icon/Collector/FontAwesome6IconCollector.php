@@ -30,7 +30,7 @@ class FontAwesome6IconCollector {
 		switch ($ext) {
 			case 'svg':
 				preg_match_all('/symbol id="([a-z][^"]+)"/', $content, $matches);
-				if (!$matches) {
+				if (empty($matches[1])) {
 					throw new RuntimeException('Cannot parse SVG: ' . $filePath);
 				}
 				$icons = $matches[1];
