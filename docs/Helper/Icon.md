@@ -1,6 +1,6 @@
 # Icon Helper
 
-A CakePHP helper to handle most common font icons. Contains convenience wrappers.
+A CakePHP helper to handle most common font icons. Contains convenience wrappers and overview in backend.
 
 ## Setup
 Include helper in your AppView class as
@@ -150,6 +150,17 @@ You can enable `checkExistence` to ensure each icon exists or otherwise throws a
     ...
 ],
 ```
+
+## Backend
+If routes are enabled, you should be able to navigate to
+```
+/admin/templating/icons
+```
+and see all your custom (mapped) icons, as well as the icons available.
+You can also check the full icon sets available (namespaced ones).
+
+It can also show you possible conflicts (same icon in different sets, here the defined order matters).
+For conflicting ones you can use aliasing through the map - or directly use the verbose `set:name` syntax where the "other one" is needed.
 
 ## Tips
 

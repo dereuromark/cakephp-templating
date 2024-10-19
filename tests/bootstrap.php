@@ -3,6 +3,8 @@
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
+use TestApp\Controller\AppController;
+use TestApp\View\AppView;
 
 if (!defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
@@ -38,6 +40,11 @@ Configure::write('App', [
 	'namespace' => 'TestApp',
 	'encoding' => 'UTF-8',
 	'fullBaseUrl' => '//localhost',
+	'paths' => [
+		'templates' => [
+			ROOT . DS . 'tests' . DS . 'test_app' . DS . 'templates' . DS,
+		],
+	],
 ]);
 
 Configure::write('debug', true);
@@ -64,6 +71,9 @@ $cache = [
 ];
 
 Cache::setConfig($cache);
+
+class_alias(AppController::class, 'App\Controller\AppController');
+class_alias(AppView::class, 'App\View\AppView');
 
 if (file_exists(CONFIG . 'app_local.php')) {
 	Configure::load('app_local');

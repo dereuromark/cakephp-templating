@@ -24,8 +24,14 @@ class IconHelperTest extends TestCase {
 
 		$config = [
 			'sets' => [
-				'feather' => FeatherIcon::class,
-				'm' => MaterialIcon::class,
+				'f' => [
+					'class' => FeatherIcon::class,
+					'path' => TEST_FILES . 'font_icon/feather/icons.json',
+				],
+				'm' => [
+					'class' => MaterialIcon::class,
+					'path' => TEST_FILES . 'font_icon/material/index.d.ts',
+				],
 			],
 		];
 
@@ -45,7 +51,7 @@ class IconHelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testIconPrefixed() {
-		$result = $this->Icon->render('feather:edit');
+		$result = $this->Icon->render('f:edit');
 		$expected = '<span data-feather="edit" title="Edit"></span>';
 		$this->assertSame($expected, (string)$result);
 	}
@@ -83,8 +89,14 @@ class IconHelperTest extends TestCase {
 	public function testIconWithCustomFontIcon() {
 		$config = [
 			'sets' => [
-				'feather' => FeatherIcon::class,
-				'm' => MaterialIcon::class,
+				'f' => [
+					'class' => FeatherIcon::class,
+					'path' => TEST_FILES . 'font_icon/feather/icons.json',
+				],
+				'm' => [
+					'class' => MaterialIcon::class,
+					'path' => TEST_FILES . 'font_icon/material/index.d.ts',
+				],
 			],
 			'map' => [
 				'edit' => 'm:save',

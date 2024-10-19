@@ -4,6 +4,7 @@ namespace Templating\View\Icon;
 
 use Cake\Core\InstanceConfigTrait;
 use Cake\Utility\Inflector;
+use Exception;
 use RuntimeException;
 use Templating\View\HtmlStringable;
 
@@ -30,6 +31,11 @@ class IconCollection {
 	 * @var array|null
 	 */
 	protected $names;
+
+	/**
+	 * @var array|null
+	 */
+	protected $map;
 
 	/**
 	 * @param array<string, mixed> $config
@@ -68,14 +74,21 @@ class IconCollection {
 		$this->defaultSet = $key;
 
 		$this->setConfig($config);
+		$this->buildMap();
 	}
 
 	/**
+	 * @param bool $sort
 	 * @return array<string, array<string>>
 	 */
-	public function names(): array {
+	public function names(bool $sort = false): array {
 		if ($this->names !== null) {
-			return $this->names;
+			$names = $this->names;
+			if ($sort) {
+				ksort($names);
+			}
+
+			return $names;
 		}
 
 		$names = [];
@@ -84,8 +97,11 @@ class IconCollection {
 			$names[$name] = $iconNames;
 		}
 
-		ksort($names);
 		$this->names = $names;
+
+		if ($sort) {
+			ksort($names);
+		}
 
 		return $names;
 	}
@@ -103,12 +119,12 @@ class IconCollection {
 	 */
 	public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable {
 		$iconName = null;
-		if (isset($this->_config['map'][$icon])) {
+		$separator = $this->_config['separator'];
+		if (!str_contains($icon, $separator) && isset($this->map[$icon])) {
 			$iconName = $icon;
-			$icon = $this->_config['map'][$icon];
+			$icon = $this->map[$icon];
 		}
 
-		$separator = $this->_config['separator'];
 		$separatorPos = strpos($icon, $separator);
 		if ($separatorPos !== false) {
 			[$set, $icon] = explode($separator, $icon, 2);
@@ -150,6 +166,30 @@ class IconCollection {
 		$names = $this->names();
 
 		return !empty($names[$set]) && in_array($icon, $names[$set], true);
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function buildMap(): void {
+		$this->map = $this->_config['map'] ?? [];
+		try {
+			$names = $this->names();
+		} catch (Exception) {
+			if (!$this->getConfig('checkExistence')) {
+				return;
+			}
+		}
+
+		foreach ($names as $set => $icons) {
+			foreach ($icons as $icon) {
+				if (isset($this->map[$icon])) {
+					continue;
+				}
+
+				$this->map[$icon] = $set . ':' . $icon;
+			}
+		}
 	}
 
 }

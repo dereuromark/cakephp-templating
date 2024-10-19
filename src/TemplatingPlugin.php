@@ -3,6 +3,7 @@
 namespace Templating;
 
 use Cake\Core\BasePlugin;
+use Cake\Routing\RouteBuilder;
 
 class TemplatingPlugin extends BasePlugin {
 
@@ -22,8 +23,16 @@ class TemplatingPlugin extends BasePlugin {
 	protected bool $bootstrapEnabled = false;
 
 	/**
-	 * @var bool
+	 * @param \Cake\Routing\RouteBuilder $routes The route builder to update.
+	 *
+	 * @return void
 	 */
-	protected bool $routesEnabled = false;
+	public function routes(RouteBuilder $routes): void {
+		$routes->prefix('Admin', function (RouteBuilder $routes): void {
+			$routes->plugin('Templating', function (RouteBuilder $routes): void {
+				$routes->fallbacks();
+			});
+		});
+	}
 
 }
