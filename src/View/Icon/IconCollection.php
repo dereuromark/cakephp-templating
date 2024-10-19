@@ -173,12 +173,19 @@ class IconCollection {
 	 */
 	protected function buildMap(): void {
 		$this->map = $this->_config['map'] ?? [];
+
+		if (isset($this->_config['autoPrefix']) && $this->_config['autoPrefix'] === false) {
+			return;
+		}
+
 		try {
 			$names = $this->names();
-		} catch (Exception) {
+		} catch (Exception $e) {
 			if (!$this->getConfig('checkExistence')) {
 				return;
 			}
+
+			throw $e;
 		}
 
 		foreach ($names as $set => $icons) {

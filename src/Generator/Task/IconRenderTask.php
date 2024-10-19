@@ -65,33 +65,32 @@ class IconRenderTask implements TaskInterface {
 	 */
 	protected function collectIcons(): array {
 		$helper = new IconHelper(new View(), $this->config);
+		$autoPrefixed = $helper->getConfig('autoPrefix');
 		$configured = $helper->getConfig('map') ?: [];
 		/** @var array<string> $configured */
 		$configured = array_keys($configured);
 
 		$icons = [];
+		foreach ($configured as $icon) {
+			$icons[$icon] = $icon;
+		}
 
 		$names = $helper->names();
 
 		$separator = $helper->getConfig('separator');
 		foreach ($names as $setName => $setList) {
 			foreach ($setList as $icon) {
-				$icons[] = $setName . $separator . $icon;
+				if ($autoPrefixed && !isset($icons[$icon])) {
+					$icons[$icon] = $icon;
+				}
+
+				// namespaced fallback
+				$name = $setName . $separator . $icon;
+				$icons[$name] = $name;
 			}
 		}
 
-		// Also add primary set without prefix
-		if ($helper->getConfig('autoPrefix')) {
-			$set = $helper->getConfig('sets');
-			$defaultSet = array_key_first($set);
-			$setList = $names[$defaultSet];
-			foreach ($setList as $icon) {
-				$icons[] = $icon;
-			}
-		}
-
-		$icons = array_merge($configured, $icons);
-		sort($icons);
+		ksort($icons);
 
 		return $icons;
 	}

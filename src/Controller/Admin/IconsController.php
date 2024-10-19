@@ -18,17 +18,17 @@ class IconsController extends AppController {
 			throw new NotFoundException('No icon set defined yet!');
 		}
 
-		Configure::write('Icon.checkExistence', false);
-
-		$icons = (new IconCollection($config))->names();
 		$flat = [];
-		foreach ($icons as $set => $list) {
-			foreach ($list as $icon) {
-				if (isset($flat[$icon])) {
-					continue;
-				}
+		if (Configure::read('Icon.autoPrefix') !== false) {
+			$icons = (new IconCollection($config))->names();
+			foreach ($icons as $set => $list) {
+				foreach ($list as $icon) {
+					if (isset($flat[$icon])) {
+						continue;
+					}
 
-				$flat[$icon] = $set;
+					$flat[$icon] = $set;
+				}
 			}
 		}
 

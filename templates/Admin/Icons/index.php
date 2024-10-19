@@ -36,7 +36,7 @@
 	<?php } ?>
 
 	<h2>Icons</h2>
-	<p><?php echo count($icons); ?> icons:</p>
+	<p><?php echo count($icons); ?> icons without namespace:</p>
 
 	<div class="row">
 		<?php foreach ($icons as $name => $iconSet) { ?>
@@ -50,6 +50,8 @@
 			</div>
 		<?php } ?>
 	</div>
-
+		<?php if (!$icons) { ?>
+		<p>No icons found. Did you set `Icon.autoPrefix` to `false`? Then check the full sets above directly.</p>
+		<?php } ?>
 	</div>
 </div>
