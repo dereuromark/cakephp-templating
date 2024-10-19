@@ -80,7 +80,7 @@ class IconRenderTask implements TaskInterface {
 		$separator = $helper->getConfig('separator');
 		foreach ($names as $setName => $setList) {
 			foreach ($setList as $icon) {
-				if ($autoPrefixed && !isset($icons[$icon])) {
+				if ($autoPrefixed !== false && !isset($icons[$icon])) {
 					$icons[$icon] = $icon;
 				}
 

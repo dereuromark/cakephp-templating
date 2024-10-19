@@ -165,7 +165,7 @@ class IconCollection {
 	protected function exists(string $icon, string $set): bool {
 		$names = $this->names();
 
-		return !empty($names[$set]) && in_array($icon, $names[$set], true);
+		return !empty($names[$set]) && in_array($icon, $names[$set]);
 	}
 
 	/**
