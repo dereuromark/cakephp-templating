@@ -69,18 +69,10 @@ Don't forget to also set up the necessary stylesheets (CSS files) and alike.
 ## Usage
 
 ### render()
-Display font icons using the default namespace or an already prefixed one.
+Display font icons using the default namespace or an already aliased one.
 ```php
 echo $this->Html->link(
     $this->Icon->render('view', $options, $attributes),
-    $url,
-);
-```
-
-Especially if you have multiple icon sets defined, any icon set after the first one would require prefixing:
-```php
-echo $this->Html->link(
-    $this->Icon->render('bs:view', $options, $attributes),
     $url,
 );
 ```
@@ -97,9 +89,32 @@ You can alias them via Configure for more usability:
 ],
 
 // in the template
-echo $this->Icon->render('translate', [], ['title' => 'Translate this']);
+echo $this->Icon->render('translate', [], ['title' => __('Translate this')]);
 ```
-This way you can also rename icons (and map them in any custom way).
+This way you can also rename icons (and map them in any custom way)
+
+Such aliasing can be especially useful to give some icons more meaningful way for your specific use case:
+```php
+    'details' => 'fas:chevron-right',
+    'delete' => 'fas:trash',
+    'female' => 'fas:venus',
+    'male' => 'fas:mars',
+    'yes' => 'fas:check',
+    'no' => 'fas:times',
+    'repeat' => 'bs:arrow-clockwise',
+    'config' => 'fas:cogs',
+    'admin' => 'fas:shield',
+    ...
+```
+
+Especially if you have multiple icon sets defined, any icon set after the first one would require prefixing for colliding icon names:
+```php
+echo $this->Html->link(
+    $this->Icon->render('bs:view', $options, $attributes),
+    $url,
+);
+```
+This would also be needed if you set `autoPrefix` config to `false`. Then only the alias map would be used here.
 
 ### names()
 You can get a nested list of all configured and available icons.
