@@ -111,9 +111,11 @@ class IconCollection {
 	 *
 	 * @param string $icon Icon name, prefixed for non default namespace
 	 * @param array<string, mixed> $options :
-	 * - translate, title, ...
+	 * - translate, titleField, ...
 	 * @param array<string, mixed> $attributes :
-	 * - class, ...
+	 * - class, title, ...
+	 *
+	 * If no title is given, it will auto-create one from the icon name (or alias).
 	 *
 	 * @return \Templating\View\HtmlStringable
 	 */
