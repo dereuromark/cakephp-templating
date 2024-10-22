@@ -78,8 +78,17 @@ class IconHelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testIconWithCustomTitleField() {
-		$result = $this->Icon->render('m:save', ['title' => 'data-title'], ['class' => 'my-extra']);
+		$result = $this->Icon->render('m:save', ['titleField' => 'data-title'], ['class' => 'my-extra']);
 		$expected = '<span class="material-icons my-extra" data-title="Save">save</span>';
+		$this->assertSame($expected, (string)$result);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testIconWithCustomTitleAttributesViaOptions() {
+		$result = $this->Icon->render('m:save', ['title' => 'Save me'], ['class' => 'my-extra']);
+		$expected = '<span class="material-icons my-extra" title="Save me">save</span>';
 		$this->assertSame($expected, (string)$result);
 	}
 

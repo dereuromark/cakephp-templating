@@ -139,12 +139,17 @@ class IconCollection {
 		$options += $this->_config;
 		if (!isset($options['title']) || $options['title'] !== false) {
 			/** @var string $titleField */
-			$titleField = !isset($options['title']) || $options['title'] === true ? 'title' : $options['title'];
-			if (!isset($attributes[$titleField])) {
-				$attributes[$titleField] = ucwords(Inflector::humanize(Inflector::underscore($iconName ?? $icon)));
-			}
-			if (!isset($options['translate']) || $options['translate'] !== false && isset($attributes[$titleField])) {
-				$attributes[$titleField] = __($attributes[$titleField]);
+			$titleField = $options['titleField'] ?? 'title';
+			if (isset($options['title']) && $options['title'] !== true) {
+				trigger_error('Deprecated. Use `$attributes` here instead. For custom title field use `titleField` config key.', E_USER_DEPRECATED);
+				$attributes[$titleField] = $options['title'];
+			} else {
+				if (!isset($attributes[$titleField])) {
+					$attributes[$titleField] = ucwords(Inflector::humanize(Inflector::underscore($iconName ?? $icon)));
+				}
+				if (!isset($options['translate']) || $options['translate'] !== false && isset($attributes[$titleField])) {
+					$attributes[$titleField] = __($attributes[$titleField]);
+				}
 			}
 		}
 
