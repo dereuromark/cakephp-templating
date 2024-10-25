@@ -20,11 +20,11 @@
 	<?php if ($map) { ?>
 	<h2>Custom Map (Icon.map config)</h2>
 
-		<div class="row">
+		<div class="row" style="margin-bottom: 16px;">
 			<?php foreach ($map as $name => $icon) { ?>
 				<div class="col-lg-3 col-md-4 col-sm-6 card">
 					<div class="card-body">
-						<span class="float-right pull-right">( <?php echo $icon?> )</span>
+						<span class="pull-right float-right float-end">( <?php echo h($icon) ?> )</span>
 						<?php echo $this->Icon->render($name); ?>
 						<br>
 						<code><?php echo h($name); ?></code>
@@ -42,7 +42,7 @@
 		<?php foreach ($icons as $name => $iconSet) { ?>
 			<div class="col-lg-3 col-md-4 col-sm-6 card">
 				<div class="card-body">
-					<span class="float-right pull-right">( <?php echo $iconSet . ':' . $name?> )</span>
+					<span class="pull-right float-right float-end">( <?php echo $iconSet . ':' . $name?> )</span>
 					<?php echo $this->Icon->render($name); ?>
 					<br>
 					<code><?php echo h($name); ?></code>

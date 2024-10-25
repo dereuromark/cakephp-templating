@@ -27,7 +27,7 @@
 	ksort($iconSet);
 	?>
 	<h3 id="<?php echo h(strtolower($name)); ?>"><?php echo h(ucfirst($name)); ?></h3>
-	<div class="row">
+	<div class="row" style="margin-bottom: 16px;">
 		<?php foreach ($iconSet as $icon) { ?>
 			<div class="col-lg-3 col-md-4 col-sm-6 card">
 				<div class="card-body">
