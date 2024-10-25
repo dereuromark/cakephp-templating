@@ -20,7 +20,7 @@
 						<?php
 						$set = array_shift($sets);
 						?>
-						<span class="float-right pull-right">( <?php echo $name?> )</span>
+						<div class="pull-right float-right float-end">( <?php echo h($name); ?> )</div>
 						<?php echo $this->Icon->render($set . ':' . $name); ?>
 						<br>
 						<code><?php echo h($set . ':' . $name); ?></code>
