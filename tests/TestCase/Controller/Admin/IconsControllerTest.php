@@ -7,6 +7,9 @@ use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use Templating\View\Icon\BootstrapIcon;
 
+/**
+ * @uses \Templating\Controller\Admin\IconsController
+ */
 class IconsControllerTest extends TestCase {
 
 	use IntegrationTestTrait;

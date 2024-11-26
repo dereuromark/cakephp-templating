@@ -26,12 +26,6 @@ class IconSnippetHelperTest extends TestCase {
 		Configure::write('Icon', [
 			'sets' => [
 				'bs' => BootstrapIcon::class,
-				/*
-				'bs' => [
-					'class' => BootstrapIcon::class,
-					'path' => TEST_FILES . 'font_icon/bootstrap/bootstrap-icons.json',
-				],
-				*/
 			],
 		]);
 

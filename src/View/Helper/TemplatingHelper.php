@@ -14,6 +14,7 @@ use Templating\View\HtmlStringable;
  * @author Mark Scherer
  * @license MIT
  * @property \Cake\View\Helper\HtmlHelper $Html
+ * @property \Templating\View\Helper\IconSnippetHelper $IconSnippet
  */
 class TemplatingHelper extends Helper {
 
@@ -22,6 +23,7 @@ class TemplatingHelper extends Helper {
 	 */
 	protected array $helpers = [
 		'Html',
+		'Templating.IconSnippet',
 	];
 
 	/**
@@ -116,6 +118,38 @@ class TemplatingHelper extends Helper {
 		$options['attributes'] = $this->template->formatAttributes($attributes);
 
 		return $this->template->format('ok', $options);
+	}
+
+	/**
+	 * Convenience method: Returns yes/no icon - green on ok, red otherwise.
+	 *
+	 * Make sure to configure these (font) icons in your `Icon.map` app config, e.g.
+	 *     'yes' => 'fa4:check',
+	 *     'no' => 'fa4:times',
+	 *
+	 * @param mixed $value Value being internally bool casted.
+	 * @param array<string, mixed> $options
+	 *  - onTitle
+	 *  - offTitle
+	 *  - invert: If true, green for no, red for yes.
+	 * @param array<string, mixed> $attributes
+	 *  - title, ...
+	 * @return string Value nicely formatted/colored
+	 */
+	public function yesNo(mixed $value, array $options = [], array $attributes = []): string {
+		$invert = !empty($options['invert']);
+		unset($options['invert']);
+
+		$value = (bool)$value;
+		$ok = $value;
+		if ($invert) {
+			$ok = !$ok;
+		}
+
+		$iconAttributes = $attributes;
+		unset($attributes['title']);
+
+		return $this->ok($this->IconSnippet->yesNo($value, $options, $iconAttributes), $ok, $attributes);
 	}
 
 }
