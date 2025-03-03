@@ -27,6 +27,7 @@ class IconRenderFontAwesome6TaskTest extends TestCase {
 					'path' => TEST_FILES . 'font_icon/fa6/icons.json',
 				],
 			],
+			'cache' => false,
 		];
 
 		if (!file_exists($config['sets']['fa6']['path'])) {

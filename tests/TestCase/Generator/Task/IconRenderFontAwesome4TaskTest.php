@@ -27,6 +27,7 @@ class IconRenderFontAwesome4TaskTest extends TestCase {
 					'path' => TEST_FILES . 'font_icon/fa4/variables.less',
 				],
 			],
+			'cache' => false,
 		];
 
 		if (!file_exists($config['sets']['fa4']['path'])) {

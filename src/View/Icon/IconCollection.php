@@ -2,6 +2,7 @@
 
 namespace Templating\View\Icon;
 
+use Cake\Cache\Cache;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Utility\Inflector;
 use Exception;
@@ -15,7 +16,9 @@ class IconCollection {
 	/**
 	 * @var array<string, mixed>
 	 */
-	protected array $_defaultConfig = [];
+	protected array $_defaultConfig = [
+		'cache' => null,
+	];
 
 	/**
 	 * @var string
@@ -82,6 +85,17 @@ class IconCollection {
 	 * @return array<string, array<string>>
 	 */
 	public function names(bool $sort = false): array {
+		if ($this->names === null) {
+			$cache = $this->getConfig('cache') ?? 'default';
+			if ($cache) {
+				$cacheKey = 'icon-collection-' . md5(serialize($this->_config));
+				$result = Cache::read($cacheKey, $cache);
+				if ($result) {
+					$this->names = $result;
+				}
+			}
+		}
+
 		if ($this->names !== null) {
 			$names = $this->names;
 			if ($sort) {
@@ -95,6 +109,12 @@ class IconCollection {
 		foreach ($this->iconSets as $name => $set) {
 			$iconNames = $set->names();
 			$names[$name] = $iconNames;
+		}
+
+		$cache = $this->getConfig('cache') ?? 'default';
+		if ($cache) {
+			$cacheKey = 'icon-collection-' . md5(serialize($this->_config));
+			Cache::write($cacheKey, $names, $cache);
 		}
 
 		$this->names = $names;

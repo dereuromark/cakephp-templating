@@ -27,6 +27,7 @@ class IconRenderFontAwesome5TaskTest extends TestCase {
 					'path' => TEST_FILES . 'font_icon/fa5/icons.json',
 				],
 			],
+			'cache' => false,
 		];
 
 		if (!file_exists($config['sets']['fa5']['path'])) {

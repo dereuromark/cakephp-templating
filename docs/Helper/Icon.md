@@ -166,6 +166,16 @@ You can enable `checkExistence` to ensure each icon exists or otherwise throws a
 ],
 ```
 
+You can define caching for the icon lists for performance - defaults to `'default'` cache engine.
+```php
+'Icon' => [
+    'cache' => ...,
+    ...
+],
+```
+Set it to `false` if you want to not cache it.
+
+
 ## Backend
 If routes are enabled, you should be able to navigate to
 ```

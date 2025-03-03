@@ -26,6 +26,7 @@ class IconRenderBootstrapTaskTest extends TestCase {
 					'path' => TEST_FILES . 'font_icon/bootstrap/bootstrap-icons.json',
 				],
 			],
+			'cache' => false,
 		];
 
 		if (!file_exists($config['sets']['bs']['path'])) {
