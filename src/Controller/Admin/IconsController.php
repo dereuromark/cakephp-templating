@@ -42,9 +42,11 @@ class IconsController extends AppController {
 	}
 
 	/**
+	 * @param string|null $set
+	 *
 	 * @return \Cake\Http\Response|null|void
 	 */
-	public function sets() {
+	public function sets($set = null) {
 		$config = (array)Configure::read('Icon');
 		if (empty($config['sets'])) {
 			throw new NotFoundException('No icon set defined yet!');
@@ -54,25 +56,13 @@ class IconsController extends AppController {
 
 		$icons = (new IconCollection($config))->names();
 		$count = 0;
-		$flat = [];
-		$conflicting = [];
-		foreach ($icons as $set => $list) {
+		foreach ($icons as $list) {
 			$count += count($list);
-			foreach ($list as $icon) {
-				if (!isset($flat[$icon])) {
-					$flat[$icon] = $set;
-
-					continue;
-				}
-
-				$conflicting[$icon][] = $set;
-				$conflicting[$icon][] = $flat[$icon];
-			}
 		}
 
 		$map = $config['map'] ?? [];
 
-		$this->set(compact('icons', 'count', 'map', 'conflicting'));
+		$this->set(compact('icons', 'count', 'map', 'set'));
 	}
 
 	/**
