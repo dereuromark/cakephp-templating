@@ -29,8 +29,8 @@ class FontAwesome4Icon extends AbstractIcon {
 
 	/**
 	 * @param string $icon
-	 * @param array $options
-	 * @param array $attributes
+	 * @param array<string, mixed> $options
+	 * @param array<string, mixed> $attributes
 	 *
 	 * @return \Templating\View\HtmlStringable
 	 */

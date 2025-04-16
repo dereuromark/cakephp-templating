@@ -42,7 +42,7 @@ abstract class AbstractIcon implements IconInterface {
 	}
 
 	/**
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 *
 	 * @return \Templating\View\HtmlStringable
 	 */

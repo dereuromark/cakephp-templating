@@ -10,7 +10,7 @@ trait HtmlHelperTrait {
 	/**
 	 * @param \Templating\View\HtmlStringable|array|string $title
 	 * @param array|string|null $url
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 *
 	 * @return string
 	 */
@@ -27,7 +27,7 @@ trait HtmlHelperTrait {
 	 * @param \Templating\View\HtmlStringable|string $title
 	 * @param string $path
 	 * @param array $params
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 *
 	 * @return string
 	 */
