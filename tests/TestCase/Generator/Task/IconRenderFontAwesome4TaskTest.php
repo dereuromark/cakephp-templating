@@ -38,12 +38,11 @@ class IconRenderFontAwesome4TaskTest extends TestCase {
 	}
 
 	/**
-	 * @dataProvider extensions
 	 *
 	 * @param string $extension
-	 *
 	 * @return void
 	 */
+	#[\PHPUnit\Framework\Attributes\DataProvider('extensions')]
 	public function testCollect(string $extension): void {
 		$config = $this->helper->getConfig();
 		$task = new IconRenderTask($config);
