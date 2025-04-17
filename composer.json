@@ -27,7 +27,7 @@
 	"require-dev": {
 		"ext-yaml": "*",
 		"fig-r/psr2r-sniffer": "dev-master",
-		"phpunit/phpunit": "^10.2",
+		"phpunit/phpunit": "^10.2 || ^11.5",
 		"dereuromark/cakephp-ide-helper": "^2.0.2"
 	},
 	"minimum-stability": "stable",
