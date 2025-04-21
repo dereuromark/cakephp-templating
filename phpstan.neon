@@ -4,6 +4,6 @@ parameters:
 		- src/
 	bootstrapFiles:
 		- tests/bootstrap.php
-	checkMissingIterableValueType: false
 	ignoreErrors:
+		- identifier: missingType.iterableValue
 		- '#Unsafe usage of new static\(\).#'
