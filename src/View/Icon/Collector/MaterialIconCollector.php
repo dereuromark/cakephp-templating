@@ -12,7 +12,7 @@ class MaterialIconCollector {
 	/**
 	 * @param string $filePath
 	 *
-	 * @return array<string>
+	 * @return array<non-empty-string>
 	 */
 	public static function collect(string $filePath): array {
 		$content = file_get_contents($filePath);
@@ -25,7 +25,7 @@ class MaterialIconCollector {
 			throw new RuntimeException('Cannot parse content: ' . $filePath);
 		}
 
-		/** @var array<string> */
+		/** @var array<non-empty-string> */
 		return $matches[1];
 	}
 
