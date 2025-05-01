@@ -21,7 +21,7 @@ You can use one or many of the following icon sets out of the box:
 
 You can also add your own custom icon set.
 
-This branch is for **CakePHP 5.0+**. See [version map](https://github.com/dereuromark/cakephp-templating/wiki#cakephp-version-map) for details.
+This branch is for **CakePHP 5.1+**. See [version map](https://github.com/dereuromark/cakephp-templating/wiki#cakephp-version-map) for details.
 
 ## Setup
 ```
