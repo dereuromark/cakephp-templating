@@ -66,6 +66,33 @@ You can also set a global attributes config that would be merged in with every i
 
 Don't forget to also set up the necessary stylesheets (CSS files) and alike.
 
+### Bootstrap Icons: SVG Mode
+
+Bootstrap Icons can be rendered as inline SVG instead of using icon fonts. This provides better customization, accessibility, and consistent rendering across browsers.
+
+To enable SVG mode for Bootstrap Icons:
+
+```php
+'Icon' => [
+    'sets' => [
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'svg' => true,
+            'svgPath' => WWW_ROOT . '/css/bootstrap-icons/icons/',
+        ],
+        ...
+    ],
+],
+```
+
+When SVG mode is enabled (`svg => true`), the icon will be rendered as an inline SVG element loaded from the configured `svgPath` directory. The path should point to the directory containing the Bootstrap Icons SVG files (typically `node_modules/bootstrap-icons/icons`).
+
+Benefits of SVG mode:
+- More consistent rendering across devices and browsers
+- Greater customization possibilities (e.g., partial hover color changes)
+- Better accessibility features
+- No need to load icon font files
+
 ## Usage
 
 ### render()
