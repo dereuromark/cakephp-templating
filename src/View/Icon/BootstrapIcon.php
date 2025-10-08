@@ -8,6 +8,11 @@ use Templating\View\Icon\Collector\BootstrapIconCollector;
 class BootstrapIcon extends AbstractIcon {
 
 	/**
+	 * @var array<string, string>
+	 */
+	protected static array $svgCache = [];
+
+	/**
 	 * @param array<string, mixed> $config
 	 */
 	public function __construct(array $config = []) {
@@ -64,14 +69,20 @@ class BootstrapIcon extends AbstractIcon {
 	protected function renderSvg(string $icon, array $attributes = []): HtmlStringable {
 		$svgPath = $this->getSvgPath($icon);
 
-		if (!file_exists($svgPath)) {
-			throw new \RuntimeException(sprintf('SVG icon file not found: %s', $svgPath));
+		if (!isset(static::$svgCache[$svgPath])) {
+			if (!file_exists($svgPath)) {
+				throw new \RuntimeException(sprintf('SVG icon file not found: %s', $svgPath));
+			}
+
+			$svgContent = file_get_contents($svgPath);
+			if ($svgContent === false) {
+				throw new \RuntimeException(sprintf('Failed to read SVG icon file: %s', $svgPath));
+			}
+
+			static::$svgCache[$svgPath] = $svgContent;
 		}
 
-		$svgContent = file_get_contents($svgPath);
-		if ($svgContent === false) {
-			throw new \RuntimeException(sprintf('Failed to read SVG icon file: %s', $svgPath));
-		}
+		$svgContent = static::$svgCache[$svgPath];
 
 		// Add custom attributes to the SVG element
 		if ($attributes) {
