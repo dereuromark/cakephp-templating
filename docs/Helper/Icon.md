@@ -17,8 +17,10 @@ Make sure to set up at least one icon set:
 - **FontAwesome** v4/v5/v6: npm package `fontawesome-free` for v6
 - **Material**: npm package `material-symbols`
 - **Feather**: npm package `feather-icons`
+- **Lucide**: npm package `lucide` (modern Feather fork with 1000+ icons)
+- **Heroicons**: npm package `heroicons` (by Tailwind CSS team)
 
-or your custom Icon class.
+or your custom Icon class (see https://icon-sets.iconify.design/ for inspiration).
 
 E.g.
 ```php
@@ -66,11 +68,11 @@ You can also set a global attributes config that would be merged in with every i
 
 Don't forget to also set up the necessary stylesheets (CSS files) and alike.
 
-### Bootstrap Icons: SVG Mode
+### SVG Mode
 
-Bootstrap Icons can be rendered as inline SVG instead of using icon fonts. This provides better customization, accessibility, and consistent rendering across browsers.
+Most icon sets can be rendered as inline SVG instead of using icon fonts or data attributes. This provides better customization, accessibility, and consistent rendering across browsers.
 
-To enable SVG mode for Bootstrap Icons:
+#### Bootstrap Icons
 
 ```php
 'Icon' => [
@@ -84,13 +86,107 @@ To enable SVG mode for Bootstrap Icons:
 ],
 ```
 
-When `svgPath` is configured, the icon will be rendered as an inline SVG element loaded from the configured directory. The path should point to the directory containing the Bootstrap Icons SVG files (typically `node_modules/bootstrap-icons/icons`).
+#### FontAwesome (v4/v5/v6)
 
-Benefits of SVG mode:
+```php
+'Icon' => [
+    'sets' => [
+        'fa6' => [
+            'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+            'svgPath' => WWW_ROOT . 'css/fontawesome/svgs/solid/',
+        ],
+        ...
+    ],
+],
+```
+
+#### Lucide
+
+```php
+'Icon' => [
+    'sets' => [
+        'lucide' => [
+            'class' => \Templating\View\Icon\LucideIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/lucide/icons/',
+        ],
+        ...
+    ],
+],
+```
+
+#### Heroicons
+
+Heroicons supports multiple styles (outline, solid, mini). The style can be configured:
+
+```php
+'Icon' => [
+    'sets' => [
+        'heroicons' => [
+            'class' => \Templating\View\Icon\HeroiconsIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/heroicons/',
+            'style' => 'outline', // outline, solid, or mini
+        ],
+        ...
+    ],
+],
+```
+
+The `svgPath` should point to the parent directory, and the class will automatically append the style subdirectory (e.g., `outline/`, `solid/`).
+
+#### Feather Icons
+
+```php
+'Icon' => [
+    'sets' => [
+        'feather' => [
+            'class' => \Templating\View\Icon\FeatherIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons/',
+        ],
+        ...
+    ],
+],
+```
+
+#### Material Icons
+
+```php
+'Icon' => [
+    'sets' => [
+        'material' => [
+            'class' => \Templating\View\Icon\MaterialIcon::class,
+            'svgPath' => WWW_ROOT . 'css/material-symbols/svg/',
+        ],
+        ...
+    ],
+],
+```
+
+#### Benefits of SVG Mode
+
 - More consistent rendering across devices and browsers
-- Greater customization possibilities (e.g., partial hover color changes)
+- Greater customization possibilities (e.g., partial hover color changes, multi-color icons)
 - Better accessibility features
 - No need to load icon font files
+- Smaller file sizes when using only a subset of icons
+
+#### Optional: Enable Caching
+
+For better performance, you can enable CakePHP caching for SVG files:
+
+```php
+'Icon' => [
+    'sets' => [
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'svgPath' => WWW_ROOT . 'css/bootstrap-icons/icons/',
+            'cache' => 'default', // Use your cache configuration name
+        ],
+        ...
+    ],
+],
+```
+
+When `svgPath` is configured, the icon will be rendered as an inline SVG element loaded from the configured directory. Icons are cached in memory per request, and optionally in your configured CakePHP cache for persistence across requests.
 
 ## Usage
 
@@ -162,6 +258,14 @@ E.g.:
         'feather' => [
             ...
             'path' => '/path/to/feather-icons/dist/icons.json',
+        ],
+        'lucide' => [
+            ...
+            'path' => '/path/to/lucide/dist/icons.json',
+        ],
+        'heroicons' => [
+            ...
+            'path' => '/path/to/heroicons/optimized/icons.json',
         ],
         'material' => [
             ...
@@ -265,9 +369,21 @@ class YourIcon extends AbstractIcon {
 ```
 Now you can hook it into your config and enjoy!
 
+## Supported Icon Sets
+
+Currently supported icon sets with full SVG rendering capability:
+- **Bootstrap Icons** - 1800+ icons, MIT license
+- **FontAwesome** (v4/v5/v6) - 2000+ icons (free tier), Font Awesome license
+- **Lucide** - 1000+ icons, ISC license (modern Feather fork)
+- **Heroicons** - 300+ icons with multiple styles, MIT license (by Tailwind CSS)
+- **Feather** - 280+ icons, MIT license
+- **Material Icons** - Google's icon set, Apache 2.0 license
+
 ## TODO
 TBD:
 - `@icon/icofont` ( https://icofont.com/ )
 - https://fontello.com/
+- Tabler Icons (4000+ icons)
+- Phosphor Icons (6000+ icons)
 
 Help welcome!
