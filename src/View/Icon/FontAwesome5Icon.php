@@ -7,6 +7,8 @@ use Templating\View\Icon\Collector\FontAwesome5IconCollector;
 
 class FontAwesome5Icon extends AbstractIcon {
 
+	use SvgRenderTrait;
+
 	/**
 	 * @param array<string, mixed> $config
 	 */
@@ -14,6 +16,8 @@ class FontAwesome5Icon extends AbstractIcon {
 		$config += [
 			'template' => '<span class="{{class}}"{{attributes}}></span>',
 			'namespace' => 'fas',
+			'svgPath' => null,
+			'cache' => null,
 		];
 
 		parent::__construct($config);
@@ -38,6 +42,10 @@ class FontAwesome5Icon extends AbstractIcon {
 	public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable {
 		if (!empty($this->config['attributes'])) {
 			$attributes += $this->config['attributes'];
+		}
+
+		if ($this->config['svgPath']) {
+			return $this->renderSvg($icon, $attributes);
 		}
 
 		$class = [
