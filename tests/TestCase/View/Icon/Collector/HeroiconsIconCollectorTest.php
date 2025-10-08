@@ -23,4 +23,28 @@ class HeroiconsIconCollectorTest extends TestCase {
 		$this->assertTrue(in_array('magnifying-glass', $result, true));
 	}
 
+	/**
+	 * Test collecting from a directory with style subdirectories (outline, solid).
+	 *
+	 * @return void
+	 */
+	public function testCollectFromDirectory(): void {
+		$path = TEST_FILES . 'font_icon' . DS . 'heroicons_svg';
+
+		$result = HeroiconsIconCollector::collect($path);
+
+		$this->assertGreaterThan(2, count($result), 'count of ' . count($result));
+		$this->assertTrue(in_array('home', $result, true));
+		$this->assertTrue(in_array('user', $result, true));
+		$this->assertTrue(in_array('magnifying-glass', $result, true));
+
+		// Icons should be unique (not duplicated from outline and solid)
+		$this->assertSame(array_unique($result), $result);
+
+		// Verify icons are sorted
+		$sorted = $result;
+		sort($sorted);
+		$this->assertSame($sorted, $result);
+	}
+
 }

@@ -17,7 +17,7 @@ Make sure to set up at least one icon set:
 - **FontAwesome** v4/v5/v6: npm package `fontawesome-free` for v6
 - **Material**: npm package `material-symbols`
 - **Feather**: npm package `feather-icons`
-- **Lucide**: npm package `lucide` (modern Feather fork with 1000+ icons)
+- **Lucide**: npm package `lucide-static` (modern Feather fork with 1000+ icons, use `lucide-static` for SVG files)
 - **Heroicons**: npm package `heroicons` (by Tailwind CSS team)
 
 or your custom Icon class (see https://icon-sets.iconify.design/ for inspiration).
@@ -108,50 +108,42 @@ SVG rendering supports two modes:
 
 #### Lucide
 
-**JSON Map (Recommended - Better Performance):**
+Lucide uses individual SVG files. The `lucide-static` package is recommended for SVG rendering:
+
 ```php
 'Icon' => [
     'sets' => [
         'lucide' => [
             'class' => \Templating\View\Icon\LucideIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/lucide/dist/icons.json',
+            'svgPath' => WWW_ROOT . 'node_modules/lucide-static/icons/',
         ],
         ...
     ],
 ],
 ```
 
-**Individual Files:**
-```php
-'Icon' => [
-    'sets' => [
-        'lucide' => [
-            'class' => \Templating\View\Icon\LucideIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/lucide/icons/',
-        ],
-        ...
-    ],
-],
-```
+**Note**: Unlike Feather Icons, Lucide does not ship with a compatible JSON map file. Individual SVG files must be used.
 
 #### Heroicons
 
-Heroicons supports multiple styles (outline, solid, mini). The style can be configured:
+Heroicons supports multiple styles (outline, solid) in different sizes. The size and style can be configured:
 
 ```php
 'Icon' => [
     'sets' => [
         'heroicons' => [
             'class' => \Templating\View\Icon\HeroiconsIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/heroicons/',
-            'style' => 'outline', // outline, solid, or mini
+            'svgPath' => WWW_ROOT . 'node_modules/heroicons/24/',
+            'style' => 'outline', // outline or solid
         ],
         ...
     ],
 ],
 ```
 
-The `svgPath` should point to the parent directory, and the class will automatically append the style subdirectory (e.g., `outline/`, `solid/`).
+**Note**: The `svgPath` should include the size directory (16, 20, or 24). The class will append the style subdirectory (e.g., `outline/`, `solid/`).
+
+For 20×20 icons, use `'svgPath' => WWW_ROOT . 'node_modules/heroicons/20/'`. The 20px size only supports `solid` style.
 
 #### Feather Icons
 
@@ -245,9 +237,9 @@ When using JSON map mode, you can customize the default SVG wrapper attributes:
 ```php
 'Icon' => [
     'sets' => [
-        'lucide' => [
-            'class' => \Templating\View\Icon\LucideIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/lucide/dist/icons.json',
+        'feather' => [
+            'class' => \Templating\View\Icon\FeatherIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',
             'svgAttributes' => [
                 'xmlns' => 'http://www.w3.org/2000/svg',
                 'width' => '24',
@@ -320,7 +312,18 @@ This would also be needed if you set `autoPrefix` config to `false`. Then only t
 ### names()
 You can get a nested list of all configured and available icons.
 
-For this make sure to set up the path config to the icon meta files as per each collector.
+For this make sure to set up the path config to the icon meta files or directories as per each collector.
+
+**Note**: Collectors can accept either:
+- A **JSON file** path (e.g., `bootstrap-icons.json`, `icons.json`) - faster parsing
+- A **directory** path containing `.svg` files - will scan and extract icon names automatically
+
+**Caching**: Icon names are cached using a two-tier approach:
+1. **In-memory cache** - Collectors cache results per request (no repeated directory scans)
+2. **CakePHP cache** - IconCollection caches the full list using your configured cache backend (persists across requests)
+
+This means directory scanning only happens on the first cache miss, then results are cached for optimal performance.
+
 E.g.:
 ```php
 'Icon' => [
@@ -340,11 +343,17 @@ E.g.:
         ],
         'lucide' => [
             ...
-            'path' => '/path/to/lucide/dist/icons.json',
+            // Can point to either:
+            // - A directory containing .svg files (recommended): '/path/to/lucide-static/icons/'
+            // - A custom JSON file with format {"icon-name": "svg-content", ...}
+            'path' => '/path/to/lucide-static/icons/',
         ],
         'heroicons' => [
             ...
-            'path' => '/path/to/heroicons/optimized/icons.json',
+            // Can point to either:
+            // - A directory (recommended): '/path/to/heroicons/24/' (will scan outline/ and solid/ subdirs)
+            // - A custom JSON file with format {"icon-name": "svg-content", ...}
+            'path' => '/path/to/heroicons/24/',
         ],
         'material' => [
             ...

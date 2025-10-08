@@ -23,4 +23,26 @@ class LucideIconCollectorTest extends TestCase {
 		$this->assertTrue(in_array('search', $result, true));
 	}
 
+	/**
+	 * Test collecting from a directory of SVG files.
+	 *
+	 * @return void
+	 */
+	public function testCollectFromDirectory(): void {
+		$path = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
+
+		$result = LucideIconCollector::collect($path);
+
+		$this->assertGreaterThan(3, count($result), 'count of ' . count($result));
+		$this->assertTrue(in_array('home', $result, true));
+		$this->assertTrue(in_array('user', $result, true));
+		$this->assertTrue(in_array('search', $result, true));
+		$this->assertTrue(in_array('settings', $result, true));
+
+		// Verify icons are sorted
+		$sorted = $result;
+		sort($sorted);
+		$this->assertSame($sorted, $result);
+	}
+
 }
