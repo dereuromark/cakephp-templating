@@ -111,7 +111,7 @@ trait SvgRenderTrait {
 	 */
 	protected function loadSvgMap(): array {
 		$jsonPath = $this->config['svgPath'];
-		$cacheKey = static::class . '_svg_map';
+		$cacheKey = static::class . '_svg_map_' . md5($jsonPath);
 
 		// Check static cache
 		if (isset(static::$svgMapCache[$cacheKey])) {
