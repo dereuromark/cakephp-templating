@@ -2,6 +2,7 @@
 
 namespace Templating\View\Icon;
 
+use Cake\Cache\Cache;
 use Templating\View\HtmlStringable;
 use Templating\View\Icon\Collector\BootstrapIconCollector;
 
@@ -19,6 +20,7 @@ class BootstrapIcon extends AbstractIcon {
 		$config += [
 			'template' => '<span class="{{class}}"{{attributes}}></span>',
 			'svgPath' => null,
+			'cache' => null,
 		];
 
 		parent::__construct($config);
@@ -70,13 +72,29 @@ class BootstrapIcon extends AbstractIcon {
 		$svgPath = $this->getSvgPath($icon);
 
 		if (!isset(static::$svgCache[$svgPath])) {
-			if (!file_exists($svgPath)) {
-				throw new \RuntimeException(sprintf('SVG icon file not found: %s', $svgPath));
+			$svgContent = null;
+
+			// Try CakePHP cache if configured
+			if ($this->config['cache']) {
+				$cacheKey = 'bootstrap_icon_' . md5($svgPath);
+				$svgContent = Cache::read($cacheKey, $this->config['cache']);
 			}
 
-			$svgContent = file_get_contents($svgPath);
-			if ($svgContent === false) {
-				throw new \RuntimeException(sprintf('Failed to read SVG icon file: %s', $svgPath));
+			// Load from file if not in cache
+			if ($svgContent === null) {
+				if (!file_exists($svgPath)) {
+					throw new \RuntimeException(sprintf('SVG icon file not found: %s', $svgPath));
+				}
+
+				$svgContent = file_get_contents($svgPath);
+				if ($svgContent === false) {
+					throw new \RuntimeException(sprintf('Failed to read SVG icon file: %s', $svgPath));
+				}
+
+				// Store in CakePHP cache if configured
+				if ($this->config['cache']) {
+					Cache::write($cacheKey, $svgContent, $this->config['cache']);
+				}
 			}
 
 			static::$svgCache[$svgPath] = $svgContent;
