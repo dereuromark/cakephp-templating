@@ -77,7 +77,7 @@ To enable SVG mode for Bootstrap Icons:
     'sets' => [
         'bs' => [
             'class' => \Templating\View\Icon\BootstrapIcon::class,
-            'svgPath' => WWW_ROOT . '/css/bootstrap-icons/icons/',
+            'svgPath' => WWW_ROOT . 'css/bootstrap-icons/icons/',
         ],
         ...
     ],
