@@ -77,7 +77,6 @@ To enable SVG mode for Bootstrap Icons:
     'sets' => [
         'bs' => [
             'class' => \Templating\View\Icon\BootstrapIcon::class,
-            'svg' => true,
             'svgPath' => WWW_ROOT . '/css/bootstrap-icons/icons/',
         ],
         ...
@@ -85,7 +84,7 @@ To enable SVG mode for Bootstrap Icons:
 ],
 ```
 
-When SVG mode is enabled (`svg => true`), the icon will be rendered as an inline SVG element loaded from the configured `svgPath` directory. The path should point to the directory containing the Bootstrap Icons SVG files (typically `node_modules/bootstrap-icons/icons`).
+When `svgPath` is configured, the icon will be rendered as an inline SVG element loaded from the configured directory. The path should point to the directory containing the Bootstrap Icons SVG files (typically `node_modules/bootstrap-icons/icons`).
 
 Benefits of SVG mode:
 - More consistent rendering across devices and browsers

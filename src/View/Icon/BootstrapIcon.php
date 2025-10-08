@@ -13,7 +13,6 @@ class BootstrapIcon extends AbstractIcon {
 	public function __construct(array $config = []) {
 		$config += [
 			'template' => '<span class="{{class}}"{{attributes}}></span>',
-			'svg' => false,
 			'svgPath' => null,
 		];
 
@@ -41,7 +40,7 @@ class BootstrapIcon extends AbstractIcon {
 			$attributes += $this->config['attributes'];
 		}
 
-		if ($this->config['svg']) {
+		if ($this->config['svgPath']) {
 			return $this->renderSvg($icon, $attributes);
 		}
 

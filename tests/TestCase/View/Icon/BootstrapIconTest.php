@@ -43,7 +43,6 @@ class BootstrapIconTest extends TestCase {
 		file_put_contents($svgFile, $svgContent);
 
 		$icon = new BootstrapIcon([
-			'svg' => true,
 			'svgPath' => $svgPath,
 		]);
 
@@ -69,7 +68,6 @@ class BootstrapIconTest extends TestCase {
 		file_put_contents($svgFile, $svgContent);
 
 		$icon = new BootstrapIcon([
-			'svg' => true,
 			'svgPath' => $svgPath,
 		]);
 
@@ -88,7 +86,6 @@ class BootstrapIconTest extends TestCase {
 	 */
 	public function testRenderSvgThrowsExceptionWhenFileNotFound(): void {
 		$icon = new BootstrapIcon([
-			'svg' => true,
 			'svgPath' => TMP . 'nonexistent',
 		]);
 
@@ -96,20 +93,6 @@ class BootstrapIconTest extends TestCase {
 		$this->expectExceptionMessage('SVG icon file not found');
 
 		$icon->render('nonexistent-icon');
-	}
-
-	/**
-	 * @return void
-	 */
-	public function testRenderSvgThrowsExceptionWhenPathNotConfigured(): void {
-		$icon = new BootstrapIcon([
-			'svg' => true,
-		]);
-
-		$this->expectException(\RuntimeException::class);
-		$this->expectExceptionMessage('SVG path not configured');
-
-		$icon->render('test-icon');
 	}
 
 }
