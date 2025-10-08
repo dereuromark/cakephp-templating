@@ -29,4 +29,55 @@ class FeatherIconTest extends TestCase {
 		$this->assertSame('<span data-feather="view"></span>', (string)$result);
 	}
 
+	/**
+	 * @return void
+	 */
+	public function testRenderSvgFromJsonMap(): void {
+		$jsonFile = TMP . 'tests' . DS . 'feather-icons.json';
+		$jsonContent = json_encode([
+			'activity' => '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>',
+			'home' => '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>',
+		]);
+		file_put_contents($jsonFile, $jsonContent);
+
+		$icon = new FeatherIcon([
+			'svgPath' => $jsonFile,
+		]);
+
+		$result = $icon->render('activity');
+		$resultString = (string)$result;
+
+		$this->assertStringContainsString('<svg', $resultString);
+		$this->assertStringContainsString('viewBox="0 0 24 24"', $resultString);
+		$this->assertStringContainsString('points="22 12 18 12 15 21 9 3 6 12 2 12"', $resultString);
+		$this->assertStringContainsString('</svg>', $resultString);
+
+		unlink($jsonFile);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testRenderSvgFromJsonMapWithCustomAttributes(): void {
+		$jsonFile = TMP . 'tests' . DS . 'feather-icons-custom.json';
+		$jsonContent = json_encode([
+			'star' => '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>',
+		]);
+		file_put_contents($jsonFile, $jsonContent);
+
+		$icon = new FeatherIcon([
+			'svgPath' => $jsonFile,
+		]);
+
+		$result = $icon->render('star', [], ['class' => 'star-icon', 'width' => '32', 'height' => '32']);
+		$resultString = (string)$result;
+
+		$this->assertStringContainsString('<svg', $resultString);
+		$this->assertStringContainsString('class="star-icon"', $resultString);
+		$this->assertStringContainsString('width="32"', $resultString);
+		$this->assertStringContainsString('height="32"', $resultString);
+
+		unlink($jsonFile);
+	}
+
 }

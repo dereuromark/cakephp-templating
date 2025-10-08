@@ -72,6 +72,12 @@ Don't forget to also set up the necessary stylesheets (CSS files) and alike.
 
 Most icon sets can be rendered as inline SVG instead of using icon fonts or data attributes. This provides better customization, accessibility, and consistent rendering across browsers.
 
+SVG rendering supports two modes:
+- **Individual files**: Each icon is loaded from a separate `.svg` file. Use `cache` config to avoid extensive file lookups.
+- **JSON map**: All icons are loaded from a single JSON file containing SVG content.
+
+**JSON map mode is recommended** for better performance as it loads all icon definitions once instead of reading individual files.
+
 #### Bootstrap Icons
 
 ```php
@@ -102,6 +108,20 @@ Most icon sets can be rendered as inline SVG instead of using icon fonts or data
 
 #### Lucide
 
+**JSON Map (Recommended - Better Performance):**
+```php
+'Icon' => [
+    'sets' => [
+        'lucide' => [
+            'class' => \Templating\View\Icon\LucideIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/lucide/dist/icons.json',
+        ],
+        ...
+    ],
+],
+```
+
+**Individual Files:**
 ```php
 'Icon' => [
     'sets' => [
@@ -135,6 +155,20 @@ The `svgPath` should point to the parent directory, and the class will automatic
 
 #### Feather Icons
 
+**JSON Map (Recommended - Better Performance):**
+```php
+'Icon' => [
+    'sets' => [
+        'feather' => [
+            'class' => \Templating\View\Icon\FeatherIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',
+        ],
+        ...
+    ],
+],
+```
+
+**Individual Files:**
 ```php
 'Icon' => [
     'sets' => [
@@ -169,6 +203,22 @@ The `svgPath` should point to the parent directory, and the class will automatic
 - No need to load icon font files
 - Smaller file sizes when using only a subset of icons
 
+#### JSON Map vs Individual Files
+
+**JSON Map Mode:**
+- Single file load (entire icon library at once)
+- Better performance (no per-icon I/O)
+- Cached in memory and optionally in CakePHP cache
+- Automatically detected when `svgPath` ends with `.json`
+- **Recommended for production**
+
+**Individual Files Mode:**
+- Each icon loaded from separate `.svg` file
+- Useful for development or when using only a few icons
+- Automatically used when `svgPath` points to a directory
+
+The mode is automatically detected based on whether `svgPath` ends with `.json`.
+
 #### Optional: Enable Caching
 
 For better performance, you can enable CakePHP caching for SVG files:
@@ -186,7 +236,36 @@ For better performance, you can enable CakePHP caching for SVG files:
 ],
 ```
 
-When `svgPath` is configured, the icon will be rendered as an inline SVG element loaded from the configured directory. Icons are cached in memory per request, and optionally in your configured CakePHP cache for persistence across requests.
+When `svgPath` is configured, the icon will be rendered as an inline SVG element loaded from the configured directory or JSON map. Icons are cached in memory per request, and optionally in your configured CakePHP cache for persistence across requests.
+
+#### Customizing SVG Attributes (JSON Map Mode)
+
+When using JSON map mode, you can customize the default SVG wrapper attributes:
+
+```php
+'Icon' => [
+    'sets' => [
+        'lucide' => [
+            'class' => \Templating\View\Icon\LucideIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/lucide/dist/icons.json',
+            'svgAttributes' => [
+                'xmlns' => 'http://www.w3.org/2000/svg',
+                'width' => '24',
+                'height' => '24',
+                'viewBox' => '0 0 24 24',
+                'fill' => 'none',
+                'stroke' => 'currentColor',
+                'stroke-width' => '2',
+                'stroke-linecap' => 'round',
+                'stroke-linejoin' => 'round',
+            ],
+        ],
+        ...
+    ],
+],
+```
+
+These attributes are used as defaults when wrapping the SVG content from the JSON map. Custom attributes passed during rendering will override these defaults.
 
 ## Usage
 
