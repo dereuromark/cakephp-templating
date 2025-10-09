@@ -146,6 +146,42 @@ class LucideIconTest extends TestCase {
 	}
 
 	/**
+	 * Test SVG attribute merging scenarios
+	 *
+	 * @return void
+	 */
+	public function testSvgAttributeMerging(): void {
+		$svgPath = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
+
+		$icon = new LucideIcon(['svgPath' => $svgPath]);
+		$result = $icon->render('user', [], ['class' => 'new', 'width' => '32', 'data-test' => 'value']);
+		$resultString = (string)$result;
+
+		// Class merging, attribute overriding, hyphenated attributes preserved, new attributes added
+		$this->assertStringContainsString('class="lucide lucide-user new"', $resultString);
+		$this->assertStringContainsString('width="32"', $resultString);
+		$this->assertStringContainsString('stroke-width="2"', $resultString);
+		$this->assertStringContainsString('data-test="value"', $resultString);
+	}
+
+	/**
+	 * Test with multiline SVG and hyphenated attributes
+	 *
+	 * @return void
+	 */
+	public function testMultilineSvgWithHyphenatedAttributes(): void {
+		$svgPath = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
+
+		$icon = new LucideIcon(['svgPath' => $svgPath]);
+		$result = $icon->render('home', [], ['class' => 'icon-lg']);
+		$resultString = (string)$result;
+
+		$this->assertStringContainsString('class="lucide lucide-home icon-lg"', $resultString);
+		$this->assertStringContainsString('stroke-width="2"', $resultString);
+		$this->assertStringContainsString('stroke-linecap="round"', $resultString);
+	}
+
+	/**
 	 * @return void
 	 */
 	public function testRenderSvgFromJsonMapThrowsExceptionWhenIconNotFound(): void {
