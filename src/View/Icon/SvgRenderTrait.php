@@ -276,9 +276,10 @@ trait SvgRenderTrait {
 			'/(["\'])(?:\\\\.|[^\\\\])*?\1|(\s+)/s',
 			function ($matches) {
 				// If group 1 matched, it's a quoted string: return as-is
-				if (isset($matches[1]) && $matches[1] !== '') {
+				if (!empty($matches[1])) {
 					return $matches[0];
 				}
+
 				// Otherwise, it's whitespace: collapse to a single space
 				return ' ';
 			},
