@@ -271,12 +271,15 @@ trait SvgRenderTrait {
 		// Remove HTML comments
 		$svgContent = (string)preg_replace('/<!--.*?-->/s', '', $svgContent);
 
-		// Remove unnecessary whitespace while preserving spaces between attributes and within text content
-		// First, protect spaces within quoted attribute values
+		// Collapse whitespace outside of quoted attribute values
 		$svgContent = (string)preg_replace_callback(
-			'/(\s+)(?=(?:[^"\']*["\'][^"\']*["\'])*[^"\']*$)/',
+			'/(["\'])(?:\\\\.|[^\\\\])*?\1|(\s+)/s',
 			function ($matches) {
-				// Only compress whitespace that's not inside quotes
+				// If group 1 matched, it's a quoted string: return as-is
+				if (isset($matches[1]) && $matches[1] !== '') {
+					return $matches[0];
+				}
+				// Otherwise, it's whitespace: collapse to a single space
 				return ' ';
 			},
 			$svgContent,
@@ -287,13 +290,6 @@ trait SvgRenderTrait {
 
 		// Remove leading and trailing whitespace
 		$svgContent = trim($svgContent);
-
-		// Remove newlines and multiple spaces
-		$svgContent = (string)preg_replace('/\s+/', ' ', $svgContent);
-
-		// Clean up spaces around tag boundaries
-		$svgContent = (string)preg_replace('/\s*>\s*/', '>', $svgContent);
-		$svgContent = (string)preg_replace('/\s*<\s*/', '<', $svgContent);
 
 		return $svgContent;
 	}
