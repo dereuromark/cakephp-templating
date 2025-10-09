@@ -116,6 +116,7 @@ Lucide uses individual SVG files. The `lucide-static` package is recommended for
         'lucide' => [
             'class' => \Templating\View\Icon\LucideIcon::class,
             'svgPath' => WWW_ROOT . 'node_modules/lucide-static/icons/',
+            'inline' => true, // Optional: compress SVG output
         ],
         ...
     ],
@@ -258,6 +259,48 @@ When using JSON map mode, you can customize the default SVG wrapper attributes:
 ```
 
 These attributes are used as defaults when wrapping the SVG content from the JSON map. Custom attributes passed during rendering will override these defaults.
+
+#### SVG Inlining
+
+When using SVG rendering, you can enable the `inline` option to optimize SVG output by removing HTML comments and compressing whitespace. This is particularly useful for production environments to reduce file size.
+
+```php
+'Icon' => [
+    'sets' => [
+        'lucide' => [
+            'class' => MyIconClass::class,
+            'svgPath' => 'path/to/svg_icons',
+            'inline' => true, // Strips comments and whitespace from SVG content
+        ],
+        ...
+    ],
+],
+```
+
+The inlining process:
+- Removes HTML comments
+- Strips unnecessary whitespace and newlines
+- Preserves spaces within quoted attribute values
+- Compresses the SVG while maintaining functionality
+
+**Before inlining:**
+```xml
+<!-- HTML comment -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+>
+  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+</svg>
+```
+
+**After inlining:**
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/></svg>
+```
+
+This option is **disabled by default** to preserve the original SVG formatting during development.
 
 ## Usage
 

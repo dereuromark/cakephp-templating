@@ -70,6 +70,11 @@ trait SvgRenderTrait {
 			$svgContent = $this->addAttributesToSvg($svgContent, $attributes);
 		}
 
+		// Apply inlining if enabled
+		if ($this->config['inline'] ?? false) {
+			$svgContent = $this->inlineSvg($svgContent);
+		}
+
 		return $this->wrap($svgContent);
 	}
 
@@ -100,6 +105,11 @@ trait SvgRenderTrait {
 		}
 
 		$svgContent = $this->wrapSvgContent($map[$icon], $attributes);
+
+		// Apply inlining if enabled
+		if ($this->config['inline'] ?? false) {
+			$svgContent = $this->inlineSvg($svgContent);
+		}
 
 		return $this->wrap($svgContent);
 	}
@@ -247,6 +257,44 @@ trait SvgRenderTrait {
 		}
 
 		return $attributes;
+	}
+
+	/**
+	 * Inline SVG content by stripping whitespace and HTML comments
+	 *
+	 * @param string $svgContent
+	 *
+	 * @return string
+	 */
+	protected function inlineSvg(string $svgContent): string {
+		// Remove HTML comments
+		$svgContent = (string)preg_replace('/<!--.*?-->/s', '', $svgContent);
+
+		// Remove unnecessary whitespace while preserving spaces between attributes and within text content
+		// First, protect spaces within quoted attribute values
+		$svgContent = (string)preg_replace_callback(
+			'/(\s+)(?=(?:[^"\']*["\'][^"\']*["\'])*[^"\']*$)/',
+			function ($matches) {
+				// Only compress whitespace that's not inside quotes
+				return ' ';
+			},
+			$svgContent,
+		);
+
+		// Remove whitespace around tags
+		$svgContent = (string)preg_replace('/>\s+</', '><', $svgContent);
+
+		// Remove leading and trailing whitespace
+		$svgContent = trim($svgContent);
+
+		// Remove newlines and multiple spaces
+		$svgContent = (string)preg_replace('/\s+/', ' ', $svgContent);
+
+		// Clean up spaces around tag boundaries
+		$svgContent = (string)preg_replace('/\s*>\s*/', '>', $svgContent);
+		$svgContent = (string)preg_replace('/\s*<\s*/', '<', $svgContent);
+
+		return $svgContent;
 	}
 
 }
