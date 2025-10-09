@@ -210,21 +210,43 @@ trait SvgRenderTrait {
 	protected function addAttributesToSvg(string $svgContent, array $attributes): string {
 		// Parse existing SVG tag to merge attributes
 		if (preg_match('/<svg([^>]*)>/', $svgContent, $matches)) {
-			$existingAttributes = $matches[1];
-			$attributeString = $this->template->formatAttributes($attributes);
+			$existingAttributesString = trim($matches[1]);
+			$existingAttributes = $this->parseAttributesFromString($existingAttributesString);
 
-			// If there's a class attribute in custom attributes, merge it with existing class
-			if (!empty($attributes['class']) && preg_match('/class="([^"]*)"/', $existingAttributes, $classMatches)) {
-				$existingClass = $classMatches[1];
-				$newClass = $existingClass . ' ' . $attributes['class'];
-				$existingAttributes = preg_replace('/class="[^"]*"/', 'class="' . $newClass . '"', $existingAttributes);
-				$attributeString = $this->template->formatAttributes($attributes, ['class']);
+			$mergedAttributes = $existingAttributes;
+			foreach ($attributes as $key => $value) {
+				if ($key === 'class' && isset($existingAttributes['class'])) {
+					$mergedAttributes['class'] = trim($existingAttributes['class'] . ' ' . $value);
+				} else {
+					$mergedAttributes[$key] = $value;
+				}
 			}
 
-			$svgContent = (string)preg_replace('/<svg[^>]*>/', '<svg' . $existingAttributes . $attributeString . '>', $svgContent, 1);
+			$attributeString = $this->template->formatAttributes($mergedAttributes);
+			$svgContent = (string)preg_replace('/<svg[^>]*>/', '<svg' . $attributeString . '>', $svgContent, 1);
 		}
 
 		return $svgContent;
+	}
+
+	/**
+	 * Parse attributes from an attribute string
+	 *
+	 * @param string $attributeString
+	 *
+	 * @return array<string, string>
+	 */
+	protected function parseAttributesFromString(string $attributeString): array {
+		$attributes = [];
+
+		// Match attribute="value" or attribute='value' patterns
+		if (preg_match_all('/([\w-]+)=(["\'])((?:(?!\2)[^\\\\]|\\\\.)*)\\2/', $attributeString, $matches, PREG_SET_ORDER)) {
+			foreach ($matches as $match) {
+				$attributes[$match[1]] = $match[3];
+			}
+		}
+
+		return $attributes;
 	}
 
 }
