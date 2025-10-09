@@ -427,4 +427,30 @@ class LucideIconTest extends TestCase {
 		$this->assertStringContainsString("\n", $resultString2);
 	}
 
+	/**
+	 * Test that explicit inline config overrides debug setting
+	 *
+	 * @return void
+	 */
+	public function testExplicitInlineOverridesDebug(): void {
+		$originalDebug = \Cake\Core\Configure::read('debug');
+		$svgPath = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
+
+		try {
+			// Test: inline = true overrides debug = true
+			\Cake\Core\Configure::write('debug', true);
+			$icon = new LucideIcon(['svgPath' => $svgPath, 'inline' => true]);
+			$result = (string)$icon->render('home');
+			$this->assertStringNotContainsString('<!-- @license', $result);
+
+			// Test: inline = false overrides debug = false
+			\Cake\Core\Configure::write('debug', false);
+			$icon = new LucideIcon(['svgPath' => $svgPath, 'inline' => false]);
+			$result = (string)$icon->render('home');
+			$this->assertStringContainsString('<!-- @license', $result);
+		} finally {
+			\Cake\Core\Configure::write('debug', $originalDebug);
+		}
+	}
+
 }

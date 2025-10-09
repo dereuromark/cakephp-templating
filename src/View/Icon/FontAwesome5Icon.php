@@ -18,6 +18,7 @@ class FontAwesome5Icon extends AbstractIcon {
 			'namespace' => 'fas',
 			'svgPath' => null,
 			'cache' => null,
+			'inline' => null,
 		];
 
 		parent::__construct($config);

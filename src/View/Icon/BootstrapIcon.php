@@ -17,6 +17,7 @@ class BootstrapIcon extends AbstractIcon {
 			'template' => '<span class="{{class}}"{{attributes}}></span>',
 			'svgPath' => null,
 			'cache' => null,
+			'inline' => null,
 		];
 
 		parent::__construct($config);

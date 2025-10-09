@@ -17,6 +17,7 @@ class FeatherIcon extends AbstractIcon {
 			'template' => '<span data-feather="{{name}}"{{attributes}}></span>',
 			'svgPath' => null,
 			'cache' => null,
+			'inline' => null,
 		];
 
 		parent::__construct($config);

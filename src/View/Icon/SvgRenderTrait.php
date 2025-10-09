@@ -3,6 +3,7 @@
 namespace Templating\View\Icon;
 
 use Cake\Cache\Cache;
+use Cake\Core\Configure;
 use Templating\View\HtmlStringable;
 
 trait SvgRenderTrait {
@@ -70,8 +71,8 @@ trait SvgRenderTrait {
 			$svgContent = $this->addAttributesToSvg($svgContent, $attributes);
 		}
 
-		// Apply inlining if enabled
-		if ($this->config['inline'] ?? false) {
+		// Apply inlining if enabled (defaults to true in production)
+		if ($this->config['inline'] ?? !Configure::read('debug', false)) {
 			$svgContent = $this->inlineSvg($svgContent);
 		}
 
@@ -106,8 +107,8 @@ trait SvgRenderTrait {
 
 		$svgContent = $this->wrapSvgContent($map[$icon], $attributes);
 
-		// Apply inlining if enabled
-		if ($this->config['inline'] ?? false) {
+		// Apply inlining if enabled (defaults to true in production)
+		if ($this->config['inline'] ?? !Configure::read('debug', false)) {
 			$svgContent = $this->inlineSvg($svgContent);
 		}
 

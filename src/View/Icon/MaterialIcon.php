@@ -18,6 +18,7 @@ class MaterialIcon extends AbstractIcon {
 			'namespace' => 'material-icons',
 			'svgPath' => null,
 			'cache' => null,
+			'inline' => null,
 		];
 
 		parent::__construct($config);

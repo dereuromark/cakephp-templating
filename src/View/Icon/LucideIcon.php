@@ -17,6 +17,7 @@ class LucideIcon extends AbstractIcon {
 			'template' => '<span data-lucide="{{name}}"{{attributes}}></span>',
 			'svgPath' => null,
 			'cache' => null,
+			'inline' => null,
 		];
 
 		parent::__construct($config);

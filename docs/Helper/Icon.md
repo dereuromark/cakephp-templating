@@ -262,15 +262,20 @@ These attributes are used as defaults when wrapping the SVG content from the JSO
 
 #### SVG Inlining
 
-When using SVG rendering, you can enable the `inline` option to optimize SVG output by removing HTML comments and compressing whitespace. This is particularly useful for production environments to reduce file size.
+When using SVG rendering, you can control the `inline` option to optimize SVG output by removing HTML comments and compressing whitespace. This reduces file size and improves page load performance.
 
 ```php
 'Icon' => [
     'sets' => [
         'lucide' => [
-            'class' => MyIconClass::class,
-            'svgPath' => 'path/to/svg_icons',
-            'inline' => true, // Strips comments and whitespace from SVG content
+            'class' => \Templating\View\Icon\LucideIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/lucide-static/icons/',
+            'inline' => true, // Explicitly enable inlining
+        ],
+        'bootstrap' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'svgPath' => WWW_ROOT . 'css/bootstrap-icons/icons/',
+            'inline' => false, // Explicitly disable inlining
         ],
         ...
     ],
@@ -278,15 +283,22 @@ When using SVG rendering, you can enable the `inline` option to optimize SVG out
 ```
 
 The inlining process:
-- Removes HTML comments
+- Removes HTML comments (e.g., `<!-- license information -->`)  
 - Strips unnecessary whitespace and newlines
 - Preserves spaces within quoted attribute values
 - Compresses the SVG while maintaining functionality
 
+**Default Behavior:**
+- **Production** (`Configure::read('debug') === false`): `inline` defaults to `true`
+- **Development** (`Configure::read('debug') === true`): `inline` defaults to `false`
+
+This ensures optimized output in production while preserving readable formatting during development.
+
 **Before inlining:**
 ```xml
-<!-- HTML comment -->
+<!-- @license lucide-static v0.545.0 - ISC -->
 <svg
+  class="lucide lucide-home"
   xmlns="http://www.w3.org/2000/svg"
   width="24"
   height="24"
@@ -297,10 +309,10 @@ The inlining process:
 
 **After inlining:**
 ```xml
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/></svg>
+<svg class="lucide lucide-home" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/></svg>
 ```
 
-This option is **disabled by default** to preserve the original SVG formatting during development.
+You can explicitly set `inline` to override the debug-based default for specific icon sets.
 
 ## Usage
 
