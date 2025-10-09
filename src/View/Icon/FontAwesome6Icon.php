@@ -19,6 +19,7 @@ class FontAwesome6Icon extends AbstractIcon {
 			'aliases' => true,
 			'svgPath' => null,
 			'cache' => null,
+			'inline' => null,
 		];
 
 		parent::__construct($config);

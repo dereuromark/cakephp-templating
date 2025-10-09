@@ -3,6 +3,7 @@
 namespace Templating\View\Icon;
 
 use Cake\Cache\Cache;
+use Cake\Core\Configure;
 use Templating\View\HtmlStringable;
 
 trait SvgRenderTrait {
@@ -70,6 +71,11 @@ trait SvgRenderTrait {
 			$svgContent = $this->addAttributesToSvg($svgContent, $attributes);
 		}
 
+		// Apply inlining if enabled (defaults to true in production)
+		if ($this->config['inline'] ?? !Configure::read('debug', false)) {
+			$svgContent = $this->inlineSvg($svgContent);
+		}
+
 		return $this->wrap($svgContent);
 	}
 
@@ -100,6 +106,11 @@ trait SvgRenderTrait {
 		}
 
 		$svgContent = $this->wrapSvgContent($map[$icon], $attributes);
+
+		// Apply inlining if enabled (defaults to true in production)
+		if ($this->config['inline'] ?? !Configure::read('debug', false)) {
+			$svgContent = $this->inlineSvg($svgContent);
+		}
 
 		return $this->wrap($svgContent);
 	}
@@ -247,6 +258,41 @@ trait SvgRenderTrait {
 		}
 
 		return $attributes;
+	}
+
+	/**
+	 * Inline SVG content by stripping whitespace and HTML comments
+	 *
+	 * @param string $svgContent
+	 *
+	 * @return string
+	 */
+	protected function inlineSvg(string $svgContent): string {
+		// Remove HTML comments
+		$svgContent = (string)preg_replace('/<!--.*?-->/s', '', $svgContent);
+
+		// Collapse whitespace outside of quoted attribute values
+		$svgContent = (string)preg_replace_callback(
+			'/(["\'])(?:\\\\.|[^\\\\])*?\1|(\s+)/s',
+			function ($matches) {
+				// If group 1 matched, it's a quoted string: return as-is
+				if (!empty($matches[1])) {
+					return $matches[0];
+				}
+
+				// Otherwise, it's whitespace: collapse to a single space
+				return ' ';
+			},
+			$svgContent,
+		);
+
+		// Remove whitespace around tags
+		$svgContent = (string)preg_replace('/>\s+</', '><', $svgContent);
+
+		// Remove leading and trailing whitespace
+		$svgContent = trim($svgContent);
+
+		return $svgContent;
 	}
 
 }

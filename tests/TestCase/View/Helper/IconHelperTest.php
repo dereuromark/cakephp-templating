@@ -32,10 +32,72 @@ class IconHelperTest extends TestCase {
 					'class' => MaterialIcon::class,
 					'path' => TEST_FILES . 'font_icon/material/index.d.ts',
 				],
+				'lucide' => [
+					'class' => \Templating\View\Icon\LucideIcon::class,
+					'svgPath' => TEST_FILES . 'font_icon' . DS . 'lucide_svg',
+				],
 			],
 		];
 
 		$this->Icon = new IconHelper(new View(null), $config);
+	}
+
+	/**
+	 * Test SVG inlining functionality through IconHelper
+	 *
+	 * @return void
+	 */
+	public function testIconSvgInlining(): void {
+		$config = [
+			'sets' => [
+				'lucide' => [
+					'class' => \Templating\View\Icon\LucideIcon::class,
+					'svgPath' => TEST_FILES . 'font_icon' . DS . 'lucide_svg',
+					'inline' => true,
+				],
+			],
+		];
+
+		$IconWithInline = new IconHelper(new View(null), $config);
+		$result = $IconWithInline->render('home');
+		$resultString = (string)$result;
+
+		// Should not contain license comment or newlines when inlined
+		$this->assertStringNotContainsString('<!-- @license lucide-static', $resultString);
+		$this->assertStringNotContainsString("\n", $resultString);
+
+		// Should still contain the SVG content
+		$this->assertStringContainsString('<svg', $resultString);
+		$this->assertStringContainsString('class="lucide lucide-home"', $resultString);
+	}
+
+	/**
+	 * Test SVG without inlining (default behavior)
+	 *
+	 * @return void
+	 */
+	public function testIconSvgWithoutInlining(): void {
+		$config = [
+			'sets' => [
+				'lucide' => [
+					'class' => \Templating\View\Icon\LucideIcon::class,
+					'svgPath' => TEST_FILES . 'font_icon' . DS . 'lucide_svg',
+					// inline not set, defaults to false
+				],
+			],
+		];
+
+		$IconWithoutInline = new IconHelper(new View(null), $config);
+		$result = $IconWithoutInline->render('home');
+		$resultString = (string)$result;
+
+		// Should contain license comment and newlines when not inlined
+		$this->assertStringContainsString('<!-- @license lucide-static', $resultString);
+		$this->assertStringContainsString("\n", $resultString);
+
+		// Should still contain the SVG content
+		$this->assertStringContainsString('<svg', $resultString);
+		$this->assertStringContainsString('class="lucide lucide-home"', $resultString);
 	}
 
 	/**

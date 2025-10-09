@@ -203,4 +203,254 @@ class LucideIconTest extends TestCase {
 		unlink($jsonFile);
 	}
 
+	/**
+	 * Test SVG inlining functionality with existing test files
+	 *
+	 * @return void
+	 */
+	public function testRenderSvgWithInlining(): void {
+		$svgPath = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
+
+		$icon = new LucideIcon([
+			'svgPath' => $svgPath,
+			'inline' => true,
+		]);
+
+		$result = $icon->render('home');
+		$resultString = (string)$result;
+
+		// Should not contain license comment
+		$this->assertStringNotContainsString('<!-- @license lucide-static', $resultString);
+
+		// Should have compressed whitespace - no newlines or multiple spaces
+		$this->assertStringNotContainsString("\n", $resultString);
+		$this->assertStringNotContainsString('  ', $resultString);
+
+		// Should still contain the actual SVG content and attributes
+		$this->assertStringContainsString('<svg', $resultString);
+		$this->assertStringContainsString('viewBox="0 0 24 24"', $resultString);
+		$this->assertStringContainsString('class="lucide lucide-home"', $resultString);
+		$this->assertStringContainsString('stroke-width="2"', $resultString);
+		$this->assertStringContainsString('d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"', $resultString);
+	}
+
+	/**
+	 * Test SVG inlining functionality with JSON map mode
+	 *
+	 * @return void
+	 */
+	public function testRenderSvgFromJsonMapWithInlining(): void {
+		$jsonFile = TMP . 'tests' . DS . 'lucide-icons-inline.json';
+		$jsonContent = json_encode([
+			'clock' => '<!-- Comment in content -->
+<path d="M12 6v6l4 2"/>  
+<circle cx="12" cy="12" r="10"/>
+<!-- Another comment -->',
+		]);
+		file_put_contents($jsonFile, $jsonContent);
+
+		$icon = new LucideIcon([
+			'svgPath' => $jsonFile,
+			'inline' => true,
+		]);
+
+		$result = $icon->render('clock');
+		$resultString = (string)$result;
+
+		// Should not contain comments
+		$this->assertStringNotContainsString('<!-- Comment in content -->', $resultString);
+		$this->assertStringNotContainsString('<!-- Another comment -->', $resultString);
+
+		// Should have compressed whitespace
+		$this->assertStringNotContainsString("\n", $resultString);
+		$this->assertStringNotContainsString('  ', $resultString);
+
+		// Should still contain the actual SVG content wrapped properly
+		$this->assertStringContainsString('<svg', $resultString);
+		$this->assertStringContainsString('viewBox="0 0 24 24"', $resultString);
+		$this->assertStringContainsString('<path d="M12 6v6l4 2"/>', $resultString);
+		$this->assertStringContainsString('<circle cx="12" cy="12" r="10"/>', $resultString);
+
+		unlink($jsonFile);
+	}
+
+	/**
+	 * Test that inlining is disabled by default
+	 *
+	 * @return void
+	 */
+	public function testRenderSvgWithoutInlining(): void {
+		$svgPath = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
+
+		$icon = new LucideIcon([
+			'svgPath' => $svgPath,
+			// inline not set, should default to false
+		]);
+
+		$result = $icon->render('home');
+		$resultString = (string)$result;
+
+		// Should contain comments and whitespace (not inlined)
+		$this->assertStringContainsString('<!-- @license lucide-static', $resultString);
+		$this->assertStringContainsString("\n", $resultString);
+		$this->assertStringContainsString('  ', $resultString);
+	}
+
+	/**
+	 * Test inlining preserves quoted attribute values properly
+	 *
+	 * @return void
+	 */
+	public function testInliningPreservesQuotedValues(): void {
+		$svgPath = TMP . 'tests' . DS . 'lucide-icons';
+		if (!is_dir($svgPath)) {
+			mkdir($svgPath, 0777, true);
+		}
+
+		$svgFile = $svgPath . DS . 'test-quotes.svg';
+		$svgContent = '<svg xmlns="http://www.w3.org/2000/svg" 
+     data-test="value with spaces" 
+     class="icon class-name">
+  <path d="M12 6 L16 8 L12 10"/>
+</svg>';
+		file_put_contents($svgFile, $svgContent);
+
+		$icon = new LucideIcon([
+			'svgPath' => $svgPath,
+			'inline' => true,
+		]);
+
+		$result = $icon->render('test-quotes');
+		$resultString = (string)$result;
+
+		// Should preserve spaces within quoted values
+		$this->assertStringContainsString('data-test="value with spaces"', $resultString);
+		$this->assertStringContainsString('class="icon class-name"', $resultString);
+		$this->assertStringContainsString('d="M12 6 L16 8 L12 10"', $resultString);
+
+		// But should remove other whitespace
+		$this->assertStringNotContainsString("\n", $resultString);
+
+		unlink($svgFile);
+	}
+
+	/**
+	 * Test inlining with mixed content including complex SVG elements
+	 *
+	 * @return void
+	 */
+	public function testInliningWithComplexSvg(): void {
+		$svgPath = TMP . 'tests' . DS . 'lucide-icons';
+		if (!is_dir($svgPath)) {
+			mkdir($svgPath, 0777, true);
+		}
+
+		$svgFile = $svgPath . DS . 'complex-test.svg';
+		$svgContent = '<!-- Complex SVG with various elements -->
+<svg xmlns="http://www.w3.org/2000/svg" 
+     viewBox="0 0 100 100"
+     class="complex-icon">
+  <!-- Group element -->
+  <g transform="scale(0.5)">
+    <!-- Multiple paths with complex data -->
+    <path d="M10 10 Q15 5 20 10 T30 10" fill="red"/>
+    
+    <circle cx="50" cy="50" r="20" 
+            stroke="blue" 
+            stroke-width="2"/>
+  </g>
+  
+  <!-- Text element -->
+  <text x="50" y="80" text-anchor="middle">Hello World</text>
+</svg>';
+		file_put_contents($svgFile, $svgContent);
+
+		$icon = new LucideIcon([
+			'svgPath' => $svgPath,
+			'inline' => true,
+		]);
+
+		$result = $icon->render('complex-test');
+		$resultString = (string)$result;
+
+		// Should remove comments
+		$this->assertStringNotContainsString('<!-- Complex SVG', $resultString);
+		$this->assertStringNotContainsString('<!-- Group element -->', $resultString);
+		$this->assertStringNotContainsString('<!-- Multiple paths', $resultString);
+		$this->assertStringNotContainsString('<!-- Text element -->', $resultString);
+
+		// Should compress whitespace
+		$this->assertStringNotContainsString("\n", $resultString);
+		$this->assertStringNotContainsString('  ', $resultString);
+
+		// Should preserve complex path data and text content
+		$this->assertStringContainsString('d="M10 10 Q15 5 20 10 T30 10"', $resultString);
+		$this->assertStringContainsString('text-anchor="middle"', $resultString);
+		$this->assertStringContainsString('>Hello World</text>', $resultString);
+		$this->assertStringContainsString('transform="scale(0.5)"', $resultString);
+
+		unlink($svgFile);
+	}
+
+	/**
+	 * Test that inline option can be overridden at render time
+	 *
+	 * @return void
+	 */
+	public function testInlineOptionInheritance(): void {
+		$svgPath = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
+
+		// Test with inline enabled globally
+		$icon = new LucideIcon([
+			'svgPath' => $svgPath,
+			'inline' => true,
+		]);
+
+		$result = $icon->render('home');
+		$resultString = (string)$result;
+
+		// Should be inlined
+		$this->assertStringNotContainsString('<!-- @license', $resultString);
+		$this->assertStringNotContainsString("\n", $resultString);
+
+		// Test with inline disabled globally
+		$icon2 = new LucideIcon([
+			'svgPath' => $svgPath,
+			'inline' => false,
+		]);
+
+		$result2 = $icon2->render('home');
+		$resultString2 = (string)$result2;
+
+		// Should not be inlined
+		$this->assertStringContainsString('<!-- @license', $resultString2);
+		$this->assertStringContainsString("\n", $resultString2);
+	}
+
+	/**
+	 * Test that explicit inline config overrides debug setting
+	 *
+	 * @return void
+	 */
+	public function testExplicitInlineOverridesDebug(): void {
+		$originalDebug = \Cake\Core\Configure::read('debug');
+		$svgPath = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
+
+		try {
+			// Test: inline = true overrides debug = true
+			\Cake\Core\Configure::write('debug', true);
+			$icon = new LucideIcon(['svgPath' => $svgPath, 'inline' => true]);
+			$result = (string)$icon->render('home');
+			$this->assertStringNotContainsString('<!-- @license', $result);
+
+			// Test: inline = false overrides debug = false
+			\Cake\Core\Configure::write('debug', false);
+			$icon = new LucideIcon(['svgPath' => $svgPath, 'inline' => false]);
+			$result = (string)$icon->render('home');
+			$this->assertStringContainsString('<!-- @license', $result);
+		} finally {
+			\Cake\Core\Configure::write('debug', $originalDebug);
+		}
+	}
+
 }

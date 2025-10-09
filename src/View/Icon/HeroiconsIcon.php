@@ -18,6 +18,7 @@ class HeroiconsIcon extends AbstractIcon {
 			'style' => 'outline',
 			'svgPath' => null,
 			'cache' => null,
+			'inline' => null,
 		];
 
 		parent::__construct($config);
