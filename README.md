@@ -18,6 +18,8 @@ You can use one or many of the following icon sets out of the box:
 - [FontAwesome](https://fontawesome.com/icons) v4/v5/v6
 - [Material](https://fonts.google.com/icons)
 - [Feather](https://feathericons.com/)
+- [Lucide](https://lucide.dev/) (modern Feather fork with 1000+ icons)
+- [Heroicons](https://heroicons.com/) (by Tailwind CSS team)
 
 You can also add your own custom icon set.
 
