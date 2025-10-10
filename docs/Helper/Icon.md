@@ -283,7 +283,7 @@ When using SVG rendering, you can control the `inline` option to optimize SVG ou
 ```
 
 The inlining process:
-- Removes HTML comments (e.g., `<!-- license information -->`)  
+- Removes HTML comments (e.g., `<!-- license information -->`)
 - Strips unnecessary whitespace and newlines
 - Preserves spaces within quoted attribute values
 - Compresses the SVG while maintaining functionality
@@ -450,15 +450,52 @@ Set it to `false` if you want to not cache it.
 
 
 ## Backend
-If routes are enabled, you should be able to navigate to
+
+### Accessing the Icon Browser
+
+The plugin provides a built-in icon browser interface at:
 ```
 /admin/templating/icons
 ```
-and see all your custom (mapped) icons, as well as the icons available.
-You can also check the full icon sets available (namespaced ones).
 
-It can also show you possible conflicts (same icon in different sets, here the defined order matters).
-For conflicting ones you can use aliasing through the map - or directly use the verbose `set:name` syntax where the "other one" is needed.
+The backend routes are automatically enabled when you load the plugin.
+The plugin's `routes()` method automatically registers the admin prefix routes in `src/TemplatingPlugin.php:30-36`.
+
+### What the Icon Browser Shows
+
+The icon browser interface displays:
+- **Custom mapped icons** - Your icon aliases from `Icon.map` configuration
+- **Available icons** - All icons from configured icon sets
+- **Full icon sets** - Complete namespaced icon collections (e.g., `bs:`, `fa6:`)
+- **Conflicts** - Icons with the same name in different sets
+
+### Handling Icon Conflicts
+
+When multiple icon sets contain icons with the same name, the order defined in your configuration determines which icon is used by default.
+
+For conflicting icons you have two options:
+1. **Use aliasing** - Map the icon to a specific set in your `Icon.map` config:
+   ```php
+   'Icon' => [
+       'map' => [
+           'home' => 'bs:house',  // Use Bootstrap's house icon for 'home'
+           'home-alt' => 'fa6:house',  // Use FontAwesome's house icon as alternative
+       ],
+   ],
+   ```
+
+2. **Use explicit syntax** - Use the verbose `set:name` syntax directly in templates:
+   ```php
+   // Use Bootstrap version
+   echo $this->Icon->render('bs:star');
+
+   // Use FontAwesome version
+   echo $this->Icon->render('fa6:star');
+   ```
+
+### Restricting Access
+
+The backend is accessible at the `Admin` prefix. You should secure this route using authentication/authorization in your application.
 
 ## Tips
 
