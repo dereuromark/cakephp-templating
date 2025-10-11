@@ -7,49 +7,44 @@ use RuntimeException;
 /**
  * Using e.g. "@fortawesome/fontawesome-free" npm package or "font-awesome-v5-icons" npm meta package.
  */
-class FontAwesome5IconCollector {
+class FontAwesome5IconCollector extends AbstractCollector {
 
 	/**
-	 * @param string $filePath
+	 * @param string $path Path to SVG, YML, or JSON file
+	 * @param array<string, mixed> $options Collection options
 	 *
 	 * @return array<string>
 	 */
-	public static function collect(string $filePath): array {
-		$content = file_get_contents($filePath);
-		if ($content === false) {
-			throw new RuntimeException('Cannot read file: ' . $filePath);
-		}
+	public static function collect(string $path, array $options = []): array {
+		return static::cached($path, $options, function() use ($path, $options) {
+			$content = static::readFile($path);
+			$extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
-		switch ($ext) {
-			case 'svg':
-				preg_match_all('/symbol id="([a-z][^"]+)"/', $content, $matches);
-				if (empty($matches[1])) {
-					throw new RuntimeException('Cannot parse SVG: ' . $filePath);
-				}
-				$icons = $matches[1];
+			switch ($extension) {
+				case 'svg':
+					$icons = static::extractWithRegex($content, '/symbol id="([a-z][^"]+)"/', $options);
+					if (empty($icons)) {
+						throw new RuntimeException('Cannot parse SVG: ' . $path);
+					}
 
-				break;
-			case 'yml':
-				$array = yaml_parse($content);
-				/** @var array<string> $icons */
-				$icons = array_keys($array);
+					break;
+				case 'yml':
+					$array = yaml_parse($content);
+					/** @var array<string> $icons */
+					$icons = array_keys($array);
 
-				break;
-			case 'json':
-				$array = json_decode($content, true);
-				if (!$array) {
-					throw new RuntimeException('Cannot parse JSON: ' . $filePath);
-				}
+					break;
+				case 'json':
+					$array = static::parseJsonFile($path);
+					$icons = static::icons($array);
 
-				$icons = static::icons($array);
+					break;
+				default:
+					throw new RuntimeException('Unknown file extension: ' . $extension);
+			}
 
-				break;
-			default:
-				throw new RuntimeException('Unknown file extension: ' . $ext);
-		}
-
-		return $icons;
+			return $icons;
+		});
 	}
 
 	/**

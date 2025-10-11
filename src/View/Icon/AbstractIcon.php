@@ -31,14 +31,28 @@ abstract class AbstractIcon implements IconInterface {
 	 */
 	protected function path(): string {
 		$path = $this->config['path'] ?? null;
-		if (!$path) {
-			throw new RuntimeException('You need to define a meta data file path for `' . static::class . '` in order to get icon names.');
+		if ($path && file_exists($path)) {
+			return $path;
 		}
-		if (!file_exists($path)) {
+
+		$svgPath = $this->config['svgPath'] ?? null;
+		if ($svgPath && is_dir($svgPath)) {
+			return $svgPath;
+		}
+
+		if (!$path && !$svgPath) {
+			throw new RuntimeException('You need to define a meta data file path or SVG directory path for `' . static::class . '` in order to get icon names.');
+		}
+
+		if ($path && !file_exists($path)) {
 			throw new RuntimeException('Cannot find meta data file path `' . $path . '` for `' . static::class . '`.');
 		}
 
-		return $path;
+		if ($svgPath && !is_dir($svgPath)) {
+			throw new RuntimeException('SVG path `' . $svgPath . '` is not a directory for `' . static::class . '`.');
+		}
+
+		throw new RuntimeException('No valid path configuration found for `' . static::class . '`.');
 	}
 
 	/**
@@ -60,5 +74,16 @@ abstract class AbstractIcon implements IconInterface {
 	protected function wrap(string $icon): HtmlStringable {
 		return Icon::create($icon);
 	}
+
+	/**
+	 * Icon formatting using the specific engine - must be implemented by concrete classes
+	 *
+	 * @param string $icon Icon name
+	 * @param array<string, mixed> $options Options (translate, title, etc.)
+	 * @param array<string, mixed> $attributes HTML attributes (class, etc.)
+	 *
+	 * @return \Templating\View\HtmlStringable
+	 */
+	abstract public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable;
 
 }

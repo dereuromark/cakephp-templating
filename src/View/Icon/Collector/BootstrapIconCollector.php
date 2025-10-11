@@ -2,30 +2,19 @@
 
 namespace Templating\View\Icon\Collector;
 
-use RuntimeException;
-
 /**
  * Using e.g. "bootstrap-icons" npm package.
  */
-class BootstrapIconCollector {
+class BootstrapIconCollector extends AbstractCollector {
 
 	/**
-	 * @param string $filePath
+	 * @param string $path Path to JSON file
+	 * @param array<string, mixed> $options Collection options
 	 *
 	 * @return array<string>
 	 */
-	public static function collect(string $filePath): array {
-		$content = file_get_contents($filePath);
-		if ($content === false) {
-			throw new RuntimeException('Cannot read file: ' . $filePath);
-		}
-		$array = json_decode($content, true);
-		if (!$array) {
-			throw new RuntimeException('Cannot parse JSON: ' . $filePath);
-		}
-
-		/** @var array<string> */
-		return array_keys($array);
+	public static function collect(string $path, array $options = []): array {
+		return static::cached($path, $options, fn () => static::collectFromJsonFile($path));
 	}
 
 }

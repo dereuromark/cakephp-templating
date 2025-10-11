@@ -80,4 +80,48 @@ class FeatherIconTest extends TestCase {
 		unlink($jsonFile);
 	}
 
+	/**
+	 * Test that svgPath can point to a directory of SVG files
+	 * and names() method works with directory scanning
+	 *
+	 * @return void
+	 */
+	public function testNamesFromSvgDirectory(): void {
+		$svgDir = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
+
+		$icon = new FeatherIcon([
+			'svgPath' => $svgDir,
+		]);
+
+		$names = $icon->names();
+
+		$this->assertIsArray($names);
+		$this->assertContains('home', $names);
+		$this->assertContains('search', $names);
+		$this->assertContains('settings', $names);
+		$this->assertContains('user', $names);
+		$this->assertCount(4, $names);
+	}
+
+	/**
+	 * Test rendering SVG from directory
+	 *
+	 * @return void
+	 */
+	public function testRenderSvgFromDirectory(): void {
+		$svgDir = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
+
+		$icon = new FeatherIcon([
+			'svgPath' => $svgDir,
+		]);
+
+		$result = $icon->render('home');
+		$resultString = (string)$result;
+
+		$this->assertStringContainsString('<svg', $resultString);
+		$this->assertStringContainsString('viewBox="0 0 24 24"', $resultString);
+		$this->assertStringContainsString('path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"', $resultString);
+		$this->assertStringContainsString('</svg>', $resultString);
+	}
+
 }
