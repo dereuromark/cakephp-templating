@@ -7,36 +7,34 @@ use RuntimeException;
 /**
  * Using e.g. "font-awesome" npm package.
  */
-class FontAwesome4IconCollector {
+class FontAwesome4IconCollector extends AbstractCollector {
 
 	/**
-	 * @param string $filePath
+	 * @param string $path Path to LESS or SCSS file
+	 * @param array<string, mixed> $options Collection options
 	 *
 	 * @return array<string>
 	 */
-	public static function collect(string $filePath): array {
-		$content = file_get_contents($filePath);
-		if ($content === false) {
-			throw new RuntimeException('Cannot read file: ' . $filePath);
-		}
+	public static function collect(string $path, array $options = []): array {
+		return static::cached($path, $options, function() use ($path, $options) {
+			$content = static::readFile($path);
+			$extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
-		switch ($ext) {
-			case 'less':
-				preg_match_all('/@fa-var-([0-9a-z-]+):/', $content, $matches);
+			switch ($extension) {
+				case 'less':
+					$pattern = '/@fa-var-([0-9a-z-]+):/';
 
-				break;
-			case 'scss':
-				preg_match_all('/\$fa-var-([0-9a-z-]+):/', $content, $matches);
+					break;
+				case 'scss':
+					$pattern = '/\$fa-var-([0-9a-z-]+):/';
 
-				break;
-			default:
-				throw new RuntimeException('Format not supported: ' . $ext);
-		}
+					break;
+				default:
+					throw new RuntimeException('Format not supported: ' . $extension);
+			}
 
-		$icons = !empty($matches[1]) ? $matches[1] : [];
-
-		return $icons;
+			return static::extractWithRegex($content, $pattern, $options);
+		});
 	}
 
 }

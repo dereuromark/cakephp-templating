@@ -59,7 +59,7 @@ class IconHelperTest extends TestCase {
 		];
 
 		$IconWithInline = new IconHelper(new View(null), $config);
-		$result = $IconWithInline->render('home');
+		$result = $IconWithInline->render('lucide:home');
 		$resultString = (string)$result;
 
 		// Should not contain license comment or newlines when inlined
@@ -88,7 +88,7 @@ class IconHelperTest extends TestCase {
 		];
 
 		$IconWithoutInline = new IconHelper(new View(null), $config);
-		$result = $IconWithoutInline->render('home');
+		$result = $IconWithoutInline->render('lucide:home');
 		$resultString = (string)$result;
 
 		// Should contain license comment and newlines when not inlined

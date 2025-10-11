@@ -2,31 +2,28 @@
 
 namespace Templating\View\Icon\Collector;
 
-use RuntimeException;
-
 /**
  * Using e.g. "material-symbols" npm package.
  */
-class MaterialIconCollector {
+class MaterialIconCollector extends AbstractCollector {
 
 	/**
-	 * @param string $filePath
+	 * @param string $path Path to TypeScript definition file
+	 * @param array<string, mixed> $options Collection options
 	 *
-	 * @return array<non-empty-string>
+	 * @return array<string>
 	 */
-	public static function collect(string $filePath): array {
-		$content = file_get_contents($filePath);
-		if ($content === false) {
-			throw new RuntimeException('Cannot read file: ' . $filePath);
-		}
+	public static function collect(string $path, array $options = []): array {
+		return static::cached($path, $options, function() use ($path, $options) {
+			$content = static::readFile($path);
+			$icons = static::extractWithRegex($content, '/"(.+)"/u', $options);
 
-		preg_match_all('/"(.+)"/u', $content, $matches);
-		if (empty($matches[1])) {
-			throw new RuntimeException('Cannot parse content: ' . $filePath);
-		}
+			if (empty($icons)) {
+				throw new \RuntimeException('Cannot parse content: ' . $path);
+			}
 
-		/** @var array<non-empty-string> */
-		return $matches[1];
+			return $icons;
+		});
 	}
 
 }

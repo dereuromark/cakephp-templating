@@ -7,58 +7,52 @@ use RuntimeException;
 /**
  * Using e.g. "fontawesome-free" npm package.
  */
-class FontAwesome6IconCollector {
+class FontAwesome6IconCollector extends AbstractCollector {
 
 	/**
-	 * @param string $filePath
-	 * @param array<string, mixed> $config
+	 * @param string $path Path to SVG, YML, or JSON file
+	 * @param array<string, mixed> $options Collection options (includes config)
 	 *
 	 * @return array<string>
 	 */
-	public static function collect(string $filePath, array $config = []): array {
-		$config += [
+	public static function collect(string $path, array $options = []): array {
+		$options += [
 			'namespace' => 'solid',
 			'aliases' => true,
 		];
 
-		$content = file_get_contents($filePath);
-		if ($content === false) {
-			throw new RuntimeException('Cannot read file: ' . $filePath);
-		}
+		return static::cached($path, $options, function() use ($path, $options) {
+			$content = static::readFile($path);
+			$extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-		$ext = pathinfo($filePath, PATHINFO_EXTENSION);
-		switch ($ext) {
-			case 'svg':
-				preg_match_all('/symbol id="([a-z][^"]+)"/', $content, $matches);
-				if (empty($matches[1])) {
-					throw new RuntimeException('Cannot parse SVG: ' . $filePath);
-				}
-				$icons = $matches[1];
+			switch ($extension) {
+				case 'svg':
+					$icons = static::extractWithRegex($content, '/symbol id="([a-z][^"]+)"/', $options);
+					if (empty($icons)) {
+						throw new RuntimeException('Cannot parse SVG: ' . $path);
+					}
 
-				break;
-			case 'yml':
-				$array = yaml_parse($content);
-				if (!$array) {
-					throw new RuntimeException('Cannot parse YML: ' . $filePath);
-				}
+					break;
+				case 'yml':
+					$array = yaml_parse($content);
+					if (!$array) {
+						throw new RuntimeException('Cannot parse YML: ' . $path);
+					}
 
-				$icons = static::icons($array, $config);
+					$icons = static::icons($array, $options);
 
-				break;
-			case 'json':
-				$array = json_decode($content, true);
-				if (!$array) {
-					throw new RuntimeException('Cannot parse JSON: ' . $filePath);
-				}
+					break;
+				case 'json':
+					$array = static::parseJsonFile($path);
+					$icons = static::icons($array, $options);
 
-				$icons = static::icons($array, $config);
+					break;
+				default:
+					throw new RuntimeException('Unknown file extension: ' . $extension);
+			}
 
-				break;
-			default:
-				throw new RuntimeException('Unknown file extension: ' . $ext);
-		}
-
-		return $icons;
+			return $icons;
+		});
 	}
 
 	/**
