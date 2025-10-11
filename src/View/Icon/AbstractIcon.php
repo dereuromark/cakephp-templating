@@ -75,15 +75,4 @@ abstract class AbstractIcon implements IconInterface {
 		return Icon::create($icon);
 	}
 
-	/**
-	 * Icon formatting using the specific engine - must be implemented by concrete classes
-	 *
-	 * @param string $icon Icon name
-	 * @param array<string, mixed> $options Options (translate, title, etc.)
-	 * @param array<string, mixed> $attributes HTML attributes (class, etc.)
-	 *
-	 * @return \Templating\View\HtmlStringable
-	 */
-	abstract public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable;
-
 }
