@@ -48,13 +48,10 @@ class HeroiconsIconCollector extends AbstractCollector {
 			$styleDir = $directory . '/' . $style;
 			if (is_dir($styleDir)) {
 				$hasStyleDirs = true;
-				$files = glob($styleDir . '/*.svg');
-				if ($files !== false) {
-					foreach ($files as $file) {
-						$iconName = basename($file, '.svg');
-						if (!in_array($iconName, $icons, true)) {
-							$icons[] = $iconName;
-						}
+				$styleIcons = parent::collectFromDirectory($styleDir, $options);
+				foreach ($styleIcons as $iconName) {
+					if (!in_array($iconName, $icons, true)) {
+						$icons[] = $iconName;
 					}
 				}
 			}
@@ -62,17 +59,11 @@ class HeroiconsIconCollector extends AbstractCollector {
 
 		// If no style directories found, scan the directory directly
 		if (!$hasStyleDirs) {
-			$files = glob($directory . '/*.svg');
-			if ($files === false) {
-				throw new RuntimeException('Cannot read directory: ' . $directory);
-			}
-
-			foreach ($files as $file) {
-				$icons[] = basename($file, '.svg');
-			}
+			$icons = parent::collectFromDirectory($directory, $options);
+		} else {
+			// Sort icons when we have style directories
+			sort($icons);
 		}
-
-		sort($icons);
 
 		return $icons;
 	}
