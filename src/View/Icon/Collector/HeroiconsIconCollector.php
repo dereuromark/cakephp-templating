@@ -2,8 +2,6 @@
 
 namespace Templating\View\Icon\Collector;
 
-use RuntimeException;
-
 /**
  * Using e.g. "heroicons" npm package.
  */
