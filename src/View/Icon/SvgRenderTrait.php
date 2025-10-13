@@ -27,6 +27,11 @@ trait SvgRenderTrait {
 	 * @return \Templating\View\HtmlStringable
 	 */
 	protected function renderSvg(string $icon, array $attributes = []): HtmlStringable {
+		// Check if svgPath is configured
+		if (!$this->resolveSvgPath()) {
+			throw new \RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
+		}
+
 		// Check if using JSON map mode
 		if ($this->isJsonMapMode()) {
 			return $this->renderSvgFromMap($icon, $attributes);
@@ -85,7 +90,7 @@ trait SvgRenderTrait {
 	 * @return bool
 	 */
 	protected function isJsonMapMode(): bool {
-		$svgPath = $this->config['svgPath'] ?? null;
+		$svgPath = $this->resolveSvgPath();
 
 		return $svgPath && str_ends_with($svgPath, '.json');
 	}
@@ -121,8 +126,8 @@ trait SvgRenderTrait {
 	 * @return array<string, string>
 	 */
 	protected function loadSvgMap(): array {
-		$jsonPath = $this->config['svgPath'];
-		$cacheKey = static::class . '_svg_map_' . md5($jsonPath);
+		$jsonPath = $this->resolveSvgPath();
+		$cacheKey = static::class . '_svg_map_' . md5((string)$jsonPath);
 
 		// Check static cache
 		if (isset(static::$svgMapCache[$cacheKey])) {
@@ -138,7 +143,7 @@ trait SvgRenderTrait {
 
 		// Load from JSON file if not in cache
 		if ($map === null) {
-			if (!file_exists($jsonPath)) {
+			if (!$jsonPath || !file_exists($jsonPath)) {
 				throw new \RuntimeException(sprintf('SVG map file not found: %s', $jsonPath));
 			}
 
@@ -202,12 +207,12 @@ trait SvgRenderTrait {
 	 * @return string
 	 */
 	protected function getSvgPath(string $icon): string {
-		$basePath = $this->config['svgPath'];
+		$basePath = $this->resolveSvgPath();
 		if (!$basePath) {
 			throw new \RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
 		}
 
-		return rtrim($basePath, '/') . '/' . $icon . '.svg';
+		return rtrim((string)$basePath, '/') . '/' . $icon . '.svg';
 	}
 
 	/**

@@ -45,7 +45,7 @@ class HeroiconsIcon extends AbstractIcon {
 			$attributes += $this->config['attributes'];
 		}
 
-		if ($this->config['svgPath']) {
+		if ($this->resolveSvgPath()) {
 			return $this->renderSvg($icon, $attributes);
 		}
 
@@ -66,14 +66,14 @@ class HeroiconsIcon extends AbstractIcon {
 	 * @return string
 	 */
 	protected function getSvgPath(string $icon): string {
-		$basePath = $this->config['svgPath'];
+		$basePath = $this->resolveSvgPath();
 		if (!$basePath) {
 			throw new \RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
 		}
 
 		$style = $this->config['style'];
 
-		return rtrim($basePath, '/') . '/' . $style . '/' . $icon . '.svg';
+		return rtrim((string)$basePath, '/') . '/' . $style . '/' . $icon . '.svg';
 	}
 
 }

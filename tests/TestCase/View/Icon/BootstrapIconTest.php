@@ -95,4 +95,32 @@ class BootstrapIconTest extends TestCase {
 		$icon->render('nonexistent-icon');
 	}
 
+	/**
+	 * Test that svgPath = true uses the path value
+	 *
+	 * @return void
+	 */
+	public function testRenderSvgPathTrue(): void {
+		$svgPath = TMP . 'tests' . DS . 'bootstrap-icons-path-true';
+		if (!is_dir($svgPath)) {
+			mkdir($svgPath, 0777, true);
+		}
+
+		$svgFile = $svgPath . DS . 'test-icon-path-true.svg';
+		$svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-test-icon-path-true" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/></svg>';
+		file_put_contents($svgFile, $svgContent);
+
+		$icon = new BootstrapIcon([
+			'path' => $svgPath,
+			'svgPath' => true, // Should use the path value
+		]);
+
+		$result = $icon->render('test-icon-path-true');
+		$this->assertStringContainsString('<svg', (string)$result);
+		$this->assertStringContainsString('bi bi-test-icon-path-true', (string)$result);
+		$this->assertStringContainsString('viewBox="0 0 16 16"', (string)$result);
+
+		unlink($svgFile);
+	}
+
 }

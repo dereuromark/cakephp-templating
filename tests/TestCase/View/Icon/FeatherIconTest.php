@@ -124,4 +124,33 @@ class FeatherIconTest extends TestCase {
 		$this->assertStringContainsString('</svg>', $resultString);
 	}
 
+	/**
+	 * Test that svgPath = true uses the path value for JSON map
+	 *
+	 * @return void
+	 */
+	public function testRenderSvgPathTrueWithJsonMap(): void {
+		$jsonFile = TMP . 'tests' . DS . 'feather-icons-path-true.json';
+		$jsonContent = json_encode([
+			'circle' => '<circle cx="12" cy="12" r="10"></circle>',
+			'square' => '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>',
+		]);
+		file_put_contents($jsonFile, $jsonContent);
+
+		$icon = new FeatherIcon([
+			'path' => $jsonFile,
+			'svgPath' => true, // Should use the path value
+		]);
+
+		$result = $icon->render('circle');
+		$resultString = (string)$result;
+
+		$this->assertStringContainsString('<svg', $resultString);
+		$this->assertStringContainsString('viewBox="0 0 24 24"', $resultString);
+		$this->assertStringContainsString('cx="12" cy="12" r="10"', $resultString);
+		$this->assertStringContainsString('</svg>', $resultString);
+
+		unlink($jsonFile);
+	}
+
 }

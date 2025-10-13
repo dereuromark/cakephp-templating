@@ -44,7 +44,7 @@ class FontAwesome4Icon extends AbstractIcon {
 			$attributes += $this->config['attributes'];
 		}
 
-		if ($this->config['svgPath']) {
+		if ($this->resolveSvgPath()) {
 			return $this->renderSvg($icon, $attributes);
 		}
 

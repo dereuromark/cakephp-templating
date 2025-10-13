@@ -35,7 +35,7 @@ abstract class AbstractIcon implements IconInterface {
 			return $path;
 		}
 
-		$svgPath = $this->config['svgPath'] ?? null;
+		$svgPath = $this->resolveSvgPath();
 		if ($svgPath && is_dir($svgPath)) {
 			return $svgPath;
 		}
@@ -53,6 +53,23 @@ abstract class AbstractIcon implements IconInterface {
 		}
 
 		throw new RuntimeException('No valid path configuration found for `' . static::class . '`.');
+	}
+
+	/**
+	 * Resolve svgPath configuration, handling true value as path alias
+	 *
+	 * @return string|null
+	 */
+	protected function resolveSvgPath(): ?string {
+		/** @var string|true|null $svgPath */
+		$svgPath = $this->config['svgPath'] ?? null;
+
+		// If svgPath is set to true, use the path value
+		if ($svgPath === true) {
+			return $this->config['path'] ?? null;
+		}
+
+		return $svgPath;
 	}
 
 	/**
