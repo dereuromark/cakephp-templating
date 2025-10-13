@@ -1,569 +1,1229 @@
 # Icon Helper
 
-A CakePHP helper to handle most common font icons. Contains convenience wrappers and overview in backend.
+A comprehensive CakePHP helper for rendering icons from popular icon libraries with support for both font-based and SVG rendering modes.
 
-## Setup
-Include helper in your AppView class as
+## Table of Contents
+
+1. [Overview](#overview)
+   - [Rendering Modes](#rendering-modes)
+2. [Quick Start](#quick-start)
+3. [Installation & Setup](#installation--setup)
+4. [Supported Icon Sets](#supported-icon-sets)
+5. [Configuration](#configuration)
+   - [Basic Configuration](#basic-configuration)
+   - [Global Attributes](#global-attributes)
+   - [Icon Mapping](#icon-mapping)
+6. [Rendering Modes Explained](#rendering-modes-explained)
+   - [Font-Based Rendering](#font-based-rendering)
+   - [SVG Individual Files](#svg-individual-files)
+   - [SVG JSON Map (Recommended)](#svg-json-map-recommended)
+   - [SVG Inlining & Optimization](#svg-inlining--optimization)
+   - [Caching System](#caching-system)
+7. [Usage](#usage)
+   - [Basic Rendering](#basic-rendering)
+   - [Icon Prefixes](#icon-prefixes)
+   - [Attributes & Options](#attributes--options)
+   - [Getting Available Icons](#getting-available-icons)
+8. [Icon Set Configurations](#icon-set-configurations)
+   - [Bootstrap Icons](#bootstrap-icons)
+   - [FontAwesome](#fontawesome)
+   - [Lucide Icons](#lucide-icons)
+   - [Heroicons](#heroicons)
+   - [Feather Icons](#feather-icons)
+   - [Material Icons](#material-icons)
+9. [Configuration Reference](#configuration-reference)
+   - [Complete Configuration Options](#complete-configuration-options)
+   - [Path Configuration Types](#path-configuration-types)
+   - [SVG Path Configuration Types](#svg-path-configuration-types)
+   - [Configuration Inheritance](#configuration-inheritance)
+10. [Backend Browser](#backend-browser)
+11. [Performance & Caching](#performance--caching)
+12. [IDE Auto-Complete](#ide-auto-complete)
+13. [Creating Custom Icon Sets](#creating-custom-icon-sets)
+14. [Tips & Best Practices](#tips--best-practices)
+
+## Overview
+
+The Icon Helper provides a unified interface for rendering icons from multiple popular icon libraries. It supports three distinct rendering modes, each optimized for different use cases and performance requirements.
+
+### Rendering Modes
+
+**1. Font-Based Icons** (Traditional)
+- Uses icon fonts (CSS classes or data attributes)
+- Requires loading CSS/font files
+- Lightweight setup, familiar approach
+- Limited customization options
+
+**2. Individual SVG Files**
+- Each icon loaded from separate `.svg` files
+- Full SVG customization capabilities
+- Ideal for selective icon usage or custom sets
+- Requires file system access per icon
+
+**3. JSON Map (Recommended)**
+- All icons loaded from single JSON file
+- Best performance (single file load)
+- Full SVG customization + caching benefits
+- Most efficient for large icon libraries
+
+**Key Features:**
+- Support for 8+ popular icon libraries
+- Automatic mode detection based on configuration
+- Advanced two-tier caching system
+- Icon mapping and aliasing
+- Backend browser interface
+- IDE auto-completion support
+- Performance optimizations for production
+
+## Quick Start
+
+**Font-based rendering:**
 ```php
+// In your AppView.php
 $this->loadHelper('Templating.Icon', [
-    ...
+    'sets' => [
+        'bs' => \Templating\View\Icon\BootstrapIcon::class,
+    ],
 ]);
+
+// In your template
+echo $this->Icon->render('house'); // <i class="bi bi-house"></i>
 ```
 
-You can store default configs also in Configure key `'Icon'`.
+**SVG rendering (JSON map):**
+```php
+// In your AppView.php
+$this->loadHelper('Templating.Icon', [
+    'sets' => [
+        'feather' => [
+            'class' => \Templating\View\Icon\FeatherIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',
+        ],
+    ],
+]);
 
-Make sure to set up at least one icon set:
-- **Bootstrap**: npm package `bootstrap-icons`
-- **FontAwesome** v4/v5/v6: npm package `fontawesome-free` for v6
-- **Material**: npm package `material-symbols`
-- **Feather**: npm package `feather-icons`
-- **Lucide**: npm package `lucide-static` (modern Feather fork with 1000+ icons, use `lucide-static` for SVG files)
-- **Heroicons**: npm package `heroicons` (by Tailwind CSS team)
+// In your template
+echo $this->Icon->render('home'); // <svg>...</svg> (inline SVG)
+```
 
-or your custom Icon class (see https://icon-sets.iconify.design/ for inspiration).
+**SVG rendering (individual files):**
+```php
+// In your AppView.php
+$this->loadHelper('Templating.Icon', [
+    'sets' => [
+        'lucide' => [
+            'class' => \Templating\View\Icon\LucideIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/lucide-static/icons/',
+        ],
+    ],
+]);
 
-E.g.
+// In your template
+echo $this->Icon->render('home'); // <svg>...</svg> (loaded from home.svg)
+```
+
+## Installation & Setup
+
+### 1. Load the Helper
+
+Add the Icon helper to your `src/View/AppView.php`:
+
+```php
+public function initialize(): void
+{
+    $this->loadHelper('Templating.Icon', [
+        'sets' => [
+            'bs' => \Templating\View\Icon\BootstrapIcon::class,
+            'fa6' => \Templating\View\Icon\FontAwesome6Icon::class,
+        ],
+    ]);
+}
+```
+
+### 2. Install Icon Libraries
+
+> [!NOTE]
+> Using npm is not required - this plugin does not handle asset management or shipping of icon files. You can install icon libraries using any method (npm, composer, CDN, manual download, etc.). The plugin only needs to know where the files are located via configuration paths.
+
+Install your preferred icon libraries via npm:
+
+```bash
+# Bootstrap Icons
+npm install bootstrap-icons
+
+# FontAwesome
+npm install @fortawesome/fontawesome-free
+
+# Lucide (modern Feather fork)
+npm install lucide-static
+
+# Heroicons (by Tailwind CSS)
+npm install heroicons
+
+# Feather Icons
+npm install feather-icons
+
+# Material Symbols
+npm install material-symbols
+```
+
+> [!IMPORTANT]
+> For font-based icons, you must include the necessary CSS/font files in your layout yourself. The plugin only generates the HTML markup - it does not handle loading stylesheets or font files.
+
+> [!WARNING]
+> When deploying your application, ensure icon files are available in production. If using npm-installed icons, include them in your build/deployment process or copy them to a permanent location. The plugin expects icon files to exist at the configured paths - missing files will cause runtime errors.
+
+### 3. Configuration
+
+You can store default configurations in `config/app.php`:
+
+```php
+'Icon' => [
+    'sets' => [
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/bootstrap-icons/icons/',
+        ],
+        'fa6' => [
+            'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+            'svgPath' => WWW_ROOT . 'node_modules/@fortawesome/fontawesome-free/svgs/solid/',
+        ],
+    ],
+    'map' => [
+        'home' => 'bs:house',
+        'user' => 'fa6:user',
+        'settings' => 'bs:gear',
+    ],
+],
+```
+
+## Supported Icon Sets
+
+| Icon Set | Class | Icons | License | NPM Package |
+|----------|-------|-------|---------|-------------|
+| **Bootstrap Icons** | `BootstrapIcon` | 1,800+ | MIT | `bootstrap-icons` |
+| **FontAwesome v6** | `FontAwesome6Icon` | 2,000+ | Font Awesome | `@fortawesome/fontawesome-free` |
+| **FontAwesome v5** | `FontAwesome5Icon` | 1,600+ | Font Awesome | `fontawesome-free` |
+| **FontAwesome v4** | `FontAwesome4Icon` | 800+ | Font Awesome | `font-awesome` |
+| **Lucide** | `LucideIcon` | 1,000+ | ISC | `lucide-static` |
+| **Heroicons** | `HeroiconsIcon` | 300+ | MIT | `heroicons` |
+| **Feather** | `FeatherIcon` | 280+ | MIT | `feather-icons` |
+| **Material Icons** | `MaterialIcon` | 2,000+ | Apache 2.0 | `material-symbols` |
+
+## Configuration
+
+### Basic Configuration
+
 ```php
 'Icon' => [
     'sets' => [
         'bs' => \Templating\View\Icon\BootstrapIcon::class,
-        ...
-    ],
-],
-```
-
-For some Icon classes, there is additional configuration available:
-- `namespace`: Some fonts offer different traits (light, bold, round, ...)
-
-In this case make sure to use an array instead of just the class string:
-```php
-'Icon' => [
-    'sets' => [
-        'material' => [
-            'class' => \Templating\View\Icon\MaterialIcon::class,
-            'namespace' => 'material-symbols-round',
-        ],
-        ...
-    ],
-],
-```
-
-You can also set a global attributes config that would be merged in with every icon:
-```php
-'Icon' => [
-    'sets' => [
-        'material' => [
-            'attributes' => [
-                'data-custom' => 'some-custom-default',
-            ],
-        ],
-        ...
-    ],
-    'attributes' => [
-        'data-default' => 'some-default',
-        ...
-    ],
-],
-```
-
-Don't forget to also set up the necessary stylesheets (CSS files) and alike.
-
-### SVG Mode
-
-Most icon sets can be rendered as inline SVG instead of using icon fonts or data attributes. This provides better customization, accessibility, and consistent rendering across browsers.
-
-SVG rendering supports two modes:
-- **Individual files**: Each icon is loaded from a separate `.svg` file. Use `cache` config to avoid extensive file lookups.
-- **JSON map**: All icons are loaded from a single JSON file containing SVG content.
-
-**JSON map mode is recommended** for better performance as it loads all icon definitions once instead of reading individual files.
-
-#### Bootstrap Icons
-
-```php
-'Icon' => [
-    'sets' => [
-        'bs' => [
-            'class' => \Templating\View\Icon\BootstrapIcon::class,
-            'svgPath' => WWW_ROOT . 'css/bootstrap-icons/icons/',
-        ],
-        ...
-    ],
-],
-```
-
-#### FontAwesome (v4/v5/v6)
-
-```php
-'Icon' => [
-    'sets' => [
         'fa6' => [
             'class' => \Templating\View\Icon\FontAwesome6Icon::class,
-            'svgPath' => WWW_ROOT . 'css/fontawesome/svgs/solid/',
+            'svgPath' => WWW_ROOT . 'fontawesome/svgs/solid/',
+            'cache' => 'default',
         ],
-        ...
+    ],
+    'cache' => 'default',
+    'checkExistence' => true,
+],
+```
+
+### Global Attributes
+
+Set default attributes that apply to all icons:
+
+```php
+'Icon' => [
+    'attributes' => [
+        'data-bs-toggle' => 'tooltip',
+        'class' => 'icon',
+    ],
+    'sets' => [
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'attributes' => [
+                'class' => 'bi', // Set-specific class
+            ],
+        ],
     ],
 ],
 ```
 
-#### Lucide
+### Icon Mapping
 
-Lucide uses individual SVG files. The `lucide-static` package is recommended for SVG rendering:
+Create aliases for easier icon usage:
 
+```php
+'Icon' => [
+    'map' => [
+        'view' => 'bs:eye',
+        'edit' => 'bs:pencil',
+        'delete' => 'fa6:trash',
+        'save' => 'bs:check',
+        'cancel' => 'bs:x',
+        'admin' => 'fa6:shield-halved',
+        'user' => 'fa6:user',
+        'settings' => 'bs:gear',
+    ],
+],
+```
+
+## Rendering Modes Explained
+
+The Icon Helper automatically detects the rendering mode based on your configuration. 
+
+> [!IMPORTANT]
+> There are two different path configurations:
+
+- **`path`** - Used for collecting icon names (metadata files like .json, .less, .ts)
+- **`svgPath`** - Used for rendering SVG icons (either directory of .svg files or .json map)
+
+Here's how each mode works:
+
+### Font-Based Rendering
+
+**When to use:** Simple setups, existing font-based workflows, or when SVG files are not available.
+
+**Configuration:** Only specify the icon class, no `svgPath`:
+```php
+'Icon' => [
+    'sets' => [
+        'bs' => \Templating\View\Icon\BootstrapIcon::class,
+        // Optional: Add 'path' for icon name collection (backend browser)
+        'bs-with-names' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'path' => WWW_ROOT . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
+        ],
+    ],
+],
+```
+
+**Output:** Traditional HTML with CSS classes or data attributes:
+```html
+<i class="bi bi-house"></i>
+<span data-lucide="home"></span>
+<span class="material-icons">home</span>
+```
+
+**Requirements:**
+- Icon font CSS files must be loaded in your layout
+- Font files must be accessible to browsers
+
+### SVG Individual Files
+
+**When to use:** Custom icon sets, selective icon usage, or when JSON maps are not available.
+
+**Configuration:** Set `svgPath` to a directory containing `.svg` files:
 ```php
 'Icon' => [
     'sets' => [
         'lucide' => [
             'class' => \Templating\View\Icon\LucideIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/lucide-static/icons/',
-            'inline' => true, // Optional: compress SVG output
+            'svgPath' => WWW_ROOT . 'node_modules/lucide-static/icons/', // For rendering
+            'path' => WWW_ROOT . 'node_modules/lucide-static/icons/',    // For name collection
+            'cache' => 'default', // Highly recommended for file-based mode
         ],
-        ...
-    ],
-],
-```
-
-**Note**: Unlike Feather Icons, Lucide does not ship with a compatible JSON map file. Individual SVG files must be used.
-
-#### Heroicons
-
-Heroicons supports multiple styles (outline, solid) in different sizes. The size and style can be configured:
-
-```php
-'Icon' => [
-    'sets' => [
         'heroicons' => [
             'class' => \Templating\View\Icon\HeroiconsIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/heroicons/24/',
-            'style' => 'outline', // outline or solid
+            'svgPath' => WWW_ROOT . 'node_modules/heroicons/24/',       // For rendering (includes outline/solid subdirs)
+            'path' => WWW_ROOT . 'node_modules/heroicons/24/',          // For name collection
+            'style' => 'outline', // 'outline' or 'solid'
         ],
-        ...
     ],
 ],
 ```
 
-**Note**: The `svgPath` should include the size directory (16, 20, or 24). The class will append the style subdirectory (e.g., `outline/`, `solid/`).
+**Output:** Inline SVG loaded from individual files:
+```html
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+</svg>
+```
 
-For 20×20 icons, use `'svgPath' => WWW_ROOT . 'node_modules/heroicons/20/'`. The 20px size only supports `solid` style.
+**Performance:** Each icon requires a file system read (cached after first load). Use caching for optimal performance.
 
-#### Feather Icons
+### SVG JSON Map (Recommended)
 
-**JSON Map (Recommended - Better Performance):**
+**When to use:** Production environments, maximum performance, full icon libraries.
+
+**Configuration:** Set `svgPath` to a `.json` file containing all icon definitions:
 ```php
 'Icon' => [
     'sets' => [
         'feather' => [
             'class' => \Templating\View\Icon\FeatherIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',
+            'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json', // For rendering
+            'path' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',    // For name collection
+            'svgAttributes' => [ // Custom SVG wrapper attributes
+                'width' => '20',
+                'height' => '20',
+                'stroke-width' => '1.5',
+            ],
         ],
-        ...
     ],
 ],
 ```
 
-**Individual Files:**
-```php
-'Icon' => [
-    'sets' => [
-        'feather' => [
-            'class' => \Templating\View\Icon\FeatherIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons/',
-        ],
-        ...
-    ],
-],
+**JSON format expected:**
+```json
+{
+  "home": "<path d='M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z'/>",
+  "user": "<circle cx='12' cy='7' r='4'/><path d='M5.5 21v-2a7.5 7.5 0 0115 0v2'/>"
+}
 ```
 
-#### Material Icons
-
-```php
-'Icon' => [
-    'sets' => [
-        'material' => [
-            'class' => \Templating\View\Icon\MaterialIcon::class,
-            'svgPath' => WWW_ROOT . 'css/material-symbols/svg/',
-        ],
-        ...
-    ],
-],
+**Output:** Inline SVG with wrapper attributes:
+```html
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+</svg>
 ```
 
-#### Benefits of SVG Mode
+**Performance:** Single file load, all icons cached in memory.
 
-- More consistent rendering across devices and browsers
-- Greater customization possibilities (e.g., partial hover color changes, multi-color icons)
-- Better accessibility features
-- No need to load icon font files
-- Smaller file sizes when using only a subset of icons
+### SVG Inlining & Optimization
 
-#### JSON Map vs Individual Files
-
-**JSON Map Mode:**
-- Single file load (entire icon library at once)
-- Better performance (no per-icon I/O)
-- Cached in memory and optionally in CakePHP cache
-- Automatically detected when `svgPath` ends with `.json`
-- **Recommended for production**
-
-**Individual Files Mode:**
-- Each icon loaded from separate `.svg` file
-- Useful for development or when using only a few icons
-- Automatically used when `svgPath` points to a directory
-
-The mode is automatically detected based on whether `svgPath` ends with `.json`.
-
-#### Optional: Enable Caching
-
-For better performance, you can enable CakePHP caching for SVG files:
+Control SVG output optimization:
 
 ```php
 'Icon' => [
     'sets' => [
         'bs' => [
             'class' => \Templating\View\Icon\BootstrapIcon::class,
-            'svgPath' => WWW_ROOT . 'css/bootstrap-icons/icons/',
-            'cache' => 'default', // Use your cache configuration name
+            'svgPath' => WWW_ROOT . 'bootstrap-icons/icons/',
+            'inline' => true, // Compress SVG output
         ],
-        ...
     ],
 ],
 ```
-
-When `svgPath` is configured, the icon will be rendered as an inline SVG element loaded from the configured directory or JSON map. Icons are cached in memory per request, and optionally in your configured CakePHP cache for persistence across requests.
-
-#### Customizing SVG Attributes (JSON Map Mode)
-
-When using JSON map mode, you can customize the default SVG wrapper attributes:
-
-```php
-'Icon' => [
-    'sets' => [
-        'feather' => [
-            'class' => \Templating\View\Icon\FeatherIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',
-            'svgAttributes' => [
-                'xmlns' => 'http://www.w3.org/2000/svg',
-                'width' => '24',
-                'height' => '24',
-                'viewBox' => '0 0 24 24',
-                'fill' => 'none',
-                'stroke' => 'currentColor',
-                'stroke-width' => '2',
-                'stroke-linecap' => 'round',
-                'stroke-linejoin' => 'round',
-            ],
-        ],
-        ...
-    ],
-],
-```
-
-These attributes are used as defaults when wrapping the SVG content from the JSON map. Custom attributes passed during rendering will override these defaults.
-
-#### SVG Inlining
-
-When using SVG rendering, you can control the `inline` option to optimize SVG output by removing HTML comments and compressing whitespace. This reduces file size and improves page load performance.
-
-```php
-'Icon' => [
-    'sets' => [
-        'lucide' => [
-            'class' => \Templating\View\Icon\LucideIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/lucide-static/icons/',
-            'inline' => true, // Explicitly enable inlining
-        ],
-        'bootstrap' => [
-            'class' => \Templating\View\Icon\BootstrapIcon::class,
-            'svgPath' => WWW_ROOT . 'css/bootstrap-icons/icons/',
-            'inline' => false, // Explicitly disable inlining
-        ],
-        ...
-    ],
-],
-```
-
-The inlining process:
-- Removes HTML comments (e.g., `<!-- license information -->`)
-- Strips unnecessary whitespace and newlines
-- Preserves spaces within quoted attribute values
-- Compresses the SVG while maintaining functionality
 
 **Default Behavior:**
-- **Production** (`Configure::read('debug') === false`): `inline` defaults to `true`
-- **Development** (`Configure::read('debug') === true`): `inline` defaults to `false`
-
-This ensures optimized output in production while preserving readable formatting during development.
+- **Production** (`debug = false`): `inline = true` (compressed)
+- **Development** (`debug = true`): `inline = false` (readable)
 
 **Before inlining:**
 ```xml
-<!-- @license lucide-static v0.545.0 - ISC -->
+<!-- Bootstrap Icons v1.11.0 -->
 <svg
-  class="lucide lucide-home"
+  class="bi bi-house"
   xmlns="http://www.w3.org/2000/svg"
-  width="24"
-  height="24"
+  width="16"
+  height="16"
 >
-  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+  <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
 </svg>
 ```
 
 **After inlining:**
 ```xml
-<svg class="lucide lucide-home" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/></svg>
+<svg class="bi bi-house" xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/></svg>
 ```
 
-You can explicitly set `inline` to override the debug-based default for specific icon sets.
+### Caching System
+
+Enable caching for better performance using global and/or per-set configuration:
+
+```php
+'Icon' => [
+    'cache' => 'default', // Global cache - used for icon name lists (names() method)
+    'sets' => [
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'svgPath' => WWW_ROOT . 'bootstrap-icons/icons/',
+            'cache' => 'icons', // Per-set cache - used for SVG content caching
+        ],
+        'fa6' => [
+            'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+            'svgPath' => WWW_ROOT . 'fontawesome/svgs/solid/',
+            // No cache specified - inherits global 'default' cache
+        ],
+    ],
+],
+```
+
+**Cache Configuration Levels:**
+
+1. **Global Cache** (`'cache' => 'default'`)
+   - Caches icon name lists from `names()` method
+   - Used by IconCollection for backend browser performance
+   - Applies to all sets unless overridden
+
+2. **Per-Set Cache** (`sets.bs.cache`)
+   - Caches SVG file content when using `svgPath`
+   - Allows fine-tuning different cache backends per icon set
+   - Overrides global cache setting for that specific set
+
+**Two-tier caching system:**
+1. **In-memory cache** - Caches content per request (automatic)
+2. **CakePHP cache** - Persists across requests using your cache configuration
 
 ## Usage
 
-### render()
-Display font icons using the default namespace or an already aliased one.
+### Basic Rendering
+
 ```php
-echo $this->Html->link(
-    $this->Icon->render('view', $options, $attributes),
-    $url,
-);
+// Render using alias
+echo $this->Icon->render('home');
+
+// Render with explicit namespace
+echo $this->Icon->render('bs:house');
+
+// Render with attributes
+echo $this->Icon->render('user', [], ['class' => 'text-primary', 'title' => 'User Profile']);
 ```
 
-You can alias them via Configure for more usability:
+### Icon Prefixes & Auto-Prefixing
+
+The Icon Helper provides flexible prefixing to handle multiple icon sets:
+
+#### Auto-Prefixing (Default Behavior)
+
+By default, `autoPrefix` is enabled, which automatically creates unprefixed aliases for all icons:
+
 ```php
-// In app.php
+'Icon' => [
+    'autoPrefix' => true, // Default - creates automatic mappings
+    'sets' => [
+        'bs' => \Templating\View\Icon\BootstrapIcon::class,
+        'fa6' => \Templating\View\Icon\FontAwesome6Icon::class,
+    ],
+],
+
+// All these work without prefixes (first match wins)
+echo $this->Icon->render('home');     // Uses bs:home (first set)
+echo $this->Icon->render('house');    // Uses bs:house
+echo $this->Icon->render('user');     // Uses bs:user or fa6:user (whichever is found first)
+
+// Explicit prefixes always work
+echo $this->Icon->render('bs:house');
+echo $this->Icon->render('fa6:user');
+```
+
+#### Manual Prefixing Only
+
+Disable auto-prefixing to require explicit prefixes:
+
+```php
+'Icon' => [
+    'autoPrefix' => false, // Disable automatic mappings
+    'sets' => [
+        'bs' => \Templating\View\Icon\BootstrapIcon::class,
+        'fa6' => \Templating\View\Icon\FontAwesome6Icon::class,
+    ],
+    'map' => [
+        'home' => 'bs:house',   // Manual aliases only
+        'user' => 'fa6:user',
+    ],
+],
+
+// Only explicit prefixes and manual mappings work
+echo $this->Icon->render('bs:house');  // ✓ Works
+echo $this->Icon->render('fa6:user');  // ✓ Works
+echo $this->Icon->render('home');      // ✓ Works (manual mapping)
+echo $this->Icon->render('house');     // ✗ Fails (no mapping, no auto-prefix)
+```
+
+#### Handling Icon Conflicts
+
+When multiple sets have the same icon name:
+
+```php
+'Icon' => [
+    'sets' => [
+        'bs' => \Templating\View\Icon\BootstrapIcon::class,    // First set (default)
+        'fa6' => \Templating\View\Icon\FontAwesome6Icon::class,
+    ],
+],
+
+// Both sets have a "home" icon
+echo $this->Icon->render('home');     // Uses Bootstrap (first set)
+echo $this->Icon->render('bs:home');  // Explicitly Bootstrap
+echo $this->Icon->render('fa6:home'); // Explicitly FontAwesome
+
+// Use manual mapping to resolve conflicts
 'Icon' => [
     'map' => [
-        'view' => 'bs:eye',
-        'translate' => 'bs:translate',
-        ...
+        'home' => 'bs:house',        // Use Bootstrap house for "home"
+        'home-alt' => 'fa6:home',    // Alternative FontAwesome home
     ],
 ],
-
-// in the template
-echo $this->Icon->render('translate', [], ['title' => __('Translate this')]);
-```
-This way you can also rename icons (and map them in any custom way)
-
-Such aliasing can be especially useful to give some icons more meaningful way for your specific use case:
-```php
-    'details' => 'fas:chevron-right',
-    'delete' => 'fas:trash',
-    'female' => 'fas:venus',
-    'male' => 'fas:mars',
-    'yes' => 'fas:check',
-    'no' => 'fas:times',
-    'repeat' => 'bs:arrow-clockwise',
-    'config' => 'fas:cogs',
-    'admin' => 'fas:shield',
-    ...
 ```
 
-Especially if you have multiple icon sets defined, any icon set after the first one would require prefixing for colliding icon names:
+### Attributes & Options
+
 ```php
-echo $this->Html->link(
-    $this->Icon->render('bs:view', $options, $attributes),
-    $url,
+echo $this->Icon->render('settings',
+    ['translate' => false], // Options
+    ['class' => 'icon-lg', 'data-toggle' => 'tooltip'] // HTML attributes
 );
 ```
-This would also be needed if you set `autoPrefix` config to `false`. Then only the alias map would be used here.
 
-### names()
-You can get a nested list of all configured and available icons.
+**Available options:**
+- `translate` (bool): Whether to translate the title attribute
+- `titleField` (string): Attribute name for auto-generated titles
+- `title` (string|false): Custom title or disable auto-title
 
-For this make sure to set up the path config to the icon meta files or directories as per each collector.
+### Getting Available Icons
 
-**Note**: Collectors can accept either:
-- A **JSON file** path (e.g., `bootstrap-icons.json`, `icons.json`) - faster parsing
-- A **directory** path containing `.svg` files - will scan and extract icon names automatically
-
-**Caching**: Icon names are cached using a two-tier approach:
-1. **In-memory cache** - Collectors cache results per request (no repeated directory scans)
-2. **CakePHP cache** - IconCollection caches the full list using your configured cache backend (persists across requests)
-
-This means directory scanning only happens on the first cache miss, then results are cached for optimal performance.
-
-E.g.:
-```php
-'Icon' => [
-    // For being able to parse the available icons
-    'sets' => [
-        'fa' => [
-            ...
-            'path' => '/path/to/font-awesome/less/variables.less',
-        ],
-        'bs' => [
-            ...
-            'path' => '/path/to/bootstrap-icons/font/bootstrap-icons.json',
-        ],
-        'feather' => [
-            ...
-            'path' => '/path/to/feather-icons/dist/icons.json',
-        ],
-        'lucide' => [
-            ...
-            // Can point to either:
-            // - A directory containing .svg files (recommended): '/path/to/lucide-static/icons/'
-            // - A custom JSON file with format {"icon-name": "svg-content", ...}
-            'path' => '/path/to/lucide-static/icons/',
-        ],
-        'heroicons' => [
-            ...
-            // Can point to either:
-            // - A directory (recommended): '/path/to/heroicons/24/' (will scan outline/ and solid/ subdirs)
-            // - A custom JSON file with format {"icon-name": "svg-content", ...}
-            'path' => '/path/to/heroicons/24/',
-        ],
-        'material' => [
-            ...
-            'path' => '/path/to/material-symbols/index.d.ts',
-        ],
-        ...
-    ],
-],
-```
-
-You can then use this to iterate over all of them for display:
 ```php
 $icons = $this->Icon->names();
-foreach ($icons as $iconSet => $list) {
-    foreach ($list as $icon) {
-        ...
+foreach ($icons as $iconSet => $iconList) {
+    echo "Icon set: {$iconSet}\n";
+    foreach ($iconList as $icon) {
+        echo "  - {$icon}\n";
     }
 }
 ```
 
-## Configuration
+**Example output:**
+```
+Icon set: bs
+  - house
+  - gear
+  - person
+Icon set: fa6
+  - home
+  - user
+  - cog
+```
 
-You can enable `checkExistence` to ensure each icon exists or otherwise throws a warning in logs:
+## Icon Set Configurations
+
+### Bootstrap Icons
+
+**Font-based rendering:**
 ```php
-'Icon' => [
-    'checkExistence' => true,
-    ...
+'bs' => [
+    'class' => \Templating\View\Icon\BootstrapIcon::class,
+    'path' => WWW_ROOT . 'node_modules/bootstrap-icons/font/bootstrap-icons.json', // For names() method
+],
+// Output: <i class="bi bi-house"></i>
+```
+
+**SVG individual files:**
+```php
+'bs' => [
+    'class' => \Templating\View\Icon\BootstrapIcon::class,
+    'svgPath' => WWW_ROOT . 'node_modules/bootstrap-icons/icons/', // Directory with .svg files
+    'path' => WWW_ROOT . 'node_modules/bootstrap-icons/font/bootstrap-icons.json', // For names() method
+    'cache' => 'default', // Recommended for file-based mode
+],
+// Output: <svg>...</svg> (loaded from individual .svg files)
+```
+
+### FontAwesome
+
+**Font-based rendering (FontAwesome 6):**
+```php
+'fa6' => [
+    'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+    'path' => WWW_ROOT . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json', // For names() method
+],
+// Output: <i class="fas fa-home"></i>
+```
+
+**SVG individual files (FontAwesome 6):**
+```php
+'fa6' => [
+    'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+    'svgPath' => WWW_ROOT . 'node_modules/@fortawesome/fontawesome-free/svgs/solid/', // Directory with .svg files
+    'path' => WWW_ROOT . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json', // For names() method
+    'cache' => 'default', // Recommended for file-based mode
+],
+// Output: <svg>...</svg> (loaded from individual .svg files)
+```
+
+**Multiple styles with SVG:**
+```php
+'fa6-solid' => [
+    'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+    'svgPath' => WWW_ROOT . 'fontawesome/svgs/solid/', // SVG individual files mode
+    'namespace' => 'solid',
+    'cache' => 'default',
+],
+'fa6-regular' => [
+    'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+    'svgPath' => WWW_ROOT . 'fontawesome/svgs/regular/', // SVG individual files mode
+    'namespace' => 'regular',
+    'cache' => 'default',
 ],
 ```
 
-You can define caching for the icon lists for performance - defaults to `'default'` cache engine.
+### Lucide Icons
+
+**Font-based rendering:**
 ```php
-'Icon' => [
-    'cache' => ...,
-    ...
+'lucide' => [
+    'class' => \Templating\View\Icon\LucideIcon::class,
+    'path' => WWW_ROOT . 'node_modules/lucide-static/icons/', // For names() method
+],
+// Output: <span data-lucide="home"></span>
+```
+
+**SVG individual files (recommended for Lucide):**
+```php
+'lucide' => [
+    'class' => \Templating\View\Icon\LucideIcon::class,
+    'svgPath' => WWW_ROOT . 'node_modules/lucide-static/icons/', // Directory with .svg files
+    'path' => WWW_ROOT . 'node_modules/lucide-static/icons/', // For names() method
+    'cache' => 'default', // Highly recommended
+    'inline' => true, // Compress SVG output
+],
+// Output: <svg>...</svg> (loaded from individual .svg files)
+```
+
+> [!NOTE]
+> Lucide does not provide JSON map files, so individual file mode is the only SVG option.
+
+**Example usage:**
+```php
+echo $this->Icon->render('lucide:home');
+echo $this->Icon->render('lucide:user-circle');
+```
+
+### Heroicons
+
+**Font-based rendering:**
+```php
+'heroicons' => [
+    'class' => \Templating\View\Icon\HeroiconsIcon::class,
+    'path' => WWW_ROOT . 'node_modules/heroicons/24/', // For names() method
+    'style' => 'outline', // 'outline' or 'solid'
+],
+// Output: <span class="heroicon-outline"></span>
+```
+
+**SVG individual files:**
+```php
+'heroicons' => [
+    'class' => \Templating\View\Icon\HeroiconsIcon::class,
+    'svgPath' => WWW_ROOT . 'node_modules/heroicons/24/', // Directory with style subdirs
+    'path' => WWW_ROOT . 'node_modules/heroicons/24/', // For names() method
+    'style' => 'outline', // 'outline' or 'solid'
+    'cache' => 'default',
+],
+// Output: <svg>...</svg> (loaded from 24/outline/*.svg or 24/solid/*.svg)
+```
+
+**Different sizes with SVG:**
+```php
+// 24x24 icons (outline and solid styles available)
+'heroicons-24' => [
+    'class' => \Templating\View\Icon\HeroiconsIcon::class,
+    'svgPath' => WWW_ROOT . 'node_modules/heroicons/24/', // SVG individual files mode
+    'style' => 'outline',
+    'cache' => 'default',
+],
+
+// 20x20 icons (solid only)
+'heroicons-20' => [
+    'class' => \Templating\View\Icon\HeroiconsIcon::class,
+    'svgPath' => WWW_ROOT . 'node_modules/heroicons/20/', // SVG individual files mode
+    'style' => 'solid', // Only solid available for 20px
+    'cache' => 'default',
 ],
 ```
-Set it to `false` if you want to not cache it.
 
+### Feather Icons
 
-## Backend
+**Font-based (data attributes):**
+```php
+'feather' => [
+    'class' => \Templating\View\Icon\FeatherIcon::class,
+    // No svgPath - uses data-feather attributes for client-side rendering
+    'path' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json', // For name collection
+],
+```
 
-### Accessing the Icon Browser
+**SVG JSON Map (Recommended):**
+```php
+'feather' => [
+    'class' => \Templating\View\Icon\FeatherIcon::class,
+    'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json', // JSON map for rendering
+    'path' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',    // Same file for names
+    'svgAttributes' => [
+        'width' => '20',
+        'height' => '20',
+        'stroke-width' => '1.5',
+    ],
+],
+```
 
-The plugin provides a built-in icon browser interface at:
+**SVG Individual Files:**
+```php
+'feather' => [
+    'class' => \Templating\View\Icon\FeatherIcon::class,
+    'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons/',    // Directory of .svg files
+    'path' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',   // JSON file for names
+    'cache' => 'default',
+],
+```
+
+### Material Icons
+
+**Font-based (CSS classes with text content):**
+```php
+'material' => [
+    'class' => \Templating\View\Icon\MaterialIcon::class,
+    'namespace' => 'material-icons', // CSS class name
+    // For name collection from TypeScript definitions
+    'path' => WWW_ROOT . 'node_modules/material-symbols/index.d.ts',
+],
+```
+
+**SVG Individual Files:**
+```php
+'material' => [
+    'class' => \Templating\View\Icon\MaterialIcon::class,
+    'svgPath' => WWW_ROOT . 'node_modules/material-symbols/svg/',        // Directory of .svg files
+    'path' => WWW_ROOT . 'node_modules/material-symbols/index.d.ts',     // TypeScript file for names
+    'namespace' => 'material-symbols-outlined', // Used for font fallback
+    'cache' => 'default',
+],
+```
+
+**Different Material Icon styles:**
+```php
+'material-outlined' => [
+    'class' => \Templating\View\Icon\MaterialIcon::class,
+    'svgPath' => WWW_ROOT . 'material-symbols/outlined/',
+    'path' => WWW_ROOT . 'material-symbols/index.d.ts',
+    'namespace' => 'material-symbols-outlined',
+],
+'material-rounded' => [
+    'class' => \Templating\View\Icon\MaterialIcon::class,
+    'svgPath' => WWW_ROOT . 'material-symbols/rounded/',
+    'path' => WWW_ROOT . 'material-symbols/index.d.ts',
+    'namespace' => 'material-symbols-rounded',
+],
+'material-sharp' => [
+    'class' => \Templating\View\Icon\MaterialIcon::class,
+    'svgPath' => WWW_ROOT . 'material-symbols/sharp/',
+    'path' => WWW_ROOT . 'material-symbols/index.d.ts',
+    'namespace' => 'material-symbols-sharp',
+],
+```
+
+**Example output:**
+```php
+// Font mode
+echo $this->Icon->render('home');
+// <span class="material-icons">home</span>
+
+// SVG mode
+echo $this->Icon->render('home');
+// <svg>...</svg>
+```
+
+## Configuration Reference
+
+### Complete Configuration Options
+
+```php
+'Icon' => [
+    // Global settings
+    'cache' => 'default',           // Cache configuration name or false to disable
+    'checkExistence' => true,       // Validate icon names exist (disable in production)
+    'autoPrefix' => true,          // Auto-create unprefixed aliases for all icons
+    'separator' => ':',            // Separator for namespaced icons (set:icon)
+
+    // Global attributes applied to all icons
+    'attributes' => [
+        'data-toggle' => 'tooltip',
+        'class' => 'icon',
+    ],
+
+    // Icon aliases/mapping
+    'map' => [
+        'home' => 'bs:house',
+        'user' => 'fa6:user',
+        'settings' => 'bs:gear',
+    ],
+
+    // Icon sets configuration
+    'sets' => [
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+
+            // Icon name collection (for backend browser, IDE helper)
+            'path' => WWW_ROOT . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
+
+            // SVG rendering (optional)
+            'svgPath' => WWW_ROOT . 'node_modules/bootstrap-icons/icons/',
+
+            // Caching (inherits global if not set)
+            'cache' => 'icons',
+
+            // SVG optimization (defaults based on debug mode)
+            'inline' => true,
+
+            // Set-specific attributes
+            'attributes' => [
+                'class' => 'bi-icon',
+            ],
+
+            // Additional icon-specific config
+            'namespace' => 'custom-namespace',  // For Material Icons
+            'style' => 'outline',              // For Heroicons
+            'svgAttributes' => [               // For JSON map SVG wrapper
+                'width' => '20',
+                'height' => '20',
+                'stroke-width' => '1.5',
+            ],
+        ],
+    ],
+],
+```
+
+### Path Configuration Types
+
+Different icon sets support different metadata file formats:
+
+| Icon Set | Supported Path Formats |
+|----------|------------------------|
+| **Bootstrap** | `.json` (bootstrap-icons.json) |
+| **FontAwesome 4** | `.less`, `.scss` (variables files) |
+| **FontAwesome 5/6** | `.json`, `.yml` (icons metadata) |
+| **Feather** | `.json` (icons.json) |
+| **Heroicons** | `.json`, directory with `outline/` and `solid/` subdirs |
+| **Lucide** | `.json`, directory of `.svg` files |
+| **Material** | `.ts` (TypeScript definitions) |
+
+### SVG Path Configuration Types
+
+For SVG rendering, different formats are supported:
+
+| Format | Description | Performance | Use Case |
+|--------|-------------|-------------|----------|
+| **JSON Map** | Single `.json` file with all icons | Best | Production |
+| **Directory** | Folder containing `.svg` files | Good (with cache) | Selective usage |
+| **Subdirectories** | Style-based subdirs (Heroicons) | Good (with cache) | Multi-style icons |
+
+### Configuration Inheritance
+
+Settings inherit in this order (higher priority overwrites lower):
+
+1. **Method parameters** (render options/attributes)
+2. **Set-specific config** (`sets.bs.attributes`)
+3. **Global config** (`attributes`)
+4. **Helper defaults** (built-in defaults)
+
+Example:
+```php
+'Icon' => [
+    'attributes' => ['class' => 'global-icon'],           // Priority 3
+    'sets' => [
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'attributes' => ['class' => 'bs-icon'],       // Priority 2
+        ],
+    ],
+],
+
+// In template
+echo $this->Icon->render('home', [], ['class' => 'custom']); // Priority 1
+// Result: class="bi bi-home custom" (built-in + method parameter)
+```
+
+### Icon Resolution Order
+
+When `autoPrefix` is enabled, icons are resolved in this order:
+
+1. **Manual mappings** (`map` configuration)
+2. **Explicit prefixes** (`set:icon` syntax)
+3. **Auto-prefixed icons** (first-match from all sets)
+4. **Default set** (first configured set)
+
+```php
+'Icon' => [
+    'autoPrefix' => true,
+    'map' => ['home' => 'fa6:house'],           // 1. Manual mapping wins
+    'sets' => [
+        'bs' => \Templating\View\Icon\BootstrapIcon::class,    // 4. Default set
+        'fa6' => \Templating\View\Icon\FontAwesome6Icon::class,
+    ],
+],
+
+echo $this->Icon->render('home');        // Uses fa6:house (manual mapping)
+echo $this->Icon->render('fa6:home');    // Uses fa6:home (explicit prefix)
+echo $this->Icon->render('gear');        // Uses bs:gear (auto-prefix, first found)
+```
+
+## Backend Browser
+
+The plugin provides a built-in icon browser interface accessible at:
 ```
 /admin/templating/icons
 ```
 
-The backend routes are automatically enabled when you load the plugin.
-The plugin's `routes()` method automatically registers the admin prefix routes in `src/TemplatingPlugin.php:30-36`.
+**Features:**
+- Browse all configured icon sets
+- View icon conflicts between sets
+- Test icon rendering
+- Copy icon names for use in templates
 
-### What the Icon Browser Shows
-
-The icon browser interface displays:
-- **Custom mapped icons** - Your icon aliases from `Icon.map` configuration
-- **Available icons** - All icons from configured icon sets
-- **Full icon sets** - Complete namespaced icon collections (e.g., `bs:`, `fa6:`)
-- **Conflicts** - Icons with the same name in different sets
-
-### Handling Icon Conflicts
-
-When multiple icon sets contain icons with the same name, the order defined in your configuration determines which icon is used by default.
-
-For conflicting icons you have two options:
-1. **Use aliasing** - Map the icon to a specific set in your `Icon.map` config:
-   ```php
-   'Icon' => [
-       'map' => [
-           'home' => 'bs:house',  // Use Bootstrap's house icon for 'home'
-           'home-alt' => 'fa6:house',  // Use FontAwesome's house icon as alternative
-       ],
-   ],
-   ```
-
-2. **Use explicit syntax** - Use the verbose `set:name` syntax directly in templates:
-   ```php
-   // Use Bootstrap version
-   echo $this->Icon->render('bs:star');
-
-   // Use FontAwesome version
-   echo $this->Icon->render('fa6:star');
-   ```
-
-### Restricting Access
-
-The backend is accessible at the `Admin` prefix. You should secure this route using authentication/authorization in your application.
-
-## Tips
-
-Check out [animations](https://fontawesome.com/docs/web/style/animate) and
-other cool things you can add for FontAwesome icons, which are by far the
-most powerful and most used ones.
-
-## Auto-Complete
-Now for the most powerful feature and probably most helpful one:
-Let your IDE (e.g. PHPStorm) provide you the available icons when you type `$this->Icon->render(` and quick-select from the dropdown list.
-
-Use [IdeHelper plugin](https://github.com/dereuromark/cakephp-ide-helper/) here to get full autocomplete for the icon names as input for `render($name)`.
-This requires an IDE that can understand the meta-data (e.g. PHPStorm).
-Just add the `IconRenderTask` shipped with this plugin and you are all set.
-
+**Securing Access:**
 ```php
-    'IdeHelper' => [
-        ...
-        'generatorTasks' => [
-            \Templating\Generator\Task\IconRenderTask::class,
-        ],
+// In your routes.php or controller
+$routes->prefix('Admin', function (RouteBuilder $builder) {
+    $builder->connect('/templating/icons', [
+        'plugin' => 'Templating',
+        'controller' => 'Icons',
+        'action' => 'index',
+        '_auth' => true, // Require authentication
+    ]);
+});
 ```
 
-## Demo
-https://sandbox.dereuromark.de/sandbox/templating-examples/icons
+## Performance & Caching
 
-## Writing your own class
-You mainly need to set up your own template string and how it should render:
+### Cache Configuration
+
+You can configure caching at the **global level** (applies to all sets) or **per-set level** (fine-tune individual sets):
+
 ```php
-class YourIcon extends AbstractIcon {
+'Icon' => [
+    'cache' => 'default', // Global cache - used for icon name lists
+    'sets' => [
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'svgPath' => WWW_ROOT . 'bootstrap-icons/icons/',
+            'cache' => 'icons', // Per-set cache - overrides global for SVG content
+        ],
+        'fa6' => [
+            'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+            'svgPath' => WWW_ROOT . 'fontawesome/svgs/solid/',
+            // No cache specified - inherits global 'default' cache
+        ],
+    ],
+],
+```
 
-	public function __construct(array $config = []) {
-		$config += [
-			'template' => '<span class="{{class}}...></span>',
-		];
+**Cache levels:**
+- **Global cache**: Caches icon name lists (`names()` method results)
+- **Per-set cache**: Caches SVG content for individual icon sets
+- **Inheritance**: Sets inherit global cache unless explicitly overridden
 
-		parent::__construct($config);
-	}
+### Cache Storage Types
 
-	public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable {
-	    ...
-	}
+**File Cache (Default):**
+```php
+// In config/app.php
+'Cache' => [
+    'icons' => [
+        'className' => 'Cake\Cache\Engine\FileEngine',
+        'duration' => '+1 days',
+        'path' => CACHE . 'icons/',
+    ],
+],
+```
 
-	public function names(): array {
-		$path = $this->path();
+**Redis Cache:**
+```php
+'Cache' => [
+    'icons' => [
+        'className' => 'Cake\Cache\Engine\RedisEngine',
+        'duration' => '+1 days',
+        'host' => '127.0.0.1',
+        'port' => 6379,
+    ],
+],
+```
 
-		return YourCollector::collect($path);
-	}
+### Performance Tips
 
+1. **Use JSON Map mode** for icon sets that support it
+2. **Enable caching** in production environments
+3. **Use SVG inlining** to reduce HTTP requests
+4. **Configure appropriate cache duration** based on deployment frequency
+
+## IDE Auto-Complete
+
+Get full auto-completion for icon names using the [IdeHelper plugin](https://github.com/dereuromark/cakephp-ide-helper/):
+
+### 1. Install IdeHelper
+
+```bash
+composer require --dev dereuromark/cakephp-ide-helper
+```
+
+### 2. Configure Generator Task
+
+```php
+// In config/app.php
+'IdeHelper' => [
+    'generatorTasks' => [
+        \Templating\Generator\Task\IconRenderTask::class,
+    ],
+],
+```
+
+### 3. Generate Annotations
+
+```bash
+ddev exec bin/cake ide_helper generate
+```
+
+### 4. IDE Auto-Complete
+
+Your IDE will now provide auto-completion for:
+```php
+$this->Icon->render('| // Auto-complete shows available icons
+```
+
+## Creating Custom Icon Sets
+
+### 1. Create Icon Class
+
+```php
+<?php declare(strict_types=1);
+
+namespace App\View\Icon;
+
+use Templating\View\Icon\AbstractIcon;
+use Templating\View\HtmlStringable;
+
+class CustomIcon extends AbstractIcon {
+
+    public function __construct(array $config = []) {
+        $config += [
+            'template' => '<i class="custom-{{name}}"{{attributes}}></i>',
+        ];
+
+        parent::__construct($config);
+    }
+
+    public function names(): array {
+        // Return array of available icon names
+        return ['icon1', 'icon2', 'icon3'];
+    }
+
+    public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable {
+        if (!empty($this->config['attributes'])) {
+            $attributes += $this->config['attributes'];
+        }
+
+        $options['name'] = $icon;
+        $options['attributes'] = $this->template->formatAttributes($attributes);
+
+        return $this->format($options);
+    }
 }
 ```
-Now you can hook it into your config and enjoy!
 
-## Supported Icon Sets
+### 2. Register Icon Set
 
-Currently supported icon sets with full SVG rendering capability:
-- **Bootstrap Icons** - 1800+ icons, MIT license
-- **FontAwesome** (v4/v5/v6) - 2000+ icons (free tier), Font Awesome license
-- **Lucide** - 1000+ icons, ISC license (modern Feather fork)
-- **Heroicons** - 300+ icons with multiple styles, MIT license (by Tailwind CSS)
-- **Feather** - 280+ icons, MIT license
-- **Material Icons** - Google's icon set, Apache 2.0 license
+```php
+'Icon' => [
+    'sets' => [
+        'custom' => \App\View\Icon\CustomIcon::class,
+    ],
+],
+```
 
-## TODO
-TBD:
-- `@icon/icofont` ( https://icofont.com/ )
-- https://fontello.com/
-- Tabler Icons (4000+ icons)
-- Phosphor Icons (6000+ icons)
+### 3. Use Custom Icons
 
-Help welcome!
+```php
+echo $this->Icon->render('custom:icon1');
+```
+
+## Tips & Best Practices
+
+### Icon Mapping Strategy
+
+Create semantic aliases for better maintainability:
+
+```php
+'Icon' => [
+    'map' => [
+        // Actions
+        'create' => 'bs:plus-circle',
+        'edit' => 'bs:pencil',
+        'delete' => 'bs:trash',
+        'save' => 'bs:check-circle',
+        'cancel' => 'bs:x-circle',
+
+        // Navigation
+        'home' => 'bs:house',
+        'back' => 'bs:arrow-left',
+        'next' => 'bs:arrow-right',
+
+        // Status
+        'success' => 'bs:check-circle-fill',
+        'warning' => 'bs:exclamation-triangle-fill',
+        'error' => 'bs:x-circle-fill',
+        'info' => 'bs:info-circle-fill',
+    ],
+],
+```
+
+### Accessibility
+
+Always provide meaningful titles:
+
+```php
+echo $this->Icon->render('delete', [], [
+    'title' => __('Delete this item'),
+    'aria-label' => __('Delete'),
+]);
+```
+
+### Performance in Production
+
+```php
+'Icon' => [
+    'cache' => 'default',
+    'checkExistence' => false, // Disable in production
+    'sets' => [
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'svgPath' => WWW_ROOT . 'icons/bootstrap-icons.json', // Use JSON map
+            'inline' => true, // Enable compression
+            'cache' => 'default',
+        ],
+    ],
+],
+```
+
+### CSS Integration
+
+For consistent styling across icon sets:
+
+```css
+.icon {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.icon-sm { width: 0.875em; height: 0.875em; }
+.icon-lg { width: 1.25em; height: 1.25em; }
+.icon-xl { width: 1.5em; height: 1.5em; }
+```
+
+### Animation Support
+
+For FontAwesome animations:
+
+```php
+echo $this->Icon->render('fa6:spinner', [], [
+    'class' => 'fa-spin',
+    'title' => __('Loading...'),
+]);
+```
+
+### Responsive Icons
+
+```php
+echo $this->Icon->render('home', [], [
+    'class' => 'd-none d-md-inline', // Hide on mobile
+]);
+```
+
+---
+
+**Demo:** https://sandbox.dereuromark.de/sandbox/templating-examples/icons
+
+**Repository:** https://github.com/dereuromark/cakephp-templating
