@@ -674,7 +674,7 @@ Icon set: fa6
 ```
 
 > [!NOTE]
-> Lucide does not provide JSON map files, so individual file mode is the only SVG option.
+> As of the current version, Lucide does not provide JSON map files, so individual file mode is the only SVG option.
 
 **Example usage:**
 ```php
