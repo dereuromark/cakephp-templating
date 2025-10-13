@@ -34,9 +34,23 @@ and
 bin/cake plugin load Templating
 ```
 
-## Usage
+## Documentation
 
-See [Docs](/docs).
+### Core Helpers
+
+- **[Icon Helper](docs/Helper/Icon.md)** - Comprehensive icon rendering with support for Bootstrap, FontAwesome, Material, Feather, Lucide, and Heroicons
+- **[IconSnippet Helper](docs/Helper/IconSnippet.md)** - Convenience wrappers for common icon snippet use cases
+- **[Html Helper](docs/Helper/Html.md)** - Enhanced HtmlHelper with automatic `HtmlStringable` support
+- **[Form Helper](docs/Helper/Form.md)** - Enhanced FormHelper with automatic `HtmlStringable` support
+- **[Templating Helper](docs/Helper/Templating.md)** - Useful templating functionality for colored status indicators
+
+### Core Concepts
+
+- **[HtmlStringable](docs/HtmlStringable.md)** - Make your template code HTML aware with the `Html` value object
+
+### Quick Start
+
+See [Complete Documentation](docs/README.md) for full details.
 
 ## Demo
 See [sandbox.dereuromark.de/sandbox/templating-examples](https://sandbox.dereuromark.de/sandbox/templating-examples).
