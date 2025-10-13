@@ -1178,6 +1178,8 @@ echo $this->Icon->render('delete', [], [
 ]);
 ```
 
+Note: When using aliasing, the title will by default be set to the same name. So aliasing helps to improve the out of the box title building if given speaking aliases.
+
 ### Performance in Production
 
 ```php
