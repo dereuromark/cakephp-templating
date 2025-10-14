@@ -31,7 +31,7 @@ echo $this->Html->link(
 
 // With icon and text
 echo $this->Html->link(
-    $this->Html->string($this->Icon->render('bs:eye') . ' ' __('View')),
+    $this->Html->string($this->Icon->render('bs:eye') . ' ' . __('View')),
     ['action' => 'view', $id],
     ['title' => __('View me')],
 );
