@@ -22,17 +22,20 @@ All methods work exactly like the core FormHelper methods, but with additional `
 Creates a button element with optional icon or HTML content.
 
 ```php
-// With icon
-echo $this->Form->button(
-    $this->Icon->render('save') . ' Save',
-);
-
-// With HtmlStringable (automatically handles escaping)
+// With only icon
 echo $this->Form->button(
     $this->Icon->render('save'),
-    ['type' => 'submit']
+    //['escapeTitle' => false] is not necessary as it handles this internally
+);
+
+// Adding extra text requires wrapping
+echo $this->Form->button(
+    $this->Html->string($this->Icon->render('save') . ' ' . __('Save')),
+    ['type' => 'submit'],
 );
 ```
+
+Note: When adding text, make sure it is safe and valid HTML, otherwise h() wrap it.
 
 #### postLink()
 Creates a link that submits a POST request with optional icon or HTML content.
@@ -40,9 +43,9 @@ Creates a link that submits a POST request with optional icon or HTML content.
 ```php
 // With icon
 echo $this->Form->postLink(
-    $this->Icon->render('delete') . ' Delete',
+    $this->Icon->render('delete'),
     ['action' => 'delete', $id],
-    ['confirm' => 'Are you sure?']
+    ['confirm' => 'Are you sure?'],
 );
 ```
 
@@ -52,9 +55,9 @@ Creates a button that submits a POST request with optional icon or HTML content.
 ```php
 // With icon
 echo $this->Form->postButton(
-    $this->Icon->render('trash') . ' Remove',
+    $this->Icon->render('trash'),
     ['action' => 'remove', $id],
-    ['confirm' => 'Remove this item?']
+    ['confirm' => 'Remove this item?'],
 );
 ```
 
@@ -70,31 +73,30 @@ This means you don't need to manually set `'escapeTitle' => false` when using ic
 ## Example Usage
 
 ```php
-// Traditional way (still works)
+// Icon only - automatic handling (no escapeTitle needed)
 echo $this->Form->button(
-    $this->Icon->render('save') . ' Save Record',
-    ['escapeTitle' => false]
-);
-
-// New way (automatic handling)
-echo $this->Form->button(
-    $this->Icon->render('save') . ' Save Record'
+    $this->Icon->render('save'),
+    ['type' => 'submit']
 );
 
 // Complex example with postLink
 echo $this->Form->postLink(
-    $this->Icon->render('bs:trash') . ' ' . __('Delete'),
+    $this->Html->string($this->Icon->render('bs:trash') . ' ' . __('Delete')),
     ['action' => 'delete', $record->id],
     [
         'confirm' => __('Are you sure you want to delete {0}?', $record->name),
-        'class' => 'btn btn-danger'
+        'class' => 'btn btn-danger',
     ]
 );
 ```
 
 ## Benefits
 
-- Cleaner code - no need to remember `escapeTitle` option
+- Cleaner code - no need to remember `escapeTitle` option when using pure `HtmlStringable` objects
 - Works seamlessly with Icon helper
 - Compatible with all existing FormHelper functionality
 - Type-safe with `HtmlStringable` interface
+
+## Important Notes
+
+- **String concatenation breaks automatic handling**: When you concatenate a `HtmlStringable` object with a string using `.`, PHP's `__toString()` method is called and the result becomes a regular string. You need to wrap here using `$this->Html->string()`.
