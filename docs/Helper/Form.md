@@ -22,13 +22,19 @@ All methods work exactly like the core FormHelper methods, but with additional `
 Creates a button element with optional icon or HTML content.
 
 ```php
-// With only icon
+// With icon
 echo $this->Form->button(
     $this->Icon->render('save'),
     //['escapeTitle' => false] is not necessary as it handles this internally
 );
 
-// Adding extra text requires wrapping
+// With text
+echo $this->Form->button(
+    $this->Html->string('<b>Save</b>'),
+    //['escapeTitle' => false] is not necessary as it handles this internally
+);
+
+// With multiple elements or string concat requires wrapping
 echo $this->Form->button(
     $this->Html->string($this->Icon->render('save') . ' ' . __('Save')),
     ['type' => 'submit'],
