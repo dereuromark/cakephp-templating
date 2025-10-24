@@ -53,7 +53,8 @@ class Html implements HtmlStringable, Serializable, JsonSerializable {
 	 *
 	 * @return void
 	 */
-	public function unserialize(string $data): void {}
+	public function unserialize(string $data): void {
+	}
 
 	/**
 	 * @return array<string, string>
