@@ -7,6 +7,7 @@ use Cake\View\View;
 use Templating\View\Helper\IconHelper;
 use Templating\View\HtmlStringable;
 use Templating\View\Icon\FeatherIcon;
+use Templating\View\Icon\LucideIcon;
 use Templating\View\Icon\MaterialIcon;
 
 class IconHelperTest extends TestCase {
@@ -33,7 +34,7 @@ class IconHelperTest extends TestCase {
 					'path' => TEST_FILES . 'font_icon/material/index.d.ts',
 				],
 				'lucide' => [
-					'class' => \Templating\View\Icon\LucideIcon::class,
+					'class' => LucideIcon::class,
 					'svgPath' => TEST_FILES . 'font_icon' . DS . 'lucide_svg',
 				],
 			],
@@ -51,7 +52,7 @@ class IconHelperTest extends TestCase {
 		$config = [
 			'sets' => [
 				'lucide' => [
-					'class' => \Templating\View\Icon\LucideIcon::class,
+					'class' => LucideIcon::class,
 					'svgPath' => TEST_FILES . 'font_icon' . DS . 'lucide_svg',
 					'inline' => true,
 				],
@@ -80,7 +81,7 @@ class IconHelperTest extends TestCase {
 		$config = [
 			'sets' => [
 				'lucide' => [
-					'class' => \Templating\View\Icon\LucideIcon::class,
+					'class' => LucideIcon::class,
 					'svgPath' => TEST_FILES . 'font_icon' . DS . 'lucide_svg',
 					// inline not set, defaults to false
 				],

@@ -2,6 +2,7 @@
 
 namespace Templating\Test\TestCase\View\Icon;
 
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Templating\View\Icon\LucideIcon;
 
@@ -433,23 +434,23 @@ class LucideIconTest extends TestCase {
 	 * @return void
 	 */
 	public function testExplicitInlineOverridesDebug(): void {
-		$originalDebug = \Cake\Core\Configure::read('debug');
+		$originalDebug = Configure::read('debug');
 		$svgPath = TEST_FILES . 'font_icon' . DS . 'lucide_svg';
 
 		try {
 			// Test: inline = true overrides debug = true
-			\Cake\Core\Configure::write('debug', true);
+			Configure::write('debug', true);
 			$icon = new LucideIcon(['svgPath' => $svgPath, 'inline' => true]);
 			$result = (string)$icon->render('home');
 			$this->assertStringNotContainsString('<!-- @license', $result);
 
 			// Test: inline = false overrides debug = false
-			\Cake\Core\Configure::write('debug', false);
+			Configure::write('debug', false);
 			$icon = new LucideIcon(['svgPath' => $svgPath, 'inline' => false]);
 			$result = (string)$icon->render('home');
 			$this->assertStringContainsString('<!-- @license', $result);
 		} finally {
-			\Cake\Core\Configure::write('debug', $originalDebug);
+			Configure::write('debug', $originalDebug);
 		}
 	}
 
