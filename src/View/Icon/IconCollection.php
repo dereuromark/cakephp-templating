@@ -173,7 +173,7 @@ class IconCollection {
 					$attributes[$titleField] = ucwords(Inflector::humanize(Inflector::underscore($iconName ?? $icon)));
 				}
 				// Only translate if attribute exists and is not null/false
-				if (isset($attributes[$titleField]) && $attributes[$titleField] !== null && $attributes[$titleField] !== false) {
+				if (isset($attributes[$titleField]) && $attributes[$titleField] !== false) {
 					if (!isset($options['translate']) || $options['translate'] !== false) {
 						$attributes[$titleField] = __($attributes[$titleField]);
 					}
