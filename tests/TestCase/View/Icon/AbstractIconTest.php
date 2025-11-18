@@ -3,6 +3,7 @@
 namespace Templating\Test\TestCase\View\Icon;
 
 use Cake\TestSuite\TestCase;
+use ReflectionClass;
 use RuntimeException;
 
 class AbstractIconTest extends TestCase {
@@ -118,7 +119,7 @@ class AbstractIconTest extends TestCase {
 	 * @return mixed
 	 */
 	protected function invokeMethod(object $object, string $methodName, array $parameters = []): mixed {
-		$reflection = new \ReflectionClass(get_class($object));
+		$reflection = new ReflectionClass(get_class($object));
 		$method = $reflection->getMethod($methodName);
 
 		return $method->invokeArgs($object, $parameters);

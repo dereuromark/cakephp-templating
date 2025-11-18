@@ -3,6 +3,7 @@
 namespace Templating\Test\TestCase\View\Icon;
 
 use Cake\TestSuite\TestCase;
+use RuntimeException;
 use Templating\View\Icon\BootstrapIcon;
 
 class BootstrapIconTest extends TestCase {
@@ -89,7 +90,7 @@ class BootstrapIconTest extends TestCase {
 			'svgPath' => TMP . 'nonexistent',
 		]);
 
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('SVG icon file not found');
 
 		$icon->render('nonexistent-icon');

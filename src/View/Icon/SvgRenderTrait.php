@@ -4,6 +4,7 @@ namespace Templating\View\Icon;
 
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
+use RuntimeException;
 use Templating\View\HtmlStringable;
 
 trait SvgRenderTrait {
@@ -29,7 +30,7 @@ trait SvgRenderTrait {
 	protected function renderSvg(string $icon, array $attributes = []): HtmlStringable {
 		// Check if svgPath is configured
 		if (!$this->resolveSvgPath()) {
-			throw new \RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
+			throw new RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
 		}
 
 		// Check if using JSON map mode
@@ -52,12 +53,12 @@ trait SvgRenderTrait {
 			// Load from file if not in cache
 			if ($svgContent === null) {
 				if (!file_exists($svgPath)) {
-					throw new \RuntimeException(sprintf('SVG icon file not found: %s', $svgPath));
+					throw new RuntimeException(sprintf('SVG icon file not found: %s', $svgPath));
 				}
 
 				$svgContent = file_get_contents($svgPath);
 				if ($svgContent === false) {
-					throw new \RuntimeException(sprintf('Failed to read SVG icon file: %s', $svgPath));
+					throw new RuntimeException(sprintf('Failed to read SVG icon file: %s', $svgPath));
 				}
 
 				// Store in CakePHP cache if configured
@@ -107,7 +108,7 @@ trait SvgRenderTrait {
 		$map = $this->loadSvgMap();
 
 		if (!isset($map[$icon])) {
-			throw new \RuntimeException(sprintf('SVG icon not found in map: %s', $icon));
+			throw new RuntimeException(sprintf('SVG icon not found in map: %s', $icon));
 		}
 
 		$svgContent = $this->wrapSvgContent($map[$icon], $attributes);
@@ -144,17 +145,17 @@ trait SvgRenderTrait {
 		// Load from JSON file if not in cache
 		if ($map === null) {
 			if (!$jsonPath || !file_exists($jsonPath)) {
-				throw new \RuntimeException(sprintf('SVG map file not found: %s', $jsonPath));
+				throw new RuntimeException(sprintf('SVG map file not found: %s', $jsonPath));
 			}
 
 			$content = file_get_contents($jsonPath);
 			if ($content === false) {
-				throw new \RuntimeException(sprintf('Failed to read SVG map file: %s', $jsonPath));
+				throw new RuntimeException(sprintf('Failed to read SVG map file: %s', $jsonPath));
 			}
 
 			$map = json_decode($content, true);
 			if (!is_array($map)) {
-				throw new \RuntimeException(sprintf('Invalid JSON in SVG map file: %s', $jsonPath));
+				throw new RuntimeException(sprintf('Invalid JSON in SVG map file: %s', $jsonPath));
 			}
 
 			// Store in CakePHP cache if configured
@@ -209,7 +210,7 @@ trait SvgRenderTrait {
 	protected function getSvgPath(string $icon): string {
 		$basePath = $this->resolveSvgPath();
 		if (!$basePath) {
-			throw new \RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
+			throw new RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
 		}
 
 		return rtrim((string)$basePath, '/') . '/' . $icon . '.svg';

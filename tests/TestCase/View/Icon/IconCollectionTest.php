@@ -74,4 +74,44 @@ class IconCollectionTest extends TestCase {
 		$this->assertTrue(in_array('zoom_out', $result['material'], true));
 	}
 
+	/**
+	 * Test that title can be explicitly disabled with false
+	 *
+	 * @return void
+	 */
+	public function testRenderWithTitleFalse(): void {
+		$config = [
+			'sets' => [
+				'feather' => [
+					'class' => FeatherIcon::class,
+				],
+			],
+			'separator' => ':',
+		];
+		$result = (new IconCollection($config))->render('foo', [], ['title' => false]);
+
+		$this->assertSame('<span data-feather="foo"></span>', (string)$result);
+		$this->assertStringNotContainsString('title=', (string)$result);
+	}
+
+	/**
+	 * Test that title false works with other attributes
+	 *
+	 * @return void
+	 */
+	public function testRenderWithTitleFalseAndOtherAttributes(): void {
+		$config = [
+			'sets' => [
+				'feather' => [
+					'class' => FeatherIcon::class,
+				],
+			],
+			'separator' => ':',
+		];
+		$result = (new IconCollection($config))->render('foo', [], ['title' => false, 'class' => 'custom-class']);
+
+		$this->assertSame('<span data-feather="foo" class="custom-class"></span>', (string)$result);
+		$this->assertStringNotContainsString('title=', (string)$result);
+	}
+
 }

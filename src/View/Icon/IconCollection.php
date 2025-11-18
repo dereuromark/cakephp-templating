@@ -166,11 +166,17 @@ class IconCollection {
 				trigger_error('Deprecated. Use `$attributes` here instead. For custom title field use `titleField` config key.', E_USER_DEPRECATED);
 				$attributes[$titleField] = $options['title'];
 			} else {
-				if (!isset($attributes[$titleField])) {
+				// Handle explicit false in attributes to disable title
+				if (isset($attributes[$titleField]) && $attributes[$titleField] === false) {
+					unset($attributes[$titleField]);
+				} elseif (!isset($attributes[$titleField])) {
 					$attributes[$titleField] = ucwords(Inflector::humanize(Inflector::underscore($iconName ?? $icon)));
 				}
-				if (!isset($options['translate']) || $options['translate'] !== false && isset($attributes[$titleField])) {
-					$attributes[$titleField] = __($attributes[$titleField]);
+				// Only translate if attribute exists and is not null/false
+				if (isset($attributes[$titleField]) && $attributes[$titleField] !== null && $attributes[$titleField] !== false) {
+					if (!isset($options['translate']) || $options['translate'] !== false) {
+						$attributes[$titleField] = __($attributes[$titleField]);
+					}
 				}
 			}
 		}

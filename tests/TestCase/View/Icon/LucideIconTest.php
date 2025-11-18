@@ -4,6 +4,7 @@ namespace Templating\Test\TestCase\View\Icon;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use RuntimeException;
 use Templating\View\Icon\LucideIcon;
 
 class LucideIconTest extends TestCase {
@@ -90,7 +91,7 @@ class LucideIconTest extends TestCase {
 			'svgPath' => TMP . 'nonexistent',
 		]);
 
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('SVG icon file not found');
 
 		$icon->render('nonexistent-icon');
@@ -196,7 +197,7 @@ class LucideIconTest extends TestCase {
 			'svgPath' => $jsonFile,
 		]);
 
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('SVG icon not found in map: nonexistent');
 
 		$icon->render('nonexistent');

@@ -2,6 +2,8 @@
 
 namespace Templating\View\Icon\Collector;
 
+use RuntimeException;
+
 /**
  * Using e.g. "material-symbols" npm package.
  */
@@ -19,7 +21,7 @@ class MaterialIconCollector extends AbstractCollector {
 			$icons = static::extractWithRegex($content, '/"(.+)"/u', $options);
 
 			if (empty($icons)) {
-				throw new \RuntimeException('Cannot parse content: ' . $path);
+				throw new RuntimeException('Cannot parse content: ' . $path);
 			}
 
 			return $icons;

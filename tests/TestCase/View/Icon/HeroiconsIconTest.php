@@ -3,6 +3,7 @@
 namespace Templating\Test\TestCase\View\Icon;
 
 use Cake\TestSuite\TestCase;
+use RuntimeException;
 use Templating\View\Icon\HeroiconsIcon;
 
 class HeroiconsIconTest extends TestCase {
@@ -131,7 +132,7 @@ class HeroiconsIconTest extends TestCase {
 			'svgPath' => TMP . 'nonexistent',
 		]);
 
-		$this->expectException(\RuntimeException::class);
+		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('SVG icon file not found');
 
 		$icon->render('nonexistent-icon');

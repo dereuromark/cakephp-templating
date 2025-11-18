@@ -2,6 +2,7 @@
 
 namespace Templating\View\Icon;
 
+use RuntimeException;
 use Templating\View\HtmlStringable;
 use Templating\View\Icon\Collector\HeroiconsIconCollector;
 
@@ -68,7 +69,7 @@ class HeroiconsIcon extends AbstractIcon {
 	protected function getSvgPath(string $icon): string {
 		$basePath = $this->resolveSvgPath();
 		if (!$basePath) {
-			throw new \RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
+			throw new RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
 		}
 
 		$style = $this->config['style'];
