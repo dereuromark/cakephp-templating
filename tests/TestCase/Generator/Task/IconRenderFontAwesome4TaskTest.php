@@ -6,6 +6,7 @@ use Cake\TestSuite\TestCase;
 use Cake\View\View;
 use IdeHelper\Generator\Directive\ExpectedArguments;
 use IdeHelper\Generator\Directive\RegisterArgumentsSet;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Templating\Generator\Task\IconRenderTask;
 use Templating\View\Helper\IconHelper;
 use Templating\View\Icon\FontAwesome4Icon;
@@ -42,7 +43,7 @@ class IconRenderFontAwesome4TaskTest extends TestCase {
 	 * @param string $extension
 	 * @return void
 	 */
-	#[\PHPUnit\Framework\Attributes\DataProvider('extensions')]
+	#[DataProvider('extensions')]
 	public function testCollect(string $extension): void {
 		$config = $this->helper->getConfig();
 		$task = new IconRenderTask($config);
