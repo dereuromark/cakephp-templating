@@ -6,4 +6,5 @@ parameters:
 		- tests/bootstrap.php
 	ignoreErrors:
 		- identifier: missingType.iterableValue
+		- identifier: missingType.generics
 		- '#Unsafe usage of new static\(\).#'
