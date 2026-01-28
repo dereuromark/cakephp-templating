@@ -1,7 +1,7 @@
 # Templating Plugin for CakePHP
 [![CI](https://github.com/dereuromark/cakephp-templating/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/dereuromark/cakephp-templating/actions/workflows/ci.yml?query=workflow%3ACI+branch%3Amaster)
 [![Coverage](https://codecov.io/github/dereuromark/cakephp-templating/graph/badge.svg)](https://app.codecov.io/github/dereuromark/cakephp-templating/tree/master)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.1-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.2-8892BF.svg)](https://php.net/)
 [![Latest Stable Version](https://poser.pugx.org/dereuromark/cakephp-templating/v/stable.svg)](https://packagist.org/packages/dereuromark/cakephp-templating)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat)](https://phpstan.org/)
 [![License](https://poser.pugx.org/dereuromark/cakephp-templating/license)](https://packagist.org/packages/dereuromark/cakephp-templating)
