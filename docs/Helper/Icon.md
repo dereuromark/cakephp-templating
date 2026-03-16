@@ -204,6 +204,7 @@ You can store default configurations in `config/app.php`:
 | Icon Set | Class | Icons | License | NPM Package |
 |----------|-------|-------|---------|-------------|
 | **Bootstrap Icons** | `BootstrapIcon` | 1,800+ | MIT | `bootstrap-icons` |
+| **FontAwesome v7** | `FontAwesome7Icon` | 2,000+ | Font Awesome | `@fortawesome/fontawesome-free` |
 | **FontAwesome v6** | `FontAwesome6Icon` | 2,000+ | Font Awesome | `@fortawesome/fontawesome-free` |
 | **FontAwesome v5** | `FontAwesome5Icon` | 1,600+ | Font Awesome | `fontawesome-free` |
 | **FontAwesome v4** | `FontAwesome4Icon` | 800+ | Font Awesome | `font-awesome` |
@@ -623,7 +624,11 @@ Icon set: fa6
 
 ### FontAwesome
 
-**Font-based rendering (FontAwesome 6):**
+> [!NOTE]
+> FontAwesome 7 uses the same CSS class syntax and metadata format as FontAwesome 6.
+> The `FontAwesome7Icon` class is provided as an alias for clarity and forward compatibility.
+
+**Font-based rendering (FontAwesome 6/7):**
 ```php
 'fa6' => [
     'class' => \Templating\View\Icon\FontAwesome6Icon::class,
