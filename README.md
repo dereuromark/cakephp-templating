@@ -6,7 +6,7 @@
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat)](https://phpstan.org/)
 [![License](https://poser.pugx.org/dereuromark/cakephp-templating/license)](https://packagist.org/packages/dereuromark/cakephp-templating)
 [![Total Downloads](https://poser.pugx.org/dereuromark/cakephp-templating/d/total.svg)](https://packagist.org/packages/dereuromark/cakephp-templating)
-[![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
+[![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-purple.svg?style=flat-square)](https://github.com/php-fig-rectified/fig-rectified-standards)
 
 A CakePHP plugin to
 - make working with HTML and helpers more convenient
