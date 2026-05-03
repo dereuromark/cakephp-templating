@@ -10,6 +10,18 @@ use Templating\View\HtmlStringable;
 trait SvgRenderTrait {
 
 	/**
+	 * Allowed pattern for icon names used as a filesystem path component.
+	 *
+	 * Matches the union of identifiers shipped by the supported icon sets
+	 * (Heroicons, Lucide, Feather, FontAwesome, Material). Forward slashes,
+	 * backslashes, dots, and other path metacharacters are intentionally
+	 * excluded to prevent path traversal via attacker-controlled icon names.
+	 *
+	 * @var string
+	 */
+	protected static string $iconNamePattern = '/^[a-zA-Z0-9][a-zA-Z0-9_\-]*$/';
+
+	/**
 	 * @var array<string, string>
 	 */
 	protected static array $svgCache = [];
@@ -105,6 +117,8 @@ trait SvgRenderTrait {
 	 * @return \Templating\View\HtmlStringable
 	 */
 	protected function renderSvgFromMap(string $icon, array $attributes = []): HtmlStringable {
+		$this->assertSafeIconName($icon);
+
 		$map = $this->loadSvgMap();
 
 		if (!isset($map[$icon])) {
@@ -213,7 +227,68 @@ trait SvgRenderTrait {
 			throw new RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
 		}
 
-		return rtrim((string)$basePath, '/') . '/' . $icon . '.svg';
+		$this->assertSafeIconName($icon);
+
+		$basePath = rtrim((string)$basePath, '/');
+
+		return $this->confineToBasePath($basePath, $basePath . '/' . $icon . '.svg');
+	}
+
+	/**
+	 * Validate that an icon name is safe to use as a filesystem path component.
+	 *
+	 * @param string $icon
+	 *
+	 * @throws \RuntimeException When the icon name contains disallowed characters.
+	 *
+	 * @return void
+	 */
+	protected function assertSafeIconName(string $icon): void {
+		if ($icon === '' || !preg_match(static::$iconNamePattern, $icon)) {
+			throw new RuntimeException(sprintf('Invalid icon name: `%s`.', $icon));
+		}
+	}
+
+	/**
+	 * Ensure that a resolved file path stays within the configured base directory.
+	 *
+	 * Uses realpath on the base directory and on the directory containing the
+	 * candidate file. The candidate file itself may not yet exist, so it is
+	 * intentionally not realpathed directly. If realpath of the base directory
+	 * fails (e.g. it is not a real directory), the candidate is rejected.
+	 *
+	 * @param string $basePath
+	 * @param string $candidate
+	 *
+	 * @throws \RuntimeException When the candidate is outside the base directory.
+	 *
+	 * @return string
+	 */
+	protected function confineToBasePath(string $basePath, string $candidate): string {
+		$realBase = realpath($basePath);
+		if ($realBase === false) {
+			// Base directory does not exist on disk. The downstream
+			// `file_exists()` check will produce the canonical
+			// "SVG icon file not found" error. The icon-name allow-list
+			// already prevents traversal through any non-resolvable base.
+			return $candidate;
+		}
+
+		$candidateDir = dirname($candidate);
+		$realCandidateDir = realpath($candidateDir);
+		if ($realCandidateDir === false) {
+			// Sub-directory does not (yet) exist; the downstream existence
+			// check will fail. Allow-list on the icon name still guarantees
+			// no traversal segments were spliced into the path.
+			return $candidate;
+		}
+
+		$separator = DIRECTORY_SEPARATOR;
+		if ($realCandidateDir !== $realBase && !str_starts_with($realCandidateDir . $separator, $realBase . $separator)) {
+			throw new RuntimeException(sprintf('Resolved SVG path escapes base directory: `%s`.', $candidate));
+		}
+
+		return $candidate;
 	}
 
 	/**

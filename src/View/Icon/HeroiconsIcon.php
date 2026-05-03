@@ -11,6 +11,25 @@ class HeroiconsIcon extends AbstractIcon {
 	use SvgRenderTrait;
 
 	/**
+	 * Allowed Heroicons style sub-directories.
+	 *
+	 * Anchored against the directories Heroicons ships (incl. v2 sized
+	 * variants). Keeps the `style` config value out of free-form path
+	 * concatenation and prevents traversal via misconfiguration.
+	 *
+	 * @var array<int, string>
+	 */
+	protected const ALLOWED_STYLES = [
+		'outline',
+		'solid',
+		'mini',
+		'24/outline',
+		'24/solid',
+		'20/solid',
+		'16/solid',
+	];
+
+	/**
 	 * @param array<string, mixed> $config
 	 */
 	public function __construct(array $config = []) {
@@ -72,9 +91,16 @@ class HeroiconsIcon extends AbstractIcon {
 			throw new RuntimeException('SVG path not configured. Set `svgPath` in configuration.');
 		}
 
-		$style = $this->config['style'];
+		$this->assertSafeIconName($icon);
 
-		return rtrim((string)$basePath, '/') . '/' . $style . '/' . $icon . '.svg';
+		$style = (string)$this->config['style'];
+		if (!in_array($style, static::ALLOWED_STYLES, true)) {
+			throw new RuntimeException(sprintf('Invalid Heroicons style: `%s`.', $style));
+		}
+
+		$basePath = rtrim((string)$basePath, '/');
+
+		return $this->confineToBasePath($basePath, $basePath . '/' . $style . '/' . $icon . '.svg');
 	}
 
 }

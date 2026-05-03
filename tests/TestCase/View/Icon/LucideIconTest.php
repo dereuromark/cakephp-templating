@@ -98,6 +98,65 @@ class LucideIconTest extends TestCase {
 	}
 
 	/**
+	 * Path traversal payloads must be rejected with a clear exception.
+	 *
+	 * @return void
+	 */
+	public function testRenderSvgRejectsPathTraversalIconName(): void {
+		$svgPath = TMP . 'tests' . DS . 'lucide-icons';
+		if (!is_dir($svgPath)) {
+			mkdir($svgPath, 0777, true);
+		}
+
+		$icon = new LucideIcon([
+			'svgPath' => $svgPath,
+		]);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Invalid icon name');
+
+		$icon->render('../../../../etc/passwd');
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testRenderSvgRejectsBackslashesInIconName(): void {
+		$svgPath = TMP . 'tests' . DS . 'lucide-icons';
+		if (!is_dir($svgPath)) {
+			mkdir($svgPath, 0777, true);
+		}
+
+		$icon = new LucideIcon([
+			'svgPath' => $svgPath,
+		]);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Invalid icon name');
+
+		$icon->render('foo\\bar');
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testRenderSvgRejectsEmptyIconName(): void {
+		$svgPath = TMP . 'tests' . DS . 'lucide-icons';
+		if (!is_dir($svgPath)) {
+			mkdir($svgPath, 0777, true);
+		}
+
+		$icon = new LucideIcon([
+			'svgPath' => $svgPath,
+		]);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Invalid icon name');
+
+		$icon->render('');
+	}
+
+	/**
 	 * @return void
 	 */
 	public function testRenderSvgFromJsonMap(): void {
