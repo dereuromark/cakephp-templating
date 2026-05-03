@@ -4,12 +4,11 @@ namespace Templating\View;
 
 use InvalidArgumentException;
 use JsonSerializable;
-use Serializable;
 
 /**
  * Html value object
  */
-class Html implements HtmlStringable, Serializable, JsonSerializable {
+class Html implements HtmlStringable, JsonSerializable {
 
 	/**
 	 * @var string
@@ -39,21 +38,6 @@ class Html implements HtmlStringable, Serializable, JsonSerializable {
 	 */
 	public function __toString(): string {
 		return $this->html;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function serialize(): string {
-		return $this->html;
-	}
-
-	/**
-	 * @param string $data
-	 *
-	 * @return void
-	 */
-	public function unserialize(string $data): void {
 	}
 
 	/**

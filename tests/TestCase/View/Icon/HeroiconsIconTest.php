@@ -138,4 +138,68 @@ class HeroiconsIconTest extends TestCase {
 		$icon->render('nonexistent-icon');
 	}
 
+	/**
+	 * Path traversal payloads must be rejected with a clear exception, not
+	 * resolved to files outside the configured icon directory.
+	 *
+	 * @return void
+	 */
+	public function testRenderSvgRejectsPathTraversalIconName(): void {
+		$svgPath = TMP . 'tests' . DS . 'heroicons';
+		$outlinePath = $svgPath . DS . 'outline';
+		if (!is_dir($outlinePath)) {
+			mkdir($outlinePath, 0777, true);
+		}
+
+		$icon = new HeroiconsIcon([
+			'svgPath' => $svgPath,
+		]);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Invalid icon name');
+
+		$icon->render('../../../../etc/passwd');
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testRenderSvgRejectsSlashesInIconName(): void {
+		$svgPath = TMP . 'tests' . DS . 'heroicons';
+		$outlinePath = $svgPath . DS . 'outline';
+		if (!is_dir($outlinePath)) {
+			mkdir($outlinePath, 0777, true);
+		}
+
+		$icon = new HeroiconsIcon([
+			'svgPath' => $svgPath,
+		]);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Invalid icon name');
+
+		$icon->render('foo/bar');
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testRenderSvgRejectsUnknownStyle(): void {
+		$svgPath = TMP . 'tests' . DS . 'heroicons';
+		$outlinePath = $svgPath . DS . 'outline';
+		if (!is_dir($outlinePath)) {
+			mkdir($outlinePath, 0777, true);
+		}
+
+		$icon = new HeroiconsIcon([
+			'svgPath' => $svgPath,
+			'style' => '../../etc',
+		]);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Invalid Heroicons style');
+
+		$icon->render('user');
+	}
+
 }
