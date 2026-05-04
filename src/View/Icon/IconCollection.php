@@ -175,7 +175,7 @@ class IconCollection {
 				// Only translate if attribute exists and is not null/false
 				if (isset($attributes[$titleField]) && $attributes[$titleField] !== false) {
 					if (!isset($options['translate']) || $options['translate'] !== false) {
-						$attributes[$titleField] = __($attributes[$titleField]);
+						$attributes[$titleField] = __d('template', $attributes[$titleField]);
 					}
 				}
 			}
