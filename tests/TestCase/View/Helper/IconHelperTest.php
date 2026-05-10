@@ -156,6 +156,31 @@ class IconHelperTest extends TestCase {
 	}
 
 	/**
+	 * Auto-title translation is opt-in. With no `translateAutoTitle` config and no
+	 * per-call `translate => true`, the humanized icon name passes through unchanged
+	 * — no __d() at runtime, no entries written into the `template` PO domain.
+	 *
+	 * @return void
+	 */
+	public function testIconAutoTitleNotTranslatedByDefault() {
+		$result = $this->Icon->render('m:save');
+		// Verbatim "Save" — no marker that translation ran.
+		$this->assertStringContainsString('title="Save"', (string)$result);
+	}
+
+	/**
+	 * Explicit per-call `translate => true` still triggers __d() (it would have run
+	 * unconditionally before this PR). __d() with no translation falls back to the
+	 * input, so output is unchanged.
+	 *
+	 * @return void
+	 */
+	public function testIconAutoTitleTranslatesWhenExplicitlyEnabled() {
+		$result = $this->Icon->render('m:save', ['translate' => true]);
+		$this->assertStringContainsString('title="Save"', (string)$result);
+	}
+
+	/**
 	 * @return void
 	 */
 	public function testIconWithCustomFontIcon() {

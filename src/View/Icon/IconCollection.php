@@ -18,6 +18,12 @@ class IconCollection {
 	 */
 	protected array $_defaultConfig = [
 		'cache' => null,
+		// When true, the auto-generated title attribute (humanized icon name) is run
+		// through __d('template', ...) at render time. Off by default to keep the
+		// PO scanner free of false positives and to avoid a silent runtime cost on
+		// every icon render — apps that actually translate icon titles can flip
+		// this on globally or pass `translate => true` per render.
+		'translateAutoTitle' => false,
 	];
 
 	/**
@@ -172,9 +178,14 @@ class IconCollection {
 				} elseif (!isset($attributes[$titleField])) {
 					$attributes[$titleField] = ucwords(Inflector::humanize(Inflector::underscore($iconName ?? $icon)));
 				}
-				// Only translate if attribute exists and is not null/false
+				// Auto-translation of the title attribute is opt-in. Default behavior keeps
+				// the humanized icon name (e.g. "Arrow Left") as-is, avoiding both the
+				// runtime __d() overhead and the misleading PO-extraction signal. Per-call
+				// `translate => true` always wins; per-call `translate => false` always
+				// wins. Otherwise the `translateAutoTitle` config flag decides.
 				if (isset($attributes[$titleField]) && $attributes[$titleField] !== false) {
-					if (!isset($options['translate']) || $options['translate'] !== false) {
+					$translate = $options['translate'] ?? $this->getConfig('translateAutoTitle');
+					if ($translate) {
 						$attributes[$titleField] = __d('template', $attributes[$titleField]);
 					}
 				}
