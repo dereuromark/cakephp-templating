@@ -274,6 +274,38 @@ Create aliases for easier icon usage:
 ],
 ```
 
+### Auto-Title Translation
+
+When a `title` attribute is auto-generated from the icon name (e.g. `arrow-left`
+becomes `Arrow Left`), translation is **off by default**. The previous behavior
+was to call `__d('template', $title)` unconditionally, which had two problems:
+
+- The runtime `__d()` value is dynamic, so a static PO scanner can't extract
+  the title strings — every icon name needed a hand-curated entry in `template.po`.
+- Most apps never translate icon titles, so the runtime `__d()` call was pure
+  overhead and a misleading "this gets translated" signal.
+
+The new `translateAutoTitle` config flag opts auto-generated titles back into
+translation for apps that have curated `Arrow Left → Pfeil links` mappings:
+
+```php
+'Icon' => [
+    'translateAutoTitle' => true, // Default: false
+],
+```
+
+Caller-supplied titles (when you pass `$attributes['title'] = 'Custom Title'`)
+continue to be translated by default — that preserves prior behavior for apps
+that intentionally use `__d()` strings as title values. To override either
+contract per-call, pass `translate => true|false` in `$options`:
+
+```php
+$this->Icon->render('arrow-left'); // title="Arrow Left" (no translation)
+$this->Icon->render('arrow-left', ['translate' => true]); // title runs through __d()
+$this->Icon->render('save', [], ['title' => 'Save now']); // 'Save now' translated by default
+$this->Icon->render('save', ['translate' => false], ['title' => 'Save now']); // not translated
+```
+
 ## Rendering Modes Explained
 
 The Icon Helper automatically detects the rendering mode based on your configuration.

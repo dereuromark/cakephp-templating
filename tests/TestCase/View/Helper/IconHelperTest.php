@@ -2,6 +2,7 @@
 
 namespace Templating\Test\TestCase\View\Helper;
 
+use Cake\I18n\I18n;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
 use Templating\View\Helper\IconHelper;
@@ -158,26 +159,97 @@ class IconHelperTest extends TestCase {
 	/**
 	 * Auto-title translation is opt-in. With no `translateAutoTitle` config and no
 	 * per-call `translate => true`, the humanized icon name passes through unchanged
-	 * — no __d() at runtime, no entries written into the `template` PO domain.
+	 * — even when a translator IS registered for the `template` domain, the auto
+	 * path skips the __d() call entirely so the registered translation does not run.
 	 *
 	 * @return void
 	 */
 	public function testIconAutoTitleNotTranslatedByDefault() {
+		$this->registerTemplateTranslator(['Save' => 'Speichern']);
 		$result = $this->Icon->render('m:save');
-		// Verbatim "Save" — no marker that translation ran.
+
+		// Translator IS registered, but auto path bypasses it — we still see "Save".
 		$this->assertStringContainsString('title="Save"', (string)$result);
+		$this->assertStringNotContainsString('Speichern', (string)$result);
 	}
 
 	/**
-	 * Explicit per-call `translate => true` still triggers __d() (it would have run
-	 * unconditionally before this PR). __d() with no translation falls back to the
-	 * input, so output is unchanged.
+	 * `translateAutoTitle => true` re-enables translation on the auto path — the
+	 * registered translator runs and the German "Speichern" surfaces in the title.
+	 *
+	 * @return void
+	 */
+	public function testIconAutoTitleTranslatesWhenConfigEnabled() {
+		$this->registerTemplateTranslator(['Save' => 'Speichern']);
+		// Pass translateAutoTitle via the helper-level config — IconCollection picks it up
+		// through getConfig() in the same shape as the existing `sets` config.
+		$config = [
+			'sets' => [
+				'm' => [
+					'class' => MaterialIcon::class,
+					'path' => TEST_FILES . 'font_icon/material/index.d.ts',
+				],
+			],
+			'translateAutoTitle' => true,
+		];
+		$this->Icon = new IconHelper(new View(null), $config);
+
+		$result = $this->Icon->render('m:save');
+
+		$this->assertStringContainsString('title="Speichern"', (string)$result);
+	}
+
+	/**
+	 * Per-call `translate => true` overrides config and runs translation for the auto path.
 	 *
 	 * @return void
 	 */
 	public function testIconAutoTitleTranslatesWhenExplicitlyEnabled() {
+		$this->registerTemplateTranslator(['Save' => 'Speichern']);
 		$result = $this->Icon->render('m:save', ['translate' => true]);
-		$this->assertStringContainsString('title="Save"', (string)$result);
+
+		$this->assertStringContainsString('title="Speichern"', (string)$result);
+	}
+
+	/**
+	 * Caller-supplied (non-auto) titles continue to be translated by default — that
+	 * preserves prior behavior for apps that intentionally pass __d() strings as
+	 * titles. translateAutoTitle does not gate the custom-title path.
+	 *
+	 * @return void
+	 */
+	public function testIconCustomTitleStillTranslatedByDefault() {
+		$this->registerTemplateTranslator(['My Title' => 'Mein Titel']);
+
+		$result = $this->Icon->render('m:save', [], ['title' => 'My Title']);
+
+		$this->assertStringContainsString('title="Mein Titel"', (string)$result);
+	}
+
+	/**
+	 * Per-call `translate => false` skips translation even on the custom-title path.
+	 *
+	 * @return void
+	 */
+	public function testIconCustomTitleNotTranslatedWhenExplicitlyDisabled() {
+		$this->registerTemplateTranslator(['My Title' => 'Mein Titel']);
+
+		$result = $this->Icon->render('m:save', ['translate' => false], ['title' => 'My Title']);
+
+		$this->assertStringContainsString('title="My Title"', (string)$result);
+		$this->assertStringNotContainsString('Mein Titel', (string)$result);
+	}
+
+	/**
+	 * Tiny in-memory translator for the `template` domain so the opt-in/opt-out
+	 * contract can be asserted with deterministic translations rather than the
+	 * usual `__d()` identity fallback that hides whether the call ran.
+	 *
+	 * @param array<string, string> $map source string => translation
+	 * @return void
+	 */
+	protected function registerTemplateTranslator(array $map): void {
+		I18n::getTranslator('template')->getPackage()->addMessages($map);
 	}
 
 	/**
