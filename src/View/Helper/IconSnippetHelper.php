@@ -96,11 +96,18 @@ class IconSnippetHelper extends Helper {
 	 * @return string
 	 */
 	public function neighbors(array $neighbors, string $field, array $options = []): string {
-		$name = 'Record'; // Translation further down!
+		$name = 'Record';
 		if (!empty($options['name'])) {
 			$name = ucfirst($options['name']);
 		}
 
+		// Translation keys use placeholders rather than runtime string concatenation so
+		// a PO scanner can statically extract `Previous {name}` and `Next {name}` once
+		// instead of trying to enumerate every record/article/post permutation. The
+		// previous code emitted runtime-composed `prev<Name>` keys that no scanner
+		// could see, leaving the raw concatenation visible in the UI. Each label is
+		// translated lazily inside the branch that uses it so a missing-prev page
+		// doesn't pay for an unused __d() call.
 		$prevSlug = $nextSlug = null;
 		if (!empty($options['slug'])) {
 			if (!empty($neighbors['prev'])) {
@@ -123,7 +130,7 @@ class IconSnippetHelper extends Helper {
 			}
 
 			$ret .= $this->Html->link(
-				$this->Icon->render('prev') . '&nbsp;' . __d('template', 'prev' . $name),
+				$this->Icon->render('prev') . '&nbsp;' . h(__d('template', 'Previous {name}', ['name' => $name])),
 				$url,
 				['escape' => false, 'title' => $neighbors['prev'][$titleField]],
 			);
@@ -139,12 +146,12 @@ class IconSnippetHelper extends Helper {
 			}
 
 			$ret .= $this->Html->link(
-				$this->Icon->render('next') . '&nbsp;' . __d('template', 'next' . $name),
+				$this->Icon->render('next') . '&nbsp;' . h(__d('template', 'Next {name}', ['name' => $name])),
 				$url,
 				['escape' => false, 'title' => $neighbors['next'][$titleField]],
 			);
 		} else {
-			$ret .= $this->Icon->render('next') . '&nbsp;' . __d('template', 'next' . $name);
+			$ret .= $this->Icon->render('next') . '&nbsp;' . h(__d('template', 'Next {name}', ['name' => $name]));
 		}
 
 		$ret .= '</div>';

@@ -79,8 +79,48 @@ class IconSnippetHelperTest extends TestCase {
 		];
 
 		$result = $this->IconSnippet->neighbors($neighbors, 'foo', $options);
-		$expected = '<div class="next-prev-navi"><a href="/some/index/1" title="bar"><span class="bi bi-prev" title="Prev"></span>&nbsp;prevRecord</a>&nbsp;&nbsp;<a href="/some/index/2" title="y"><span class="bi bi-next" title="Next"></span>&nbsp;nextRecord</a></div>';
+		$expected = '<div class="next-prev-navi"><a href="/some/index/1" title="bar"><span class="bi bi-prev" title="Prev"></span>&nbsp;Previous Record</a>&nbsp;&nbsp;<a href="/some/index/2" title="y"><span class="bi bi-next" title="Next"></span>&nbsp;Next Record</a></div>';
 		$this->assertEquals($expected, $result);
+	}
+
+	/**
+	 * Custom `name` flows through the {name} placeholder so the PO scanner sees only
+	 * the two stable keys `Previous {name}` and `Next {name}`, not a runtime-composed
+	 * `prev<Name>` per call site.
+	 *
+	 * @return void
+	 */
+	public function testNeighborsWithCustomName() {
+		$neighbors = [
+			'prev' => ['id' => 1, 'foo' => 'bar'],
+			'next' => ['id' => 2, 'foo' => 'y'],
+		];
+		$options = [
+			'url' => ['controller' => 'Some'],
+			'name' => 'Article',
+		];
+
+		$result = $this->IconSnippet->neighbors($neighbors, 'foo', $options);
+		$this->assertStringContainsString('Previous Article', $result);
+		$this->assertStringContainsString('Next Article', $result);
+	}
+
+	/**
+	 * Empty prev/next still renders only the next-side label.
+	 *
+	 * @return void
+	 */
+	public function testNeighborsWithMissingPrev() {
+		$neighbors = [
+			'next' => ['id' => 2, 'foo' => 'y'],
+		];
+		$options = [
+			'url' => ['controller' => 'Some'],
+		];
+
+		$result = $this->IconSnippet->neighbors($neighbors, 'foo', $options);
+		$this->assertStringNotContainsString('Previous Record', $result);
+		$this->assertStringContainsString('Next Record', $result);
 	}
 
 	/**
