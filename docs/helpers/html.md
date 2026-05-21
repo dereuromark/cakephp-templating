@@ -1,24 +1,30 @@
 # Html Helper
 
-An enhanced CakePHP HtmlHelper that automatically handles `HtmlStringable` objects.
+An enhanced CakePHP `HtmlHelper` that automatically handles
+[`HtmlStringable`](./html-stringable) objects.
 
 ## Setup
-Include helper in your AppView class as
+
+Include the helper in your `AppView` class:
+
 ```php
 $this->loadHelper('Templating.Html');
 ```
 
-This replaces the core HtmlHelper with the enhanced version that supports `HtmlStringable` interface.
+This replaces the core `HtmlHelper` with the enhanced version that supports the
+`HtmlStringable` interface.
 
 ## Features
 
-The Templating HtmlHelper extends CakePHP's core HtmlHelper and adds:
-- Automatic support for `HtmlStringable` objects in link titles
-- Convenience method to create `HtmlStringable` objects
+The Templating `HtmlHelper` extends CakePHP's core `HtmlHelper` and adds:
 
-### Supported Methods
+- automatic support for `HtmlStringable` objects in link titles,
+- a convenience method to create `HtmlStringable` objects.
 
-#### link()
+## Supported methods
+
+### link()
+
 Creates a link element with optional icon or HTML content.
 
 ```php
@@ -26,7 +32,7 @@ Creates a link element with optional icon or HTML content.
 echo $this->Html->link(
     $this->Icon->render('home'),
     ['controller' => 'Pages', 'action' => 'display', 'home'],
-    //['escapeTitle' => false] is not necessary as it handles this internally
+    // ['escapeTitle' => false] is not necessary as it handles this internally
 );
 
 // With icon and text
@@ -37,7 +43,8 @@ echo $this->Html->link(
 );
 ```
 
-#### linkFromPath()
+### linkFromPath()
+
 Creates a link from a named route with optional icon or HTML content.
 
 ```php
@@ -49,7 +56,8 @@ echo $this->Html->linkFromPath(
 );
 ```
 
-#### string()
+### string()
+
 Convenience method to create `HtmlStringable` objects from raw HTML strings.
 
 ```php
@@ -64,16 +72,22 @@ $title = $this->Html->string($this->Icon->render('star') . ' ' .  __('Featured')
 echo $this->Html->link($title, ['action' => 'featured']);
 ```
 
-## How It Works
+## How it works
 
-When you pass a `HtmlStringable` object (like an Icon) as the title parameter, the helper:
-1. Automatically sets `escapeTitle` to `false`
-2. Converts the `HtmlStringable` to a string
-3. Passes it to the parent HtmlHelper method
+When you pass an `HtmlStringable` object (like an Icon) as the title parameter,
+the helper:
 
-**Important:** This automatic handling only works when passing a pure `HtmlStringable` object. When you concatenate with strings, you need to wrap using `$this->Html->string()`.
+1. automatically sets `escapeTitle` to `false`,
+2. converts the `HtmlStringable` to a string,
+3. passes it to the parent `HtmlHelper` method.
 
-## Example Usage
+::: important Concatenation requires string()
+This automatic handling only works when passing a pure `HtmlStringable` object.
+When you concatenate with strings, you need to wrap the result using
+`$this->Html->string()`.
+:::
+
+## Example usage
 
 ```php
 echo $this->Html->link(
@@ -104,19 +118,25 @@ echo $this->Html->link(
 
 ## Benefits
 
-- Cleaner code - no need to remember `escapeTitle` option when using pure `HtmlStringable` objects
-- Works seamlessly with Icon helper
-- Type-safe with `HtmlStringable` interface
-- Compatible with all existing HtmlHelper functionality
-- `string()` method provides explicit HTML content creation
+- Cleaner code — no need to remember the `escapeTitle` option when using pure
+  `HtmlStringable` objects.
+- Works seamlessly with the [Icon helper](./icon).
+- Type-safe with the `HtmlStringable` interface.
+- Compatible with all existing `HtmlHelper` functionality.
+- The `string()` method provides explicit HTML content creation.
 
-## Important Notes
+## Important notes
 
-- **String concatenation breaks automatic handling**: When you concatenate a `HtmlStringable` object with a string using `.`, PHP's `__toString()` method is called and the result becomes a regular string. You need to wrap here using `$this->Html->string()`.
+::: warning String concatenation breaks automatic handling
+When you concatenate an `HtmlStringable` object with a string using `.`, PHP's
+`__toString()` method is called and the result becomes a regular string. You
+need to wrap it here using `$this->Html->string()`.
+:::
 
 ## Working with HtmlStringable
 
-The `HtmlStringable` interface is a marker interface that tells the helper "this content is already safe HTML and should not be escaped."
+The [`HtmlStringable`](./html-stringable) interface is a marker interface that
+tells the helper "this content is already safe HTML and should not be escaped."
 
 ```php
 // Any HtmlStringable object works (automatic handling)
@@ -129,4 +149,5 @@ $combined = $icon . ' ' . $html . ' Text';
 echo $this->Html->link($this->Html->string($combined), '/url');
 ```
 
-See [HtmlStringable docs](../HtmlStringable.md) for more details on the interface.
+See the [HtmlStringable docs](./html-stringable) for more details on the
+interface.

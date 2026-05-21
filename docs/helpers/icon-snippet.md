@@ -1,27 +1,30 @@
 # IconSnippet Helper
 
-A CakePHP helper to handle some icon snippet use cases. Contains convenience wrappers.
+A CakePHP helper for common icon snippet use cases. It contains convenience
+wrappers built on top of the [Icon helper](./icon).
 
 ## Setup
-Include helper in your AppView class as
+
+Include the helper in your `AppView` class:
+
 ```php
 $this->loadHelper('Templating.IconSnippet', [
-    ...
+    // ...
 ]);
 ```
 
 It provides the following methods:
 
-- `neighbors()` - printing them as icon elements with URLs
-- `thumbs()` - up/down icon (pro/contra)
-- `yesNo()` - printing an icon representation
+- `neighbors()` — print prev/next records as icon elements with URLs.
+- `thumbs()` — up/down icon (pro/contra).
+- `yesNo()` — print an icon representation of a boolean value.
 
-## Methods
+## yesNo()
 
-### yesNo()
-Displays yes/no symbol based on a boolean value.
+Displays a yes/no symbol based on a boolean value.
 
 Make sure to configure these icons in your `Icon.map` app config:
+
 ```php
 'Icon' => [
     'map' => [
@@ -32,6 +35,7 @@ Make sure to configure these icons in your `Icon.map` app config:
 ```
 
 **Usage:**
+
 ```php
 // Basic usage
 echo $this->IconSnippet->yesNo($user->is_active);
@@ -51,19 +55,22 @@ echo $this->IconSnippet->yesNo($status, [], [
 ```
 
 **Parameters:**
-- `$value` (int|bool): Value to check (defaults to comparing against 1)
-- `$options` (array): Optional configuration
-  - `on` (int|bool): Value that represents "on/yes" (default: 1)
-  - `onTitle` (string): Title for "yes" state (default: "Yes")
-  - `offTitle` (string): Title for "no" state (default: "No")
-- `$attributes` (array): HTML attributes for the icon
 
-**Returns:** HtmlStringable icon
+- `$value` (int|bool) — value to check (defaults to comparing against `1`).
+- `$options` (array) — optional configuration:
+  - `on` (int|bool) — value that represents "on/yes" (default: `1`).
+  - `onTitle` (string) — title for the "yes" state (default: "Yes").
+  - `offTitle` (string) — title for the "no" state (default: "No").
+- `$attributes` (array) — HTML attributes for the icon.
 
-### thumbs()
-Displays thumbs up/down icon based on a boolean value.
+**Returns:** an `HtmlStringable` icon.
+
+## thumbs()
+
+Displays a thumbs up/down icon based on a boolean value.
 
 Make sure to configure these icons in your `Icon.map` app config:
+
 ```php
 'Icon' => [
     'map' => [
@@ -74,6 +81,7 @@ Make sure to configure these icons in your `Icon.map` app config:
 ```
 
 **Usage:**
+
 ```php
 // Basic usage
 echo $this->IconSnippet->thumbs($review->is_positive);
@@ -87,16 +95,19 @@ echo $this->IconSnippet->thumbs($value, [], [
 ```
 
 **Parameters:**
-- `$value` (mixed): Boolish value (truthy = thumbs up, falsy = thumbs down)
-- `$options` (array): Optional configuration
-- `$attributes` (array): HTML attributes for the icon
 
-**Returns:** HtmlStringable icon (thumbs-up for true, thumbs-down for false)
+- `$value` (mixed) — boolish value (truthy = thumbs up, falsy = thumbs down).
+- `$options` (array) — optional configuration.
+- `$attributes` (array) — HTML attributes for the icon.
 
-### neighbors()
-Display neighbor quicklinks for prev/next navigation with icons.
+**Returns:** an `HtmlStringable` icon (thumbs-up for true, thumbs-down for false).
+
+## neighbors()
+
+Displays neighbor quicklinks for prev/next navigation with icons.
 
 Make sure to configure these icons in your `Icon.map` app config:
+
 ```php
 'Icon' => [
     'map' => [
@@ -107,6 +118,7 @@ Make sure to configure these icons in your `Icon.map` app config:
 ```
 
 **Usage:**
+
 ```php
 // In controller
 $neighbors = $this->Articles->find('neighbors', ['field' => 'id', 'value' => $id]);
@@ -133,12 +145,13 @@ echo $this->IconSnippet->neighbors($neighbors, 'title', [
 ```
 
 **Parameters:**
-- `$neighbors` (array): Array containing 'prev' and 'next' records
-- `$field` (string): Field to use for URL (e.g., 'id', 'slug', 'Model.field')
-- `$options` (array): Optional configuration
-  - `name` (string): Name used in link text (e.g., 'Article' becomes 'prevArticle', 'nextArticle')
-  - `slug` (bool): Whether to slugify the field value for URL (default: false)
-  - `titleField` (string): Field to use for link title attribute (default: same as $field)
-  - `url` (array): Additional URL parameters to merge
 
-**Returns:** String with HTML navigation links
+- `$neighbors` (array) — array containing `prev` and `next` records.
+- `$field` (string) — field to use for the URL (for example, `id`, `slug`, `Model.field`).
+- `$options` (array) — optional configuration:
+  - `name` (string) — name used in link text (for example, `Article` becomes `prevArticle`, `nextArticle`).
+  - `slug` (bool) — whether to slugify the field value for the URL (default: `false`).
+  - `titleField` (string) — field to use for the link title attribute (default: same as `$field`).
+  - `url` (array) — additional URL parameters to merge.
+
+**Returns:** a string with the HTML navigation links.

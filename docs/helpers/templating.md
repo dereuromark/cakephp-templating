@@ -1,24 +1,26 @@
 # Templating Helper
 
-A CakePHP helper to handle some templating use cases. Contains convenience wrappers.
+A CakePHP helper for common templating use cases. It contains convenience
+wrappers for colored status indicators.
 
 ## Setup
-Include helper in your AppView class as
+
+Include the helper in your `AppView` class:
+
 ```php
 $this->loadHelper('Templating.Templating', [
-    ...
+    // ...
 ]);
 ```
 
 It provides the following methods:
 
-- `ok()` - printing them with markup to color it green/red
-- `warning()` - wrapping `ok()` as always "red" right away
-- `yesNo()` - convenience method combining icon rendering with colored output
+- `ok()` — print content with markup to color it green/red.
+- `warning()` — wrap `ok()` to always show "red" right away.
+- `yesNo()` — convenience method combining icon rendering with colored output.
 
-## Methods
+## ok()
 
-### ok()
 Returns green text on true/ok, red text otherwise.
 
 ```php
@@ -36,9 +38,11 @@ echo $this->Templating->ok('Status', $isActive, ['class' => 'status-badge']);
 echo $this->Templating->ok('<strong>Bold</strong>', true, ['escape' => false]);
 ```
 
-By default, this method escapes the content. Use the `escape` attribute set to `false` to disable escaping.
+By default, this method escapes the content. Use the `escape` attribute set to
+`false` to disable escaping.
 
-### warning()
+## warning()
+
 Convenience wrapper for `ok()` that always returns red text unless explicitly ok.
 
 ```php
@@ -50,10 +54,13 @@ echo $this->Templating->warning('All good', true);  // Plain text (not colored)
 echo $this->Templating->warning($errorMessage, $hasError, ['class' => 'alert']);
 ```
 
-### yesNo()
-Convenience method that combines icon rendering with colored output. Returns a yes/no icon colored green/red based on the value.
+## yesNo()
+
+Convenience method that combines icon rendering with colored output. Returns a
+yes/no icon colored green/red based on the value.
 
 Make sure to configure these icons in your `Icon.map` app config:
+
 ```php
 'Icon' => [
     'map' => [
@@ -64,6 +71,7 @@ Make sure to configure these icons in your `Icon.map` app config:
 ```
 
 **Usage:**
+
 ```php
 // Basic usage
 echo $this->Templating->yesNo($user->is_active);  // Green check icon
@@ -88,13 +96,14 @@ echo $this->Templating->yesNo($status, [], [
 ```
 
 **Parameters:**
-- `$value` (mixed): Value being internally bool casted
-- `$options` (array): Optional configuration
-  - `onTitle` (string): Title/tooltip for true value (default: "Yes")
-  - `offTitle` (string): Title/tooltip for false value (default: "No")
-  - `invert` (bool): If true, green for no/false, red for yes/true
-- `$attributes` (array): HTML attributes for the icon element
-  - `title`: Custom title attribute
-  - Any other HTML attributes
 
-**Returns:** String with colored icon HTML
+- `$value` (mixed) — value internally cast to bool.
+- `$options` (array) — optional configuration:
+  - `onTitle` (string) — title/tooltip for the true value (default: "Yes").
+  - `offTitle` (string) — title/tooltip for the false value (default: "No").
+  - `invert` (bool) — if true, green for no/false, red for yes/true.
+- `$attributes` (array) — HTML attributes for the icon element:
+  - `title` — custom title attribute.
+  - Any other HTML attributes.
+
+**Returns:** a string with the colored icon HTML.

@@ -36,21 +36,17 @@ bin/cake plugin load Templating
 
 ## Documentation
 
-### Core Helpers
+Full documentation lives at **[dereuromark.github.io/cakephp-templating](https://dereuromark.github.io/cakephp-templating/)**.
 
-- **[Icon Helper](docs/Helper/Icon.md)** - Comprehensive icon rendering with support for Bootstrap, FontAwesome, Material, Feather, Lucide, and Heroicons
-- **[IconSnippet Helper](docs/Helper/IconSnippet.md)** - Convenience wrappers for common icon snippet use cases
-- **[Html Helper](docs/Helper/Html.md)** - Enhanced HtmlHelper with automatic `HtmlStringable` support
-- **[Form Helper](docs/Helper/Form.md)** - Enhanced FormHelper with automatic `HtmlStringable` support
-- **[Templating Helper](docs/Helper/Templating.md)** - Useful templating functionality for colored status indicators
+A few good entry points:
 
-### Core Concepts
+* [Getting started](https://dereuromark.github.io/cakephp-templating/guide/)
+* [HtmlStringable](https://dereuromark.github.io/cakephp-templating/helpers/html-stringable)
+* [Icon helper](https://dereuromark.github.io/cakephp-templating/helpers/icon)
+* [IconSnippet helper](https://dereuromark.github.io/cakephp-templating/helpers/icon-snippet)
+* [Html and Form helpers](https://dereuromark.github.io/cakephp-templating/helpers/html)
 
-- **[HtmlStringable](docs/HtmlStringable.md)** - Make your template code HTML aware with the `Html` value object
-
-### Quick Start
-
-See [Complete Documentation](docs/README.md) for full details.
+The Markdown sources live in the [docs](docs/) directory of this repository.
 
 ## Demo
 See [sandbox.dereuromark.de/sandbox/templating-examples](https://sandbox.dereuromark.de/sandbox/templating-examples).

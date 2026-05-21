@@ -19,9 +19,11 @@
 			"role": "Maintainer"
 		}
 	],
-	"homepage": "https://github.com/dereuromark/cakephp-templating",
+	"homepage": "https://dereuromark.github.io/cakephp-templating/",
 	"support": {
-		"source": "https://github.com/dereuromark/cakephp-templating"
+		"issues": "https://github.com/dereuromark/cakephp-templating/issues",
+		"source": "https://github.com/dereuromark/cakephp-templating",
+		"docs": "https://dereuromark.github.io/cakephp-templating/"
 	},
 	"require": {
 		"php": ">=8.2",
