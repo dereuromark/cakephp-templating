@@ -97,8 +97,6 @@ class FormHelperTest extends TestCase {
 		};
 
 		$result = $this->helper->postLink($icon, '/');
-		$expected = '<form name="post_657564d45eaf5901345215" style="display:none;" method="post" action="/"><input type="hidden" name="_method" value="POST"></form>
-					 <a href="#" onclick="document.post_657564d45eaf5901345215.submit(); event.returnValue = false; return false;"><span>Some ICON HTML</span></a>';
 		$expected = [
 			'form' => [
 				'name' => 'preg:/post_\w+/',

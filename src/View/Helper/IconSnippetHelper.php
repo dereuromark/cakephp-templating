@@ -74,7 +74,7 @@ class IconSnippetHelper extends Helper {
 	 * @return \Templating\View\HtmlStringable
 	 */
 	public function thumbs($value, array $options = [], array $attributes = []): HtmlStringable {
-		$icon = !empty($value) ? 'pro' : 'contra';
+		$icon = empty($value) ? 'contra' : 'pro';
 
 		return $this->Icon->render($icon, $options, $attributes);
 	}
@@ -98,7 +98,7 @@ class IconSnippetHelper extends Helper {
 	public function neighbors(array $neighbors, string $field, array $options = []): string {
 		$name = 'Record';
 		if (!empty($options['name'])) {
-			$name = ucfirst($options['name']);
+			$name = ucfirst((string) $options['name']);
 		}
 
 		// Translation keys use placeholders rather than runtime string concatenation so
@@ -154,9 +154,7 @@ class IconSnippetHelper extends Helper {
 			$ret .= $this->Icon->render('next') . '&nbsp;' . h(__d('template', 'Next {name}', ['name' => $name]));
 		}
 
-		$ret .= '</div>';
-
-		return $ret;
+		return $ret . '</div>';
 	}
 
 }
