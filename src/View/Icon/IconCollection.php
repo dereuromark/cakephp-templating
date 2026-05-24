@@ -56,12 +56,12 @@ class IconCollection {
 
 		foreach ($sets as $set => $setConfig) {
 			if (is_string($setConfig)) {
-                $setConfig = [
+				$setConfig = [
 					'class' => $setConfig,
 				];
-            } elseif (empty($setConfig['class'])) {
-                throw new RuntimeException('You must define a `class` for each icon set.');
-            }
+			} elseif (empty($setConfig['class'])) {
+				throw new RuntimeException('You must define a `class` for each icon set.');
+			}
 
 			/** @var class-string<\Templating\View\Icon\IconInterface> $className */
 			$className = $setConfig['class'];
@@ -146,12 +146,12 @@ class IconCollection {
 	public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable {
 		$iconName = null;
 		$separator = $this->_config['separator'];
-		if (!str_contains($icon, (string) $separator) && isset($this->map[$icon])) {
+		if (!str_contains($icon, (string)$separator) && isset($this->map[$icon])) {
 			$iconName = $icon;
 			$icon = $this->map[$icon];
 		}
 
-		$separatorPos = strpos($icon, (string) $separator);
+		$separatorPos = strpos($icon, (string)$separator);
 		if ($separatorPos !== false) {
 			[$set, $icon] = explode($separator, $icon, 2);
 		} else {

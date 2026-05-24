@@ -58,7 +58,7 @@ trait SvgRenderTrait {
 
 			// Try CakePHP cache if configured
 			if ($this->config['cache']) {
-				$cacheKey = str_replace('\\', '_', static::class) . '_' . md5((string) $svgPath);
+				$cacheKey = str_replace('\\', '_', static::class) . '_' . md5((string)$svgPath);
 				$svgContent = Cache::read($cacheKey, $this->config['cache']);
 			}
 
@@ -105,7 +105,7 @@ trait SvgRenderTrait {
 	protected function isJsonMapMode(): bool {
 		$svgPath = $this->resolveSvgPath();
 
-		return $svgPath && str_ends_with((string) $svgPath, '.json');
+		return $svgPath && str_ends_with((string)$svgPath, '.json');
 	}
 
 	/**
