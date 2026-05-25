@@ -38,7 +38,7 @@ class IconsController extends AppController {
 		ksort($flat);
 		$icons = $flat;
 
-		$this->set(['icons' => $icons, 'map' => $map]);
+		$this->set(compact('icons', 'map'));
 	}
 
 	/**
@@ -62,7 +62,7 @@ class IconsController extends AppController {
 
 		$map = $config['map'] ?? [];
 
-		$this->set(['icons' => $icons, 'count' => $count, 'map' => $map, 'set' => $set]);
+		$this->set(compact('icons', 'count', 'map', 'set'));
 	}
 
 	/**
