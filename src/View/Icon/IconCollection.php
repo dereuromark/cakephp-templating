@@ -151,7 +151,8 @@ class IconCollection {
 			$icon = $this->map[$icon];
 		}
 
-		$separatorPos = strpos($icon, (string)$separator);
+		$separator = (string)$separator;
+		$separatorPos = strpos($icon, $separator);
 		if ($separatorPos !== false) {
 			[$set, $icon] = explode($separator, $icon, 2);
 		} else {

@@ -97,23 +97,6 @@ class FormHelperTest extends TestCase {
 		};
 
 		$result = $this->helper->postLink($icon, '/');
-		$expected = [
-			'form' => [
-				'name' => 'preg:/post_\w+/',
-				'style' => 'display:none;',
-				'method' => 'post',
-				'action' => '/',
-			],
-			'input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST'],
-			'/form',
-			'a' => ['href' => '#', 'onclick' => 'preg:/document\.post_\w+\.submit\(\); event\.returnValue = false; return false;/'],
-			'span',
-			'Some ICON HTML',
-			'/span',
-			'/a',
-		];
-		//FIXME
-		//$this->assertHtml($expected, $result);
 		$this->assertTextContains('><span>Some ICON HTML</span></a>', $result);
 	}
 
