@@ -154,9 +154,7 @@ class IconSnippetHelper extends Helper {
 			$ret .= $this->Icon->render('next') . '&nbsp;' . h(__d('template', 'Next {name}', ['name' => $name]));
 		}
 
-		$ret .= '</div>';
-
-		return $ret;
+		return $ret . '</div>';
 	}
 
 }

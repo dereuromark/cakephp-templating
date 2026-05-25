@@ -20,18 +20,11 @@ class FontAwesome4IconCollector extends AbstractCollector {
 			$content = static::readFile($path);
 			$extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-			switch ($extension) {
-				case 'less':
-					$pattern = '/@fa-var-([0-9a-z-]+):/';
-
-					break;
-				case 'scss':
-					$pattern = '/\$fa-var-([0-9a-z-]+):/';
-
-					break;
-				default:
-					throw new RuntimeException('Format not supported: ' . $extension);
-			}
+			$pattern = match ($extension) {
+				'less' => '/@fa-var-([0-9a-z-]+):/',
+				'scss' => '/\$fa-var-([0-9a-z-]+):/',
+				default => throw new RuntimeException('Format not supported: ' . $extension),
+			};
 
 			return static::extractWithRegex($content, $pattern, $options);
 		});

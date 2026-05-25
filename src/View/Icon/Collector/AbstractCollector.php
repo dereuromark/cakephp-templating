@@ -217,13 +217,11 @@ abstract class AbstractCollector {
 
 		$extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-		switch ($extension) {
-			case 'json':
-				return static::collectFromJsonFile($path);
-			default:
-				// For other file types, concrete classes should override collect
-				throw new RuntimeException('Unsupported file type: ' . $extension . ' for path: ' . $path);
-		}
+		return match ($extension) {
+			'json' => static::collectFromJsonFile($path),
+			// For other file types, concrete classes should override collect
+			default => throw new RuntimeException('Unsupported file type: ' . $extension . ' for path: ' . $path),
+		};
 	}
 
 }
