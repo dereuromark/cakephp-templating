@@ -98,7 +98,7 @@ class IconSnippetHelper extends Helper {
 	public function neighbors(array $neighbors, string $field, array $options = []): string {
 		$name = 'Record';
 		if (!empty($options['name'])) {
-			$name = ucfirst((string)$options['name']);
+			$name = ucfirst($options['name']);
 		}
 
 		// Translation keys use placeholders rather than runtime string concatenation so
