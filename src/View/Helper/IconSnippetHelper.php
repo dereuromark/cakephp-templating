@@ -74,7 +74,7 @@ class IconSnippetHelper extends Helper {
 	 * @return \Templating\View\HtmlStringable
 	 */
 	public function thumbs($value, array $options = [], array $attributes = []): HtmlStringable {
-		$icon = empty($value) ? 'contra' : 'pro';
+		$icon = !empty($value) ? 'pro' : 'contra';
 
 		return $this->Icon->render($icon, $options, $attributes);
 	}
