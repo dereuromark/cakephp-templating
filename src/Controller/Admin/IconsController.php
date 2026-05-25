@@ -93,7 +93,7 @@ class IconsController extends AppController {
 		}
 		ksort($conflicting);
 
-		$this->set(['conflicting' => $conflicting]);
+		$this->set(compact('conflicting'));
 	}
 
 }
