@@ -62,7 +62,7 @@ class TemplatingHelper extends Helper {
 	 *
 	 * @return string Value in HTML tags
 	 */
-	public function warning(string|HtmlStringable $content, bool $ok = false, array $attributes = []): string {
+	public function warning(HtmlStringable|string $content, bool $ok = false, array $attributes = []): string {
 		if (!$ok) {
 			return $this->ok($content, false, $attributes);
 		}
@@ -91,7 +91,7 @@ class TemplatingHelper extends Helper {
 	 * @param array<string, mixed> $attributes
 	 * @return string Value nicely formatted/colored
 	 */
-	public function ok(string|HtmlStringable $content, bool $ok = false, array $attributes = []): string {
+	public function ok(HtmlStringable|string $content, bool $ok = false, array $attributes = []): string {
 		if ($ok) {
 			$type = 'yes';
 			$color = 'green';

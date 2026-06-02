@@ -14,7 +14,7 @@ trait HtmlHelperTrait {
 	 *
 	 * @return string
 	 */
-	public function link(array|string|HtmlStringable $title, array|string|null $url = null, array $options = []): string {
+	public function link(HtmlStringable|array|string $title, array|string|null $url = null, array $options = []): string {
 		if ($title instanceof HtmlStringable) {
 			$options['escapeTitle'] = false;
 			$title = (string)$title;
@@ -31,7 +31,7 @@ trait HtmlHelperTrait {
 	 *
 	 * @return string
 	 */
-	public function linkFromPath(string|HtmlStringable $title, string $path, array $params = [], array $options = []): string {
+	public function linkFromPath(HtmlStringable|string $title, string $path, array $params = [], array $options = []): string {
 		if ($title instanceof HtmlStringable) {
 			$options['escapeTitle'] = false;
 			$title = (string)$title;

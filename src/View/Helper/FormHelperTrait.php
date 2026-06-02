@@ -12,7 +12,7 @@ trait FormHelperTrait {
 	 *
 	 * @return string
 	 */
-	public function button(string|HtmlStringable $title, array $options = []): string {
+	public function button(HtmlStringable|string $title, array $options = []): string {
 		if ($title instanceof HtmlStringable) {
 			$options['escapeTitle'] = false;
 			$title = (string)$title;
@@ -28,7 +28,7 @@ trait FormHelperTrait {
 	 *
 	 * @return string
 	 */
-	public function postLink(string|HtmlStringable $title, array|string|null $url = null, array $options = []): string {
+	public function postLink(HtmlStringable|string $title, array|string|null $url = null, array $options = []): string {
 		if ($title instanceof HtmlStringable) {
 			$options['escapeTitle'] = false;
 			$title = (string)$title;
@@ -44,7 +44,7 @@ trait FormHelperTrait {
 	 *
 	 * @return string
 	 */
-	public function postButton(string|HtmlStringable $title, array|string $url, array $options = []): string {
+	public function postButton(HtmlStringable|string $title, array|string $url, array $options = []): string {
 		if ($title instanceof HtmlStringable) {
 			$options['escapeTitle'] = false;
 			$title = (string)$title;
