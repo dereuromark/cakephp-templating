@@ -17,7 +17,7 @@ use Templating\View\HtmlStringable;
 class IconSnippetHelper extends Helper {
 
 	/**
-	 * @var array
+	 * @var array<int|string, array<string, mixed>|string>
 	 */
 	protected array $helpers = [
 		'Html',
