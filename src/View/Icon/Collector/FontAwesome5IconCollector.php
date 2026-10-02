@@ -10,13 +10,17 @@ use RuntimeException;
 class FontAwesome5IconCollector extends AbstractCollector {
 
 	/**
-	 * @param string $path Path to SVG, YML, or JSON file
+	 * @param string $path Path to SVG, YML, or JSON file, or a directory of SVG files
 	 * @param array<string, mixed> $options Collection options
 	 *
 	 * @return array<string>
 	 */
 	public static function collect(string $path, array $options = []): array {
 		return static::cached($path, $options, function() use ($path, $options) {
+			if (is_dir($path)) {
+				return static::collectFromDirectory($path, $options);
+			}
+
 			$content = static::readFile($path);
 			$extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 

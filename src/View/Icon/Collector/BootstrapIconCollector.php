@@ -8,13 +8,13 @@ namespace Templating\View\Icon\Collector;
 class BootstrapIconCollector extends AbstractCollector {
 
 	/**
-	 * @param string $path Path to JSON file
+	 * @param string $path Path to JSON file or a directory of SVG files
 	 * @param array<string, mixed> $options Collection options
 	 *
 	 * @return array<string>
 	 */
 	public static function collect(string $path, array $options = []): array {
-		return static::cached($path, $options, fn () => static::collectFromJsonFile($path));
+		return static::cached($path, $options, fn () => static::collectByType($path, $options));
 	}
 
 }

@@ -4,6 +4,7 @@ namespace Templating\Test\TestCase\View\Icon;
 
 use Cake\TestSuite\TestCase;
 use Templating\View\Icon\FeatherIcon;
+use Templating\View\Icon\FontAwesome7Icon;
 use Templating\View\Icon\IconCollection;
 use Templating\View\Icon\MaterialIcon;
 
@@ -112,6 +113,38 @@ class IconCollectionTest extends TestCase {
 
 		$this->assertSame('<span data-feather="foo" class="custom-class"></span>', (string)$result);
 		$this->assertStringNotContainsString('title=', (string)$result);
+	}
+
+	/**
+	 * Name collection falls back to `svgPath` (SVG directory or JSON map) when no `path` is set.
+	 *
+	 * @return void
+	 */
+	public function testNamesFromSvgPathOnly(): void {
+		$config = [
+			'sets' => [
+				'fa7' => [
+					'class' => FontAwesome7Icon::class,
+					'svgPath' => TEST_FILES . 'font_icon' . DS . 'fa6_svg' . DS,
+				],
+				'feather' => [
+					'class' => FeatherIcon::class,
+					'svgPath' => TEST_FILES . 'font_icon' . DS . 'svg_map.json',
+				],
+			],
+			'checkExistence' => true,
+			'cache' => false,
+		];
+		$collection = new IconCollection($config);
+
+		$expected = [
+			'fa7' => ['thumbs-up', 'user'],
+			'feather' => ['house', 'user'],
+		];
+		$this->assertSame($expected, $collection->names());
+
+		$result = (string)$collection->render('house', [], ['title' => false]);
+		$this->assertStringStartsWith('<svg', $result);
 	}
 
 }

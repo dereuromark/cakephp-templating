@@ -35,4 +35,22 @@ class FontAwesome4CollectorTest extends TestCase {
 		];
 	}
 
+	/**
+	 * @return void
+	 */
+	public function testCollectFromSvgDirectory(): void {
+		$result = FontAwesome4IconCollector::collect(TEST_FILES . 'font_icon' . DS . 'fa6_svg' . DS);
+
+		$this->assertSame(['thumbs-up', 'user'], $result);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testCollectFromSvgMap(): void {
+		$result = FontAwesome4IconCollector::collect(TEST_FILES . 'font_icon' . DS . 'svg_map.json');
+
+		$this->assertSame(['house', 'user'], $result);
+	}
+
 }

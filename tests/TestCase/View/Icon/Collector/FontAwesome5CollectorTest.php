@@ -63,4 +63,15 @@ class FontAwesome5CollectorTest extends TestCase {
 		$this->assertTrue(in_array('thumbs-up', $result, true));
 	}
 
+	/**
+	 * @return void
+	 */
+	public function testCollectFromSvgDirectory(): void {
+		$path = TEST_FILES . 'font_icon' . DS . 'fa6_svg' . DS;
+
+		$result = FontAwesome5IconCollector::collect($path);
+
+		$this->assertSame(['thumbs-up', 'user'], $result);
+	}
+
 }

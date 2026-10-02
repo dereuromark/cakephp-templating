@@ -4,6 +4,7 @@ namespace Templating\Test\TestCase\View\Icon;
 
 use Cake\TestSuite\TestCase;
 use Templating\View\Icon\FontAwesome6Icon;
+use Templating\View\Icon\FontAwesome7Icon;
 
 class FontAwesome6IconTest extends TestCase {
 
@@ -53,6 +54,17 @@ class FontAwesome6IconTest extends TestCase {
 	public function testRenderSpin(): void {
 		$result = $this->icon->render('camera-retro', ['spin' => true]);
 		$this->assertSame('<span class="fa-solid fa-spin fa-camera-retro"></span>', (string)$result);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testNamesFromSvgPathDirectory(): void {
+		$icon = new FontAwesome7Icon([
+			'svgPath' => TEST_FILES . 'font_icon' . DS . 'fa6_svg' . DS,
+		]);
+
+		$this->assertSame(['thumbs-up', 'user'], $icon->names());
 	}
 
 }

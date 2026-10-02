@@ -10,7 +10,7 @@ use RuntimeException;
 class FontAwesome6IconCollector extends AbstractCollector {
 
 	/**
-	 * @param string $path Path to SVG, YML, or JSON file
+	 * @param string $path Path to SVG, YML, or JSON file, or a directory of SVG files
 	 * @param array<string, mixed> $options Collection options (includes config)
 	 *
 	 * @return array<string>
@@ -22,6 +22,10 @@ class FontAwesome6IconCollector extends AbstractCollector {
 		];
 
 		return static::cached($path, $options, function() use ($path, $options) {
+			if (is_dir($path)) {
+				return static::collectFromDirectory($path, $options);
+			}
+
 			$content = static::readFile($path);
 			$extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
@@ -64,6 +68,12 @@ class FontAwesome6IconCollector extends AbstractCollector {
 	protected static function icons(array $array, array $config): array {
 		$icons = [];
 		foreach ($array as $key => $details) {
+			// JSON SVG map (name => SVG body) carries no style metadata
+			if (is_string($details)) {
+				$icons[] = (string)$key;
+
+				continue;
+			}
 			if (!static::isStyle($details, $config['namespace'])) {
 				continue;
 			}
