@@ -60,11 +60,12 @@ abstract class AbstractCollector {
 	 * @return string
 	 */
 	protected static function getCacheKey(string $path, array $options = []): string {
+		$key = static::class . '|' . $path;
 		if (empty($options)) {
-			return $path;
+			return $key;
 		}
 
-		return $path . '|' . md5(serialize($options));
+		return $key . '|' . md5(serialize($options));
 	}
 
 	/**

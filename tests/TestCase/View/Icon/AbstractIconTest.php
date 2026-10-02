@@ -89,7 +89,7 @@ class AbstractIconTest extends TestCase {
 		$icon = new TestIcon(['svgPath' => $filePath]);
 
 		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage('SVG path `' . $filePath . '` is not a directory for');
+		$this->expectExceptionMessage('SVG path `' . $filePath . '` is neither a directory nor a JSON map file for');
 
 		$this->invokeMethod($icon, 'path');
 	}
@@ -123,6 +123,17 @@ class AbstractIconTest extends TestCase {
 		$method = $reflection->getMethod($methodName);
 
 		return $method->invokeArgs($object, $parameters);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testPathWithSvgPathJsonMap(): void {
+		$jsonMap = TEST_FILES . 'font_icon' . DS . 'svg_map.json';
+		$icon = new TestIcon(['svgPath' => $jsonMap]);
+
+		$result = $this->invokeMethod($icon, 'path');
+		$this->assertSame($jsonMap, $result);
 	}
 
 }

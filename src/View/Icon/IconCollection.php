@@ -24,6 +24,7 @@ class IconCollection {
 		// every icon render — apps that actually translate icon titles can flip
 		// this on globally or pass `translate => true` per render.
 		'translateAutoTitle' => false,
+		'separator' => ':',
 	];
 
 	/**

@@ -36,7 +36,7 @@ abstract class AbstractIcon implements IconInterface {
 		}
 
 		$svgPath = $this->resolveSvgPath();
-		if ($svgPath && is_dir($svgPath)) {
+		if ($svgPath && (is_dir($svgPath) || str_ends_with($svgPath, '.json') && is_file($svgPath))) {
 			return $svgPath;
 		}
 
@@ -48,8 +48,8 @@ abstract class AbstractIcon implements IconInterface {
 			throw new RuntimeException('Cannot find meta data file path `' . $path . '` for `' . static::class . '`.');
 		}
 
-		if ($svgPath && !is_dir($svgPath)) {
-			throw new RuntimeException('SVG path `' . $svgPath . '` is not a directory for `' . static::class . '`.');
+		if ($svgPath) {
+			throw new RuntimeException('SVG path `' . $svgPath . '` is neither a directory nor a JSON map file for `' . static::class . '`.');
 		}
 
 		throw new RuntimeException('No valid path configuration found for `' . static::class . '`.');

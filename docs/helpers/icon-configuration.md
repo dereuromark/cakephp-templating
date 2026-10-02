@@ -17,6 +17,10 @@ There are two distinct path options:
   `.less`, `.ts`, or the path of icons if no metadata file exists).
 - **`svgPath`** — used for rendering SVG icons (either a directory of `.svg`
   files or a `.json` map). Set to `true` if it equals the `path`.
+
+Without `path`, icon names are collected from `svgPath`: the `.svg` file names
+of the directory, or the keys of the JSON map. An SVG-only set needs no
+separate metadata file.
 :::
 
 ### Font-based rendering
@@ -491,7 +495,9 @@ echo $this->Icon->render('home');
 
 ### Path configuration types
 
-Different icon sets support different metadata file formats:
+Different icon sets support different metadata file formats. Every set also
+accepts a directory of `.svg` files or a JSON SVG map, which is what
+`svgPath` falls back to when `path` is not set.
 
 | Icon Set | Supported Path Formats |
 |----------|------------------------|

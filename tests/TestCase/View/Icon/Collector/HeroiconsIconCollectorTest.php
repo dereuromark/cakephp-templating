@@ -4,6 +4,7 @@ namespace Templating\Test\TestCase\View\Icon\Collector;
 
 use Cake\TestSuite\TestCase;
 use Templating\View\Icon\Collector\HeroiconsIconCollector;
+use Templating\View\Icon\Collector\LucideIconCollector;
 
 class HeroiconsIconCollectorTest extends TestCase {
 
@@ -45,6 +46,18 @@ class HeroiconsIconCollectorTest extends TestCase {
 		$sorted = $result;
 		sort($sorted);
 		$this->assertSame($sorted, $result);
+	}
+
+	/**
+	 * The in-memory cache must not leak results between collector classes for the same path.
+	 *
+	 * @return void
+	 */
+	public function testCacheIsScopedPerCollector(): void {
+		$path = TEST_FILES . 'font_icon' . DS . 'heroicons_svg';
+
+		$this->assertSame([], LucideIconCollector::collect($path));
+		$this->assertSame(['home', 'magnifying-glass', 'user'], HeroiconsIconCollector::collect($path));
 	}
 
 }

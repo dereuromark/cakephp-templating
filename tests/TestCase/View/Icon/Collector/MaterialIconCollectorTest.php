@@ -21,4 +21,22 @@ class MaterialIconCollectorTest extends TestCase {
 		$this->assertTrue(in_array('zoom_in', $result, true));
 	}
 
+	/**
+	 * @return void
+	 */
+	public function testCollectFromSvgDirectory(): void {
+		$result = MaterialIconCollector::collect(TEST_FILES . 'font_icon' . DS . 'fa6_svg' . DS);
+
+		$this->assertSame(['thumbs-up', 'user'], $result);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testCollectFromSvgMap(): void {
+		$result = MaterialIconCollector::collect(TEST_FILES . 'font_icon' . DS . 'svg_map.json');
+
+		$this->assertSame(['house', 'user'], $result);
+	}
+
 }

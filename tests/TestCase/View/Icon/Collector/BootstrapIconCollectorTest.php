@@ -21,4 +21,15 @@ class BootstrapIconCollectorTest extends TestCase {
 		$this->assertTrue(in_array('info-circle-fill', $result, true));
 	}
 
+	/**
+	 * @return void
+	 */
+	public function testCollectFromSvgDirectory(): void {
+		$path = TEST_FILES . 'font_icon' . DS . 'bootstrap_svg' . DS;
+
+		$result = BootstrapIconCollector::collect($path);
+
+		$this->assertSame(['gear', 'house'], $result);
+	}
+
 }
