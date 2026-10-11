@@ -4,8 +4,8 @@ The `HtmlStringable` interface lets you build any HTML snippet and use it inside
 other helpers or template elements with ease.
 
 The idea is that the snippet knows how to behave (it should not be escaped), and
-your helpers can adjust themselves accordingly — saving you from sprinkling
-`'escapeTitle' => false'` all over your templates.
+your helpers can adjust themselves accordingly, saving you from sprinkling
+`'escapeTitle' => false` all over your templates.
 
 ## The problem it solves
 
@@ -48,10 +48,14 @@ The same goes for any custom snippet of yours:
 ```php
 use Templating\View\HtmlStringable;
 
-class SvgGraph implements HtmlStringable { ... }
+class SvgGraph implements HtmlStringable {
+    public function __toString(): string {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>';
+    }
+}
 
 // in your templates
-$icon = new SvgIcon($name);
+$icon = new SvgGraph();
 $this->Html->link($icon, '/my/url');
 ```
 
@@ -77,7 +81,7 @@ $this->addHelper('Templating.Html');
 $this->addHelper('Templating.Form');
 ```
 
-Or add the traits to your app's own helpers — necessary if you already extended
+Or add the traits to your app's own helpers, necessary if you already extended
 or added other helper methods:
 
 ```php
@@ -120,7 +124,7 @@ When using `declare(strict_types=1);` you need to manually cast when passing a
 value object to methods that only accept `string`:
 
 ```php
-$icon = new SvgIcon($name);
+$icon = new SvgGraph();
 // CustomHelper::display(string $html) does not accept HtmlStringable
 $this->Custom->display((string)$icon);
 ```
@@ -151,8 +155,8 @@ of transportation (for example an API) through different layers.
 
 Some methods (for example link generation) provide these options:
 
-- `escape` — set to `false` to disable escaping of title and attributes.
-- `escapeTitle` — set to `false` to disable escaping of the title only. Takes
+- `escape`, set to `false` to disable escaping of title and attributes.
+- `escapeTitle`, set to `false` to disable escaping of the title only. Takes
   precedence over the value of `escape`.
 
 ::: warning Prefer escapeTitle over escape

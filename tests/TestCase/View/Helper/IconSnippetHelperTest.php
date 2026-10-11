@@ -5,6 +5,7 @@ namespace Templating\Test\TestCase\View\Helper;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
+use DOMDocument;
 use Templating\View\Helper\IconSnippetHelper;
 use Templating\View\Icon\BootstrapIcon;
 
@@ -133,6 +134,24 @@ class IconSnippetHelperTest extends TestCase {
 
 		Configure::delete('App.imageBaseUrl');
 		Configure::delete('Icon');
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testNeighborRecordTitlesCannotInjectAttributes(): void {
+		$title = 'Example" onmouseover="alert(1)';
+		$html = $this->IconSnippet->neighbors([
+			'prev' => ['id' => 1, 'name' => $title],
+			'next' => ['id' => 2, 'name' => $title],
+		], 'name', ['url' => ['controller' => 'Some']]);
+		$document = new DOMDocument();
+		$document->loadHTML($html);
+		$this->assertSame(2, $document->getElementsByTagName('a')->length);
+		foreach ($document->getElementsByTagName('a') as $link) {
+			$this->assertSame($title, $link->getAttribute('title'));
+			$this->assertFalse($link->hasAttribute('onmouseover'));
+		}
 	}
 
 }

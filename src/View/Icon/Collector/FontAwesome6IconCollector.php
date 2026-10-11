@@ -38,6 +38,9 @@ class FontAwesome6IconCollector extends AbstractCollector {
 
 					break;
 				case 'yml':
+					if (!function_exists('yaml_parse')) {
+						throw new RuntimeException('YAML metadata requires ext-yaml. Use JSON metadata or an SVG directory instead.');
+					}
 					$array = yaml_parse($content);
 					if (!$array) {
 						throw new RuntimeException('Cannot parse YML: ' . $path);

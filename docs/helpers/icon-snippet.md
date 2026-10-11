@@ -15,9 +15,9 @@ $this->loadHelper('Templating.IconSnippet', [
 
 It provides the following methods:
 
-- `neighbors()` — print prev/next records as icon elements with URLs.
-- `thumbs()` — up/down icon (pro/contra).
-- `yesNo()` — print an icon representation of a boolean value.
+- `neighbors()`, print prev/next records as icon elements with URLs.
+- `thumbs()`, up/down icon (pro/contra).
+- `yesNo()`, print an icon representation of a boolean value.
 
 ## yesNo()
 
@@ -56,12 +56,12 @@ echo $this->IconSnippet->yesNo($status, [], [
 
 **Parameters:**
 
-- `$value` (int|bool) — value to check (defaults to comparing against `1`).
-- `$options` (array) — optional configuration:
-  - `on` (int|bool) — value that represents "on/yes" (default: `1`).
-  - `onTitle` (string) — title for the "yes" state (default: "Yes").
-  - `offTitle` (string) — title for the "no" state (default: "No").
-- `$attributes` (array) — HTML attributes for the icon.
+- `$value` (int|bool), value to check (defaults to comparing against `1`).
+- `$options` (array), optional configuration:
+  - `on` (int|bool), value that represents "on/yes" (default: `1`).
+  - `onTitle` (string), title for the "yes" state (default: "Yes").
+  - `offTitle` (string), title for the "no" state (default: "No").
+- `$attributes` (array), HTML attributes for the icon.
 
 **Returns:** an `HtmlStringable` icon.
 
@@ -96,9 +96,9 @@ echo $this->IconSnippet->thumbs($value, [], [
 
 **Parameters:**
 
-- `$value` (mixed) — boolish value (truthy = thumbs up, falsy = thumbs down).
-- `$options` (array) — optional configuration.
-- `$attributes` (array) — HTML attributes for the icon.
+- `$value` (mixed), boolish value (truthy = thumbs up, falsy = thumbs down).
+- `$options` (array), optional configuration.
+- `$attributes` (array), HTML attributes for the icon.
 
 **Returns:** an `HtmlStringable` icon (thumbs-up for true, thumbs-down for false).
 
@@ -120,8 +120,11 @@ Make sure to configure these icons in your `Icon.map` app config:
 **Usage:**
 
 ```php
-// In controller
-$neighbors = $this->Articles->find('neighbors', ['field' => 'id', 'value' => $id]);
+// Supply neighboring records from your application query.
+$neighbors = [
+    'prev' => ['id' => 10, 'title' => 'Previous article'],
+    'next' => ['id' => 12, 'title' => 'Next article'],
+];
 $this->set('neighbors', $neighbors);
 
 // In template
@@ -130,7 +133,7 @@ echo $this->IconSnippet->neighbors($neighbors, 'title');
 // With slug support
 echo $this->IconSnippet->neighbors($neighbors, 'title', [
     'slug' => true,
-    'name' => 'Article',  // Used for link text: "prevArticle", "nextArticle"
+    'name' => 'Article',  // Used for link text: "Previous Article", "Next Article"
 ]);
 
 // With custom title field
@@ -146,12 +149,12 @@ echo $this->IconSnippet->neighbors($neighbors, 'title', [
 
 **Parameters:**
 
-- `$neighbors` (array) — array containing `prev` and `next` records.
-- `$field` (string) — field to use for the URL (for example, `id`, `slug`, `Model.field`).
-- `$options` (array) — optional configuration:
-  - `name` (string) — name used in link text (for example, `Article` becomes `prevArticle`, `nextArticle`).
-  - `slug` (bool) — whether to slugify the field value for the URL (default: `false`).
-  - `titleField` (string) — field to use for the link title attribute (default: same as `$field`).
-  - `url` (array) — additional URL parameters to merge.
+- `$neighbors` (array), array containing `prev` and `next` records.
+- `$field` (string), field to use for the URL (for example, `id`, `slug`, `Model.field`).
+- `$options` (array), optional configuration:
+  - `name` (string), name used in link text (for example, `Article` becomes `Previous Article`, `Next Article`).
+  - `slug` (bool), whether to slugify the field value for the URL (default: `false`).
+  - `titleField` (string), field to use for the link title attribute (default: same as `$field`).
+  - `url` (array), additional URL parameters to merge.
 
 **Returns:** a string with the HTML navigation links.

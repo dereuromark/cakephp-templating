@@ -118,7 +118,7 @@ echo $this->Html->link(
 
 ## Benefits
 
-- Cleaner code — no need to remember the `escapeTitle` option when using pure
+- Cleaner code, no need to remember the `escapeTitle` option when using pure
   `HtmlStringable` objects.
 - Works seamlessly with the [Icon helper](./icon).
 - Type-safe with the `HtmlStringable` interface.

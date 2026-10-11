@@ -38,6 +38,11 @@ class IconCollection {
 	protected array $iconSets = [];
 
 	/**
+	 * @var array<string, mixed>
+	 */
+	protected array $setConfigs = [];
+
+	/**
 	 * @var array|null
 	 */
 	protected $names;
@@ -54,6 +59,7 @@ class IconCollection {
 		/** @var array<class-string<\Templating\View\Icon\IconInterface>|array<string, mixed>> $sets */
 		$sets = $config['sets'] ?? [];
 		unset($config['sets']);
+		$this->setConfigs = $sets;
 
 		foreach ($sets as $set => $setConfig) {
 			if (is_string($setConfig)) {
@@ -92,8 +98,8 @@ class IconCollection {
 	public function names(bool $sort = false): array {
 		if ($this->names === null) {
 			$cache = $this->getConfig('cache') ?? 'default';
-			if ($cache) {
-				$cacheKey = 'icon-collection-' . md5(serialize($this->_config));
+			$cacheKey = $cache ? $this->nameCacheKey() : null;
+			if ($cache && $cacheKey !== null) {
 				$result = Cache::read($cacheKey, $cache);
 				if ($result) {
 					$this->names = $result;
@@ -117,8 +123,8 @@ class IconCollection {
 		}
 
 		$cache = $this->getConfig('cache') ?? 'default';
-		if ($cache) {
-			$cacheKey = 'icon-collection-' . md5(serialize($this->_config));
+		$cacheKey = $cache ? $this->nameCacheKey() : null;
+		if ($cache && $cacheKey !== null) {
 			Cache::write($cacheKey, $names, $cache);
 		}
 
@@ -129,6 +135,17 @@ class IconCollection {
 		}
 
 		return $names;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	protected function nameCacheKey(): ?string {
+		try {
+			return 'icon-collection-' . md5(serialize([$this->_config, $this->setConfigs]));
+		} catch (Exception) {
+			return null;
+		}
 	}
 
 	/**
@@ -249,7 +266,7 @@ class IconCollection {
 					continue;
 				}
 
-				$this->map[$icon] = $set . ':' . $icon;
+				$this->map[$icon] = $set . $this->getConfig('separator') . $icon;
 			}
 		}
 	}

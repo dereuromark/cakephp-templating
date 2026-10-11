@@ -10,11 +10,8 @@ It helps you to:
 - provide (font) icons from various libraries out of the box,
 - and, together with the IdeHelper plugin, get auto-complete on those icons.
 
-::: info CakePHP version
-This documentation is for the branch that supports **CakePHP 5.1+**. See the
-[version map](https://github.com/dereuromark/cakephp-templating/wiki#cakephp-version-map)
-for older releases.
-:::
+The current branch targets CakePHP 5. Composer declares the supported PHP and framework ranges.
+
 
 ## Supported icon sets
 
@@ -24,8 +21,8 @@ You can use one or many of the following icon sets out of the box:
 - [FontAwesome](https://fontawesome.com/icons) v4/v5/v6/v7
 - [Material](https://fonts.google.com/icons)
 - [Feather](https://feathericons.com/)
-- [Lucide](https://lucide.dev/) — a modern Feather fork with 1000+ icons
-- [Heroicons](https://heroicons.com/) — by the Tailwind CSS team
+- [Lucide](https://lucide.dev/), a modern Feather fork with 1000+ icons
+- [Heroicons](https://heroicons.com/), by the Tailwind CSS team
 
 You can also add your own custom icon set.
 
@@ -42,9 +39,10 @@ You can also add your own custom icon set.
 
 ## Next steps
 
-- [Installation](./installation) — install the plugin and load helpers.
-- [HtmlStringable](/helpers/html-stringable) — the core concept behind the helpers.
-- [Icon helper](/helpers/icon) — render icons from any configured set.
+- [Installation](./installation), install and register the plugin.
+- [Getting started](./getting-started.md), render your first SVG.
+- [HtmlStringable](/helpers/html-stringable), the core concept behind the helpers.
+- [Icon helper](/helpers/icon), render icons from any configured set.
 
 ## Demo
 

@@ -3,6 +3,7 @@
 namespace Templating\Test\TestCase\View\Icon;
 
 use Cake\TestSuite\TestCase;
+use DOMDocument;
 use RuntimeException;
 use Templating\View\Icon\BootstrapIcon;
 
@@ -122,6 +123,29 @@ class BootstrapIconTest extends TestCase {
 		$this->assertStringContainsString('viewBox="0 0 16 16"', (string)$result);
 
 		unlink($svgFile);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testSvgAttributesPreserveNamespacesEntitiesAndLiteralValues(): void {
+		$path = TMP . 'tests' . DS . 'svg-attributes';
+		if (!is_dir($path)) {
+			mkdir($path, 0777, true);
+		}
+		$file = $path . DS . 'attribute-probe.svg';
+		file_put_contents($file, '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="A &amp; B &gt; C"><use xlink:href="#shape"/></svg>');
+		try {
+			$icon = new BootstrapIcon(['svgPath' => $path]);
+			$result = (string)$icon->render('attribute-probe', [], ['title' => 'Price $1']);
+			$document = new DOMDocument();
+			$this->assertTrue($document->loadXML($result));
+			$this->assertSame('A & B > C', $document->documentElement->getAttribute('aria-label'));
+			$this->assertSame('Price $1', $document->documentElement->getAttribute('title'));
+			$this->assertSame('http://www.w3.org/1999/xlink', $document->documentElement->getAttribute('xmlns:xlink'));
+		} finally {
+			unlink($file);
+		}
 	}
 
 }

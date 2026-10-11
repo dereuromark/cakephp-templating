@@ -50,7 +50,7 @@ echo $this->Form->button(
 ```
 
 ::: tip
-When adding text, make sure it is safe and valid HTML — otherwise wrap it with
+When adding text, make sure it is safe and valid HTML, otherwise wrap it with
 `h()`.
 :::
 
@@ -114,7 +114,7 @@ echo $this->Form->postLink(
 
 ## Benefits
 
-- Cleaner code — no need to remember the `escapeTitle` option when using pure
+- Cleaner code, no need to remember the `escapeTitle` option when using pure
   `HtmlStringable` objects.
 - Works seamlessly with the [Icon helper](./icon).
 - Compatible with all existing `FormHelper` functionality.

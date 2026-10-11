@@ -15,9 +15,9 @@ $this->loadHelper('Templating.Templating', [
 
 It provides the following methods:
 
-- `ok()` — print content with markup to color it green/red.
-- `warning()` — wrap `ok()` to always show "red" right away.
-- `yesNo()` — convenience method combining icon rendering with colored output.
+- `ok()`, print content with markup to color it green/red.
+- `warning()`, wrap `ok()` to always show "red" right away.
+- `yesNo()`, convenience method combining icon rendering with colored output.
 
 ## ok()
 
@@ -32,7 +32,7 @@ echo $this->Templating->ok('Failed', false);  // Red text
 echo $this->Templating->ok($this->Icon->render('check'), true);
 
 // With attributes
-echo $this->Templating->ok('Status', $isActive, ['class' => 'status-badge']);
+echo $this->Templating->ok('Status', $isActive, ['data-state' => 'status']);
 
 // Disable escaping if needed
 echo $this->Templating->ok('<strong>Bold</strong>', true, ['escape' => false]);
@@ -51,7 +51,7 @@ echo $this->Templating->warning('Error occurred', false);  // Red text
 echo $this->Templating->warning('All good', true);  // Plain text (not colored)
 
 // With attributes
-echo $this->Templating->warning($errorMessage, $hasError, ['class' => 'alert']);
+echo $this->Templating->warning($errorMessage, !$hasError, ['data-state' => 'alert']);
 ```
 
 ## yesNo()
@@ -75,7 +75,7 @@ Make sure to configure these icons in your `Icon.map` app config:
 ```php
 // Basic usage
 echo $this->Templating->yesNo($user->is_active);  // Green check icon
-echo $this->Templating->yesNo($user->is_banned);  // Red times icon
+echo $this->Templating->yesNo(!$user->is_banned);  // Red times icon when banned
 
 // With options
 echo $this->Templating->yesNo($value, [
@@ -97,13 +97,13 @@ echo $this->Templating->yesNo($status, [], [
 
 **Parameters:**
 
-- `$value` (mixed) — value internally cast to bool.
-- `$options` (array) — optional configuration:
-  - `onTitle` (string) — title/tooltip for the true value (default: "Yes").
-  - `offTitle` (string) — title/tooltip for the false value (default: "No").
-  - `invert` (bool) — if true, green for no/false, red for yes/true.
-- `$attributes` (array) — HTML attributes for the icon element:
-  - `title` — custom title attribute.
+- `$value` (mixed), value internally cast to bool.
+- `$options` (array), optional configuration:
+  - `onTitle` (string), title/tooltip for the true value (default: "Yes").
+  - `offTitle` (string), title/tooltip for the false value (default: "No").
+  - `invert` (bool), if true, green for no/false, red for yes/true.
+- `$attributes` (array), HTML attributes for the icon element:
+  - `title`, custom title attribute.
   - Any other HTML attributes.
 
 **Returns:** a string with the colored icon HTML.
