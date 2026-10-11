@@ -34,7 +34,7 @@ class TemplatingHelper extends Helper {
 	/**
 	 * @var array
 	 */
-	protected array $_defaults = [
+	protected array $defaults = [
 		'templates' => [
 			'ok' => '<span class="ok-{{type}}" style="color:{{color}}"{{attributes}}>{{content}}</span>',
 		],
@@ -45,7 +45,7 @@ class TemplatingHelper extends Helper {
 	 * @param array<string, mixed> $config
 	 */
 	public function __construct(View $View, array $config = []) {
-		$defaults = (array)Configure::read('Templating') + $this->_defaults;
+		$defaults = (array)Configure::read('Templating') + $this->defaults;
 		$config += $defaults;
 
 		$this->template = new StringTemplate($config['templates']);

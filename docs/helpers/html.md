@@ -32,7 +32,7 @@ Creates a link element with optional icon or HTML content.
 echo $this->Html->link(
     $this->Icon->render('home'),
     ['controller' => 'Pages', 'action' => 'display', 'home'],
-    // ['escapeTitle' => false] is not necessary as it handles this internally
+    // ['escape' => false] is not necessary as it handles this internally
 );
 
 // With icon and text
@@ -77,7 +77,7 @@ echo $this->Html->link($title, ['action' => 'featured']);
 When you pass an `HtmlStringable` object (like an Icon) as the title parameter,
 the helper:
 
-1. automatically sets `escapeTitle` to `false`,
+1. automatically sets `escape` to `false`,
 2. converts the `HtmlStringable` to a string,
 3. passes it to the parent `HtmlHelper` method.
 
@@ -101,7 +101,7 @@ echo $this->Html->link(
     ['action' => 'edit', $id],
 );
 
-// Using string() method (concatenation requires escapeTitle)
+// Using string() method (concatenation requires escape)
 $badge = $this->Html->string('Product ' . '<span class="badge">New</span>');
 echo $this->Html->link(
     $badge,
@@ -118,7 +118,7 @@ echo $this->Html->link(
 
 ## Benefits
 
-- Cleaner code — no need to remember the `escapeTitle` option when using pure
+- Cleaner code — no need to remember the `escape` option when using pure
   `HtmlStringable` objects.
 - Works seamlessly with the [Icon helper](./icon).
 - Type-safe with the `HtmlStringable` interface.
@@ -141,9 +141,9 @@ tells the helper "this content is already safe HTML and should not be escaped."
 ```php
 // Any HtmlStringable object works (automatic handling)
 $icon = $this->Icon->render('check');
-echo $this->Html->link($icon, '/url');  // No escapeTitle needed
+echo $this->Html->link($icon, '/url');  // No escape needed
 
-// Concatenate them (becomes regular string, needs escapeTitle)
+// Concatenate them (becomes regular string, needs escape)
 $html = $this->Html->string('<em>Emphasis</em>');
 $combined = $icon . ' ' . $html . ' Text';
 echo $this->Html->link($this->Html->string($combined), '/url');

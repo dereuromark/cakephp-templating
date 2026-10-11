@@ -5,7 +5,7 @@ other helpers or template elements with ease.
 
 The idea is that the snippet knows how to behave (it should not be escaped), and
 your helpers can adjust themselves accordingly — saving you from sprinkling
-`'escapeTitle' => false'` all over your templates.
+`'escape' => false'` all over your templates.
 
 ## The problem it solves
 
@@ -14,7 +14,7 @@ Before, you had to disable title escaping by hand every time:
 ```php
 $icon = $this->Icon->render('delete');
 
-$this->Form->postLink($icon, ['action' => 'delete', $id], ['escapeTitle' => false]);
+$this->Form->postLink($icon, ['action' => 'delete', $id], ['escape' => false]);
 ```
 
 After, the helper recognizes the `HtmlStringable` and handles escaping for you:
@@ -55,7 +55,7 @@ $icon = new SvgIcon($name);
 $this->Html->link($icon, '/my/url');
 ```
 
-No more `escapeTitle` overhead. In these cases you need a `use` statement in the
+No more `escape` overhead. In these cases you need a `use` statement in the
 template, however.
 
 You can always just echo it as well:
@@ -133,7 +133,7 @@ the interface into the signature as done for the Html and Form helpers:
 ```php
 public function display(string|HtmlStringable $icon, array $options = []): string {
     if ($icon instanceof HtmlStringable) {
-        $options['escapeTitle'] = false;
+        $options['escape'] = false;
         $icon = (string)$icon;
     }
 
@@ -151,16 +151,12 @@ of transportation (for example an API) through different layers.
 
 Some methods (for example link generation) provide these options:
 
-- `escape` — set to `false` to disable escaping of title and attributes.
-- `escapeTitle` — set to `false` to disable escaping of the title only. Takes
-  precedence over the value of `escape`.
+- `escape` — set to `false` to disable escaping of element content.
+- `escapeAttributes` — controls HTML attribute escaping separately (enabled by default).
 
-::: warning Prefer escapeTitle over escape
-Make sure to use `escapeTitle` instead of `escape` where possible. The latter
-would not escape any elements in your HTML element, including other attributes,
-and can open you up to XSS vulnerabilities. The default usage of the value
-object is for the main title of the link.
-:::
+CakePHP 6 uses `escape` for element content and `escapeAttributes` for
+HTML attributes. The helpers disable content escaping for `HtmlStringable`
+values while retaining attribute escaping.
 
 In general, also make sure your HTML is safe and not user-provided in any way
 without proper sanitization.

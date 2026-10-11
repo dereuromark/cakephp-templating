@@ -28,7 +28,7 @@ features:
     details: Pick traditional icon fonts or inline SVG (JSON map or individual files). The helper auto-detects the mode from your configuration.
   - icon: 🔒
     title: HTML-Aware Helpers
-    details: The HtmlStringable contract lets value objects carry safe HTML, so you stop sprinkling escapeTitle => false across your templates.
+    details: The HtmlStringable contract lets value objects carry safe HTML, so you stop sprinkling escape => false across your templates.
   - icon: 🚀
     title: Built for Production
     details: Two-tier caching, SVG inlining, and existence checks that you can switch off in production for maximum throughput.

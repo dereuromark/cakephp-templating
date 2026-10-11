@@ -16,7 +16,7 @@ class IconCollection {
 	/**
 	 * @var array<string, mixed>
 	 */
-	protected array $_defaultConfig = [
+	protected array $defaultConfig = [
 		'cache' => null,
 		// When true, the auto-generated title attribute (humanized icon name) is run
 		// through __d('template', ...) at render time. Off by default to keep the
@@ -93,7 +93,7 @@ class IconCollection {
 		if ($this->names === null) {
 			$cache = $this->getConfig('cache') ?? 'default';
 			if ($cache) {
-				$cacheKey = 'icon-collection-' . md5(serialize($this->_config));
+				$cacheKey = 'icon-collection-' . md5(serialize($this->config));
 				$result = Cache::read($cacheKey, $cache);
 				if ($result) {
 					$this->names = $result;
@@ -118,7 +118,7 @@ class IconCollection {
 
 		$cache = $this->getConfig('cache') ?? 'default';
 		if ($cache) {
-			$cacheKey = 'icon-collection-' . md5(serialize($this->_config));
+			$cacheKey = 'icon-collection-' . md5(serialize($this->config));
 			Cache::write($cacheKey, $names, $cache);
 		}
 
@@ -146,7 +146,7 @@ class IconCollection {
 	 */
 	public function render(string $icon, array $options = [], array $attributes = []): HtmlStringable {
 		$iconName = null;
-		$separator = $this->_config['separator'];
+		$separator = $this->config['separator'];
 		if (!str_contains($icon, (string)$separator) && isset($this->map[$icon])) {
 			$iconName = $icon;
 			$icon = $this->map[$icon];
@@ -164,7 +164,7 @@ class IconCollection {
 			throw new RuntimeException('No such icon namespace: `' . $set . '`.');
 		}
 
-		$options += $this->_config;
+		$options += $this->config;
 		if (!isset($options['title']) || $options['title'] !== false) {
 			/** @var string $titleField */
 			$titleField = $options['titleField'] ?? 'title';
@@ -227,9 +227,9 @@ class IconCollection {
 	 * @return void
 	 */
 	protected function buildMap(): void {
-		$this->map = $this->_config['map'] ?? [];
+		$this->map = $this->config['map'] ?? [];
 
-		if (isset($this->_config['autoPrefix']) && $this->_config['autoPrefix'] === false) {
+		if (isset($this->config['autoPrefix']) && $this->config['autoPrefix'] === false) {
 			return;
 		}
 

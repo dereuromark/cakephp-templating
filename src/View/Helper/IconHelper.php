@@ -24,7 +24,7 @@ class IconHelper extends Helper {
 	/**
 	 * @var array
 	 */
-	protected array $_defaults = [
+	protected array $defaults = [
 		'sets' => [],
 		'paths' => [],
 		'autoPrefix' => true, // For primary set no prefix is required
@@ -36,7 +36,7 @@ class IconHelper extends Helper {
 	 * @param array<string, mixed> $config
 	 */
 	public function __construct(View $View, array $config = []) {
-		$defaults = (array)Configure::read('Icon') + $this->_defaults;
+		$defaults = (array)Configure::read('Icon') + $this->defaults;
 		$config += $defaults;
 
 		$this->collection = new IconCollection($config);
