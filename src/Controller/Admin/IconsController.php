@@ -53,6 +53,7 @@ class IconsController extends AppController {
 		}
 
 		Configure::write('Icon.checkExistence', false);
+		$config['checkExistence'] = false;
 
 		$icons = (new IconCollection($config))->names();
 		$count = 0;
@@ -75,6 +76,7 @@ class IconsController extends AppController {
 		}
 
 		Configure::write('Icon.checkExistence', false);
+		$config['checkExistence'] = false;
 
 		$icons = (new IconCollection($config))->names();
 		$flat = [];

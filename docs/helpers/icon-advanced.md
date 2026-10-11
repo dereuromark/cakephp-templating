@@ -29,6 +29,8 @@ behind your application's authentication/authorization.
 The plugin registers Admin routes when it is loaded. Its controller extends the application's `AppController`, so the host application's authentication and authorization callbacks apply. Protect these routes through that application policy. A route option such as `_auth => true` does not enforce access by itself.
 
 
+The browser reads `Configure::read('Icon')`. If you configured sets only in AppView, move those settings into the application's `Icon` configuration; otherwise the browser returns “No icon set defined yet!”. The helper also reads these shared defaults.
+
 ## IDE auto-complete
 
 Get full auto-completion for icon names using the
@@ -39,6 +41,8 @@ Get full auto-completion for icon names using the
 ```bash
 composer require --dev dereuromark/cakephp-ide-helper
 ```
+
+Load the IdeHelper plugin and configure `Icon.sets` in application configuration before running the generator. AppView-only settings are unavailable to this command.
 
 ### 2. Configure the generator task
 

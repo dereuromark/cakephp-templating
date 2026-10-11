@@ -134,13 +134,13 @@ class BootstrapIconTest extends TestCase {
 			mkdir($path, 0777, true);
 		}
 		$file = $path . DS . 'attribute-probe.svg';
-		file_put_contents($file, '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="A &amp; B"><use xlink:href="#shape"/></svg>');
+		file_put_contents($file, '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="A &amp; B &gt; C"><use xlink:href="#shape"/></svg>');
 		try {
 			$icon = new BootstrapIcon(['svgPath' => $path]);
 			$result = (string)$icon->render('attribute-probe', [], ['title' => 'Price $1']);
 			$document = new DOMDocument();
 			$this->assertTrue($document->loadXML($result));
-			$this->assertSame('A & B', $document->documentElement->getAttribute('aria-label'));
+			$this->assertSame('A & B > C', $document->documentElement->getAttribute('aria-label'));
 			$this->assertSame('Price $1', $document->documentElement->getAttribute('title'));
 			$this->assertSame('http://www.w3.org/1999/xlink', $document->documentElement->getAttribute('xmlns:xlink'));
 		} finally {

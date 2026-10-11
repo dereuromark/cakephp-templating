@@ -132,7 +132,7 @@ class IconSnippetHelper extends Helper {
 			$ret .= $this->Html->link(
 				$this->Icon->render('prev') . '&nbsp;' . h(__d('template', 'Previous {name}', ['name' => $name])),
 				$url,
-				['escape' => false, 'title' => $neighbors['prev'][$titleField]],
+				['escapeTitle' => false, 'title' => $neighbors['prev'][$titleField]],
 			);
 		} else {
 			$ret .= $this->Icon->render('prev');
@@ -148,7 +148,7 @@ class IconSnippetHelper extends Helper {
 			$ret .= $this->Html->link(
 				$this->Icon->render('next') . '&nbsp;' . h(__d('template', 'Next {name}', ['name' => $name])),
 				$url,
-				['escape' => false, 'title' => $neighbors['next'][$titleField]],
+				['escapeTitle' => false, 'title' => $neighbors['next'][$titleField]],
 			);
 		} else {
 			$ret .= $this->Icon->render('next') . '&nbsp;' . h(__d('template', 'Next {name}', ['name' => $name]));

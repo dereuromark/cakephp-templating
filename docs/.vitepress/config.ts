@@ -41,7 +41,8 @@ export default defineConfig({
   themeConfig: {
     logo: '/logo.svg',
     nav: [
-      { text: 'Guide', link: '/guide/', activeMatch: '/guide/' },
+      { text: 'Installation', link: '/guide/installation' },
+      { text: 'Getting started', link: '/guide/getting-started' },
       { text: 'Helpers', link: '/helpers/icon', activeMatch: '/helpers/' },
       {
         text: 'Links',

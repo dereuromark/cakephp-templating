@@ -120,8 +120,11 @@ Make sure to configure these icons in your `Icon.map` app config:
 **Usage:**
 
 ```php
-// In controller
-$neighbors = $this->Articles->find('neighbors', ['field' => 'id', 'value' => $id]);
+// Supply neighboring records from your application query.
+$neighbors = [
+    'prev' => ['id' => 10, 'title' => 'Previous article'],
+    'next' => ['id' => 12, 'title' => 'Next article'],
+];
 $this->set('neighbors', $neighbors);
 
 // In template
@@ -130,7 +133,7 @@ echo $this->IconSnippet->neighbors($neighbors, 'title');
 // With slug support
 echo $this->IconSnippet->neighbors($neighbors, 'title', [
     'slug' => true,
-    'name' => 'Article',  // Used for link text: "prevArticle", "nextArticle"
+    'name' => 'Article',  // Used for link text: "Previous Article", "Next Article"
 ]);
 
 // With custom title field
@@ -149,7 +152,7 @@ echo $this->IconSnippet->neighbors($neighbors, 'title', [
 - `$neighbors` (array), array containing `prev` and `next` records.
 - `$field` (string), field to use for the URL (for example, `id`, `slug`, `Model.field`).
 - `$options` (array), optional configuration:
-  - `name` (string), name used in link text (for example, `Article` becomes `prevArticle`, `nextArticle`).
+  - `name` (string), name used in link text (for example, `Article` becomes `Previous Article`, `Next Article`).
   - `slug` (bool), whether to slugify the field value for the URL (default: `false`).
   - `titleField` (string), field to use for the link title attribute (default: same as `$field`).
   - `url` (array), additional URL parameters to merge.

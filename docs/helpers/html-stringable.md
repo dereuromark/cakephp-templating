@@ -5,7 +5,7 @@ other helpers or template elements with ease.
 
 The idea is that the snippet knows how to behave (it should not be escaped), and
 your helpers can adjust themselves accordingly, saving you from sprinkling
-`'escapeTitle' => false'` all over your templates.
+`'escapeTitle' => false` all over your templates.
 
 ## The problem it solves
 
@@ -48,10 +48,14 @@ The same goes for any custom snippet of yours:
 ```php
 use Templating\View\HtmlStringable;
 
-class SvgGraph implements HtmlStringable { ... }
+class SvgGraph implements HtmlStringable {
+    public function __toString(): string {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>';
+    }
+}
 
 // in your templates
-$icon = new SvgIcon($name);
+$icon = new SvgGraph();
 $this->Html->link($icon, '/my/url');
 ```
 
@@ -120,7 +124,7 @@ When using `declare(strict_types=1);` you need to manually cast when passing a
 value object to methods that only accept `string`:
 
 ```php
-$icon = new SvgIcon($name);
+$icon = new SvgGraph();
 // CustomHelper::display(string $html) does not accept HtmlStringable
 $this->Custom->display((string)$icon);
 ```

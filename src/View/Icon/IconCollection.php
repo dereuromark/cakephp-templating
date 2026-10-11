@@ -98,8 +98,8 @@ class IconCollection {
 	public function names(bool $sort = false): array {
 		if ($this->names === null) {
 			$cache = $this->getConfig('cache') ?? 'default';
-			if ($cache) {
-				$cacheKey = 'icon-collection-' . md5(serialize([$this->_config, $this->setConfigs]));
+			$cacheKey = $cache ? $this->nameCacheKey() : null;
+			if ($cache && $cacheKey !== null) {
 				$result = Cache::read($cacheKey, $cache);
 				if ($result) {
 					$this->names = $result;
@@ -123,8 +123,8 @@ class IconCollection {
 		}
 
 		$cache = $this->getConfig('cache') ?? 'default';
-		if ($cache) {
-			$cacheKey = 'icon-collection-' . md5(serialize([$this->_config, $this->setConfigs]));
+		$cacheKey = $cache ? $this->nameCacheKey() : null;
+		if ($cache && $cacheKey !== null) {
 			Cache::write($cacheKey, $names, $cache);
 		}
 
@@ -135,6 +135,17 @@ class IconCollection {
 		}
 
 		return $names;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	protected function nameCacheKey(): ?string {
+		try {
+			return 'icon-collection-' . md5(serialize([$this->_config, $this->setConfigs]));
+		} catch (Exception) {
+			return null;
+		}
 	}
 
 	/**

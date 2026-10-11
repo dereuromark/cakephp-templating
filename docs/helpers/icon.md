@@ -60,7 +60,7 @@ $this->loadHelper('Templating.Icon', [
 ]);
 
 // In your template
-echo $this->Icon->render('house'); // <i class="bi bi-house"></i>
+echo $this->Icon->render('house'); // <span class="bi bi-house" title="House"></span>
 ```
 
 **SVG rendering (JSON map):**
@@ -196,7 +196,7 @@ Run npm commands from the application root. SVG and metadata examples below read
 | **Bootstrap Icons** | `BootstrapIcon` | `bootstrap-icons` |
 | **FontAwesome v7** | `FontAwesome7Icon` | `@fortawesome/fontawesome-free` |
 | **FontAwesome v6** | `FontAwesome6Icon` | `@fortawesome/fontawesome-free` |
-| **FontAwesome v5** | `FontAwesome5Icon` | `fontawesome-free` |
+| **FontAwesome v5** | `FontAwesome5Icon` | `@fortawesome/fontawesome-free@5` |
 | **FontAwesome v4** | `FontAwesome4Icon` | `font-awesome` |
 | **Lucide** | `LucideIcon` | `lucide-static` |
 | **Heroicons** | `HeroiconsIcon` | `heroicons` |
@@ -225,7 +225,11 @@ echo $this->Icon->render('user', [], ['class' => 'text-primary', 'title' => 'Use
 
 The Icon helper provides flexible prefixing to handle multiple icon sets.
 
-#### Auto-prefixing (default behavior)
+#Automatic aliases need readable `path` metadata or an `svgPath` directory/map for every participating set. Without those files, an unprefixed name falls back to the first set.
+
+### Auto-prefixing (default behavior)
+
+Automatic aliases require readable metadata or an SVG directory/map for every set. Clear the name cache after updating icon files.
 
 By default, `autoPrefix` is enabled, which automatically creates unprefixed
 aliases for all icons:
@@ -253,7 +257,7 @@ echo $this->Icon->render('fa6:user');
 
 #### Manual prefixing only
 
-Disable auto-prefixing to require explicit prefixes:
+Disable automatic alias generation. Unprefixed names still fall back to the first set:
 
 ```php
 'Icon' => [
@@ -270,11 +274,11 @@ Disable auto-prefixing to require explicit prefixes:
 ```
 
 ```php
-// Only explicit prefixes and manual mappings work
+// Explicit prefixes, manual mappings and the default set remain available
 echo $this->Icon->render('bs:house');  // Works
 echo $this->Icon->render('fa6:user');  // Works
 echo $this->Icon->render('home');      // Works (manual mapping)
-echo $this->Icon->render('house');     // Fails (no mapping, no auto-prefix)
+echo $this->Icon->render('house');     // Uses the first set
 ```
 
 #### Handling icon conflicts
@@ -321,7 +325,7 @@ echo $this->Icon->render('settings',
 
 - `translate` (bool), whether to translate the title attribute.
 - `titleField` (string), attribute name for auto-generated titles.
-- `title` (string|false), custom title, or `false` to disable the auto-title.
+- Put a custom `title` or `title => false` in the third, attributes argument. A string `title` in the second argument is deprecated.
 
 ### Auto-title translation
 

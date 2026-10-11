@@ -32,7 +32,7 @@ echo $this->Templating->ok('Failed', false);  // Red text
 echo $this->Templating->ok($this->Icon->render('check'), true);
 
 // With attributes
-echo $this->Templating->ok('Status', $isActive, ['class' => 'status-badge']);
+echo $this->Templating->ok('Status', $isActive, ['data-state' => 'status']);
 
 // Disable escaping if needed
 echo $this->Templating->ok('<strong>Bold</strong>', true, ['escape' => false]);
@@ -51,7 +51,7 @@ echo $this->Templating->warning('Error occurred', false);  // Red text
 echo $this->Templating->warning('All good', true);  // Plain text (not colored)
 
 // With attributes
-echo $this->Templating->warning($errorMessage, $hasError, ['class' => 'alert']);
+echo $this->Templating->warning($errorMessage, !$hasError, ['data-state' => 'alert']);
 ```
 
 ## yesNo()
@@ -75,7 +75,7 @@ Make sure to configure these icons in your `Icon.map` app config:
 ```php
 // Basic usage
 echo $this->Templating->yesNo($user->is_active);  // Green check icon
-echo $this->Templating->yesNo($user->is_banned);  // Red times icon
+echo $this->Templating->yesNo(!$user->is_banned);  // Red times icon when banned
 
 // With options
 echo $this->Templating->yesNo($value, [

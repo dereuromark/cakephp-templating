@@ -183,4 +183,21 @@ class IconCollectionTest extends TestCase {
 		$this->assertSame((string)$collection->render('bs|house'), (string)$collection->render('house'));
 	}
 
+	/**
+	 * @return void
+	 */
+	public function testNameCollectionAllowsNonSerializableSetOptions(): void {
+		$collection = new IconCollection([
+			'sets' => [
+				'bs' => [
+					'class' => BootstrapIcon::class,
+					'svgPath' => TEST_FILES . 'font_icon/bootstrap_svg',
+					'customCallback' => static fn () => true,
+				],
+			],
+		]);
+		$this->assertContains('house', $collection->names()['bs']);
+		$this->assertStringContainsString('<svg', (string)$collection->render('house'));
+	}
+
 }

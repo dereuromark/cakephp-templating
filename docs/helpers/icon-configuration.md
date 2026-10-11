@@ -46,7 +46,7 @@ are not available.
 **Output:** traditional HTML with CSS classes or data attributes:
 
 ```html
-<i class="bi bi-house"></i>
+<span class="bi bi-house" title="House"></span>
 <span data-lucide="home"></span>
 <span class="material-icons">home</span>
 ```
@@ -71,7 +71,13 @@ definitions:
             'class' => \Templating\View\Icon\FeatherIcon::class,
             'svgPath' => ROOT . DS . 'node_modules/feather-icons/dist/icons.json', // For rendering
             'path' => ROOT . DS . 'node_modules/feather-icons/dist/icons.json',    // For name collection
-            'svgAttributes' => [ // Custom SVG wrapper attributes
+            'svgAttributes' => [ // Complete SVG wrapper configuration
+                'xmlns' => 'http://www.w3.org/2000/svg',
+                'viewBox' => '0 0 24 24',
+                'fill' => 'none',
+                'stroke' => 'currentColor',
+                'stroke-linecap' => 'round',
+                'stroke-linejoin' => 'round',
                 'width' => '20',
                 'height' => '20',
                 'stroke-width' => '1.5',
@@ -190,7 +196,7 @@ Control SVG output optimization:
     'class' => \Templating\View\Icon\BootstrapIcon::class,
     'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json', // For names() method
 ],
-// Output: <i class="bi bi-house"></i>
+// Output: <span class="bi bi-house" title="House"></span>
 ```
 
 **SVG individual files:**
@@ -220,7 +226,7 @@ and forward compatibility.
     'class' => \Templating\View\Icon\FontAwesome6Icon::class,
     'path' => ROOT . DS . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json', // For names() method
 ],
-// Output: <i class="fas fa-home"></i>
+// Output: <span class="fa-solid fa-home" title="Home"></span>
 ```
 
 **SVG individual files (FontAwesome 6):**
@@ -278,7 +284,7 @@ and forward compatibility.
 ```
 
 ::: info
-As of the current version, Lucide does not provide JSON map files, so individual
+As of the current version, For Lucide, the directory example uses individual SVG files, so individual
 file mode is the only SVG option.
 :::
 
@@ -291,16 +297,7 @@ echo $this->Icon->render('lucide:user-circle');
 
 ### Heroicons
 
-**Font-based rendering:**
-
-```php
-'heroicons' => [
-    'class' => \Templating\View\Icon\HeroiconsIcon::class,
-    'path' => ROOT . DS . 'node_modules/heroicons/24/', // For names() method
-    'style' => 'outline', // 'outline' or 'solid'
-],
-// Output: <span class="heroicon-outline"></span>
-```
+Heroicons uses SVG files. Configure an SVG directory with the matching style.
 
 **SVG individual files:**
 
@@ -355,6 +352,12 @@ echo $this->Icon->render('lucide:user-circle');
     'path' => ROOT . DS . 'node_modules/feather-icons/dist/icons.json',    // Same file for names
     'svgPath' => true, // JSON map for rendering (use same as path)
     'svgAttributes' => [
+        'xmlns' => 'http://www.w3.org/2000/svg',
+        'viewBox' => '0 0 24 24',
+        'fill' => 'none',
+        'stroke' => 'currentColor',
+        'stroke-linecap' => 'round',
+        'stroke-linejoin' => 'round',
         'width' => '20',
         'height' => '20',
         'stroke-width' => '1.5',
@@ -441,7 +444,7 @@ echo $this->Icon->render('home');
 'Icon' => [
     // Global settings
     'cache' => 'default',           // Cache configuration name or false to disable
-    'checkExistence' => true,       // Validate icon names exist (disable in production)
+    'checkExistence' => true,       // Opt-in; needs readable icon metadata for every set
     'autoPrefix' => true,          // Auto-create unprefixed aliases for all icons
     'separator' => ':',            // Separator for namespaced icons (set:icon)
 
@@ -483,7 +486,11 @@ echo $this->Icon->render('home');
             // Additional icon-specific config
             'namespace' => 'custom-namespace',  // For Material Icons
             'style' => 'outline',              // For Heroicons
-            'svgAttributes' => [               // For JSON map SVG wrapper
+            'svgAttributes' => [               // Complete JSON map SVG wrapper
+                'xmlns' => 'http://www.w3.org/2000/svg',
+                'viewBox' => '0 0 24 24',
+                'fill' => 'none',
+                'stroke' => 'currentColor',
                 'width' => '20',
                 'height' => '20',
                 'stroke-width' => '1.5',
@@ -503,7 +510,7 @@ accepts a directory of `.svg` files or a JSON SVG map, which is what
 |----------|------------------------|
 | **Bootstrap** | `.json` (bootstrap-icons.json) |
 | **FontAwesome 4** | `.less`, `.scss` (variables files) |
-| **FontAwesome 5/6** | `.json`, `.yml` (icons metadata) |
+| **FontAwesome 5/6/7** | `.json`, `.yml` (requires ext-yaml), `.svg` sprite, SVG directory |
 | **Feather** | `.json` (icons.json) |
 | **Heroicons** | `.json`, directory with `outline/` and `solid/` subdirs |
 | **Lucide** | `.json`, directory of `.svg` files |
@@ -513,10 +520,10 @@ accepts a directory of `.svg` files or a JSON SVG map, which is what
 
 For SVG rendering, different formats are supported:
 
-| Format | Description | Performance | Use Case |
-|--------|-------------|-------------|----------|
-| **JSON Map** | Single `.json` file with all icons | Best | Production |
-| **Directory** | Folder containing `.svg` files | Good (with cache) | Selective usage |
+| Format | Description |
+|--------|-------------|
+| **JSON Map** | Reads the whole map; caches its contents |
+| **Directory** | Reads requested SVG files; caches each file |
 | **Subdirectories** | Style-based subdirs (Heroicons) | Good (with cache) | Multi-style icons |
 
 ### Configuration inheritance
@@ -660,10 +667,20 @@ Enable caching for better performance using global and/or per-set configuration:
     'sets' => [
         'bs' => [
             'class' => \Templating\View\Icon\BootstrapIcon::class,
-            'svgPath' => WWW_ROOT . 'icons/bootstrap-icons.json', // Use JSON map
+            'svgPath' => ROOT . DS . 'node_modules/bootstrap-icons/icons', // Individual fill-based SVG files
             'inline' => true, // Enable compression
             'cache' => 'default',
         ],
     ],
 ],
 ```
+
+## Cache and metadata details
+
+Icon name collection falls back to CakePHP's `default` cache when `Icon.cache` is unset. Clear that cache after changing installed icon files, or set `Icon.cache` to `false` while developing. File and map contents also have in-process caches.
+
+`checkExistence` is opt-in and defaults to off. Enabling it requires readable `path` metadata or `svgPath` files for every set. Font rendering without validation can work without metadata; automatic aliases and the admin browser still need names to collect.
+
+`svgAttributes` replaces the complete JSON-map wrapper defaults. Include `xmlns`, the appropriate `viewBox` and all required fill/stroke settings when you supply it. Individual SVG files retain their own root attributes.
+
+FontAwesome YAML metadata requires PHP's `ext-yaml`. JSON metadata, SVG sprite files and SVG directories avoid that optional extension.

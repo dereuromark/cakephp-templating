@@ -4,7 +4,7 @@
  * Templating Example Configuration
  *
  * Merge the keys below into your application's config/app.php (or
- * config/app_local.php) — do not replace the whole file, since this snippet
+ * config/app_local.php), do not replace the whole file, since this snippet
  * only contains this plugin's configuration. When copying entries that
  * reference imported classes, use fully-qualified class names or move the
  * `use` imports to the top of the target file. Customize the values as needed.
@@ -39,7 +39,7 @@ return [
 			// 'bs' => \Templating\View\Icon\BootstrapIcon::class,
 		],
 		// NOTE: per-set asset locations go inside each set's config above as `path` /
-		// `svgPath`. There is no top-level `Icon.paths` key — IconCollection does not
+		// `svgPath`. There is no top-level `Icon.paths` key, IconCollection does not
 		// read one, so setting it here has no effect.
 		// When true, an icon used without a set prefix resolves against the primary
 		// (first) set without requiring the prefix. Default: true.
@@ -49,6 +49,10 @@ return [
 		// Cache config name used when caching the icon name map. null falls back to the
 		// 'default' cache config; set to false to disable caching. Default: null.
 		'cache' => null,
+		// Optional name validation; requires readable metadata for every set.
+		// 'checkExistence' => true,
+		// 'map' => ['home' => 'bs:house'],
+		// 'attributes' => ['class' => 'app-icon'],
 		// When true, the auto-generated title attribute (humanized icon name) is run
 		// through translation at render time. Off by default to avoid PO scanner false
 		// positives and a per-render runtime cost. Default: false.

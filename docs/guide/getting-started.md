@@ -45,7 +45,7 @@ Add this to a template rendered through your AppView:
 
 You should see the house icon beside “Home”. The visible text names the item, so the decorative icon is hidden from assistive technology. Pass HTML attributes as the third argument; the old `title` option in the second argument is deprecated.
 
-If the icon is missing, check that `webroot/icons/home.svg` exists and the helper is loaded by the view rendering that template. A font-mode icon needs its library's CSS; this SVG example does not.
+If rendering reports “SVG icon file not found”, check that `webroot/icons/home.svg` exists and the helper is loaded by the view rendering that template. A font-mode icon needs its library's CSS; this SVG example does not.
 
 ## Continue
 
