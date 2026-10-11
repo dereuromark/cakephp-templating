@@ -7,50 +7,50 @@ use Templating\View\HtmlStringable;
 trait FormHelperTrait {
 
 	/**
-	 * @param \Templating\View\HtmlStringable|string $title
+	 * @param \Templating\View\HtmlStringable|string $content
 	 * @param array<string, mixed> $options
 	 *
 	 * @return string
 	 */
-	public function button(HtmlStringable|string $title, array $options = []): string {
-		if ($title instanceof HtmlStringable) {
-			$options['escapeTitle'] = false;
-			$title = (string)$title;
+	public function button(HtmlStringable|string $content, array $options = []): string {
+		if ($content instanceof HtmlStringable) {
+			$options['escape'] = false;
+			$content = (string)$content;
 		}
 
-		return parent::button($title, $options);
+		return parent::button($content, $options);
 	}
 
 	/**
-	 * @param \Templating\View\HtmlStringable|string $title
+	 * @param \Templating\View\HtmlStringable|string $content
 	 * @param array|string|null $url
 	 * @param array<string, mixed> $options
 	 *
 	 * @return string
 	 */
-	public function postLink(HtmlStringable|string $title, array|string|null $url = null, array $options = []): string {
-		if ($title instanceof HtmlStringable) {
-			$options['escapeTitle'] = false;
-			$title = (string)$title;
+	public function postLink(HtmlStringable|string $content, array|string|null $url = null, array $options = []): string {
+		if ($content instanceof HtmlStringable) {
+			$options['escape'] = false;
+			$content = (string)$content;
 		}
 
-		return parent::postLink($title, $url, $options);
+		return parent::postLink($content, $url, $options);
 	}
 
 	/**
-	 * @param \Templating\View\HtmlStringable|string $title
+	 * @param \Templating\View\HtmlStringable|string $content
 	 * @param array|string $url
 	 * @param array<string, mixed> $options
 	 *
 	 * @return string
 	 */
-	public function postButton(HtmlStringable|string $title, array|string $url, array $options = []): string {
-		if ($title instanceof HtmlStringable) {
-			$options['escapeTitle'] = false;
-			$title = (string)$title;
+	public function postButton(HtmlStringable|string $content, array|string $url, array $options = []): string {
+		if ($content instanceof HtmlStringable) {
+			$options['escape'] = false;
+			$content = (string)$content;
 		}
 
-		return parent::postButton($title, $url, $options);
+		return parent::postButton($content, $url, $options);
 	}
 
 }

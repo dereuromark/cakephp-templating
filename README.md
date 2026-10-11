@@ -22,7 +22,7 @@ You can use one or many of the following icon sets out of the box:
 
 You can also add your own custom icon set.
 
-The current branch targets CakePHP 5. Composer declares the supported PHP and framework ranges.
+This branch targets CakePHP 6 and PHP 8.5 or later. Development dependencies use the IDE Helper `cake6` branch.
 
 ## Documentation
 
