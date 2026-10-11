@@ -5,8 +5,9 @@ function sidebar() {
     {
       text: 'Guide',
       items: [
-        { text: 'Overview', link: '/guide/' },
         { text: 'Installation', link: '/guide/installation' },
+        { text: 'Getting started', link: '/guide/getting-started' },
+        { text: 'Overview', link: '/guide/' },
       ],
     },
     {
@@ -27,7 +28,7 @@ function sidebar() {
 
 export default defineConfig({
   title: 'cakephp-templating',
-  description: 'Convenient HTML helpers and out-of-the-box (font) icons for CakePHP — Bootstrap, FontAwesome, Material, Feather, Lucide, and Heroicons.',
+  description: 'Convenient HTML helpers and out-of-the-box (font) icons for CakePHP: Bootstrap, FontAwesome, Material, Feather, Lucide, and Heroicons.',
   base: '/cakephp-templating/',
   lastUpdated: true,
   cleanUrls: true,

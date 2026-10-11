@@ -2,7 +2,9 @@
 
 namespace Templating\Test\TestCase\View\Icon;
 
+use Cake\Cache\Cache;
 use Cake\TestSuite\TestCase;
+use Templating\View\Icon\BootstrapIcon;
 use Templating\View\Icon\FeatherIcon;
 use Templating\View\Icon\FontAwesome7Icon;
 use Templating\View\Icon\IconCollection;
@@ -145,6 +147,28 @@ class IconCollectionTest extends TestCase {
 
 		$result = (string)$collection->render('house', [], ['title' => false]);
 		$this->assertStringStartsWith('<svg', $result);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testPersistentNameCacheSeparatesIconSets(): void {
+		Cache::setConfig('templating_sets', ['className' => 'Array']);
+		try {
+			$first = new IconCollection([
+				'cache' => 'templating_sets',
+				'sets' => ['bootstrap' => ['class' => BootstrapIcon::class, 'svgPath' => TEST_FILES . 'font_icon/bootstrap_svg']],
+			]);
+			$this->assertArrayHasKey('bootstrap', $first->names());
+			$second = new IconCollection([
+				'cache' => 'templating_sets',
+				'sets' => ['feather' => ['class' => FeatherIcon::class, 'path' => TEST_FILES . 'font_icon/feather/icons.json']],
+			]);
+			$this->assertArrayHasKey('feather', $second->names());
+			$this->assertArrayNotHasKey('bootstrap', $second->names());
+		} finally {
+			Cache::drop('templating_sets');
+		}
 	}
 
 }

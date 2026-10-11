@@ -315,7 +315,7 @@ trait SvgRenderTrait {
 			}
 
 			$attributeString = $this->template->formatAttributes($mergedAttributes);
-			$svgContent = (string)preg_replace('/<svg[^>]*>/', '<svg' . $attributeString . '>', $svgContent, 1);
+			$svgContent = (string)preg_replace_callback('/<svg[^>]*>/', static fn () => '<svg' . $attributeString . '>', $svgContent, 1);
 		}
 
 		return $svgContent;
@@ -332,9 +332,9 @@ trait SvgRenderTrait {
 		$attributes = [];
 
 		// Match attribute="value" or attribute='value' patterns
-		if (preg_match_all('/([\w-]+)=(["\'])((?:(?!\2)[^\\\\]|\\\\.)*)\\2/', $attributeString, $matches, PREG_SET_ORDER)) {
+		if (preg_match_all('/([\w:.-]+)\s*=\s*(["\'])((?:(?!\2)[^\\\\]|\\\\.)*)\\2/', $attributeString, $matches, PREG_SET_ORDER)) {
 			foreach ($matches as $match) {
-				$attributes[$match[1]] = $match[3];
+				$attributes[$match[1]] = html_entity_decode($match[3], ENT_QUOTES | ENT_XML1, 'UTF-8');
 			}
 		}
 
