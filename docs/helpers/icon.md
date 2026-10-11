@@ -212,8 +212,8 @@ Run npm commands from the application root. SVG and metadata examples below read
 | **Feather** | `FeatherIcon` | `feather-icons` |
 | **Material Icons** | `MaterialIcon` | `material-symbols` |
 
-Besides these out-of-the-box ones, you can easily create your own Icon class —
-see [Creating custom icon sets](./icon-advanced#creating-custom-icon-sets).
+Besides these out-of-the-box ones, you can easily create your own Icon class.
+See [Creating custom icon sets](./icon-advanced#creating-custom-icon-sets).
 
 ## Usage
 
