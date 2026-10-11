@@ -26,17 +26,8 @@ The backend browser is not protected by default. Make sure to restrict access
 behind your application's authentication/authorization.
 :::
 
-```php
-// In your routes.php or controller
-$routes->prefix('Admin', function (RouteBuilder $builder) {
-    $builder->connect('/templating/icons', [
-        'plugin' => 'Templating',
-        'controller' => 'Icons',
-        'action' => 'index',
-        '_auth' => true, // Require authentication
-    ]);
-});
-```
+The plugin registers Admin routes when it is loaded. Its controller extends the application's `AppController`, so the host application's authentication and authorization callbacks apply. Protect these routes through that application policy. A route option such as `_auth => true` does not enforce access by itself.
+
 
 ## IDE auto-complete
 
@@ -71,7 +62,7 @@ bin/cake ide_helper generate
 Your IDE will now provide auto-completion for the icon names:
 
 ```php
-$this->Icon->render('| // Auto-complete shows available icons
+$this->Icon->render('home'); // Complete an icon name inside the string
 ```
 
 ## Creating custom icon sets
@@ -162,7 +153,7 @@ Create semantic aliases for better maintainability:
 
 ### Accessibility
 
-Always provide meaningful titles:
+Give an icon-only control an accessible name. Hide decorative icons beside visible labels using `aria-hidden="true"` and `title => false`. For an icon that needs its own label:
 
 ```php
 echo $this->Icon->render('delete', [], [

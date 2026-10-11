@@ -13,9 +13,9 @@ configuration.
 ::: important Two different path configurations
 There are two distinct path options:
 
-- **`path`** — used for collecting icon names (metadata files like `.json`,
+- **`path`**, used for collecting icon names (metadata files like `.json`,
   `.less`, `.ts`, or the path of icons if no metadata file exists).
-- **`svgPath`** — used for rendering SVG icons (either a directory of `.svg`
+- **`svgPath`**, used for rendering SVG icons (either a directory of `.svg`
   files or a `.json` map). Set to `true` if it equals the `path`.
 
 Without `path`, icon names are collected from `svgPath`: the `.svg` file names
@@ -37,7 +37,7 @@ are not available.
         // Optional: Add 'path' for icon name collection (backend browser)
         'bs-with-names' => [
             'class' => \Templating\View\Icon\BootstrapIcon::class,
-            'path' => WWW_ROOT . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
+            'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
         ],
     ],
 ],
@@ -69,8 +69,8 @@ definitions:
     'sets' => [
         'feather' => [
             'class' => \Templating\View\Icon\FeatherIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json', // For rendering
-            'path' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',    // For name collection
+            'svgPath' => ROOT . DS . 'node_modules/feather-icons/dist/icons.json', // For rendering
+            'path' => ROOT . DS . 'node_modules/feather-icons/dist/icons.json',    // For name collection
             'svgAttributes' => [ // Custom SVG wrapper attributes
                 'width' => '20',
                 'height' => '20',
@@ -112,14 +112,14 @@ not available.
     'sets' => [
         'lucide' => [
             'class' => \Templating\View\Icon\LucideIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/lucide-static/icons/', // For rendering
-            'path' => WWW_ROOT . 'node_modules/lucide-static/icons/',    // For name collection
+            'svgPath' => ROOT . DS . 'node_modules/lucide-static/icons/', // For rendering
+            'path' => ROOT . DS . 'node_modules/lucide-static/icons/',    // For name collection
             'cache' => 'default', // Highly recommended for file-based mode
         ],
         'heroicons' => [
             'class' => \Templating\View\Icon\HeroiconsIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/heroicons/24/',       // For rendering (includes outline/solid subdirs)
-            'path' => WWW_ROOT . 'node_modules/heroicons/24/',          // For name collection
+            'svgPath' => ROOT . DS . 'node_modules/heroicons/24/',       // For rendering (includes outline/solid subdirs)
+            'path' => ROOT . DS . 'node_modules/heroicons/24/',          // For name collection
             'style' => 'outline', // 'outline' or 'solid'
         ],
     ],
@@ -188,7 +188,7 @@ Control SVG output optimization:
 ```php
 'bs' => [
     'class' => \Templating\View\Icon\BootstrapIcon::class,
-    'path' => WWW_ROOT . 'node_modules/bootstrap-icons/font/bootstrap-icons.json', // For names() method
+    'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json', // For names() method
 ],
 // Output: <i class="bi bi-house"></i>
 ```
@@ -198,8 +198,8 @@ Control SVG output optimization:
 ```php
 'bs' => [
     'class' => \Templating\View\Icon\BootstrapIcon::class,
-    'path' => WWW_ROOT . 'node_modules/bootstrap-icons/font/bootstrap-icons.json', // For names() method
-    'svgPath' => WWW_ROOT . 'node_modules/bootstrap-icons/icons/', // Directory with .svg files
+    'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json', // For names() method
+    'svgPath' => ROOT . DS . 'node_modules/bootstrap-icons/icons/', // Directory with .svg files
     'cache' => 'default', // Recommended for file-based mode
 ],
 // Output: <svg>...</svg> (loaded from individual .svg files)
@@ -218,7 +218,7 @@ and forward compatibility.
 ```php
 'fa6' => [
     'class' => \Templating\View\Icon\FontAwesome6Icon::class,
-    'path' => WWW_ROOT . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json', // For names() method
+    'path' => ROOT . DS . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json', // For names() method
 ],
 // Output: <i class="fas fa-home"></i>
 ```
@@ -228,8 +228,8 @@ and forward compatibility.
 ```php
 'fa6' => [
     'class' => \Templating\View\Icon\FontAwesome6Icon::class,
-    'svgPath' => WWW_ROOT . 'node_modules/@fortawesome/fontawesome-free/svgs/solid/', // Directory with .svg files
-    'path' => WWW_ROOT . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json', // For names() method
+    'svgPath' => ROOT . DS . 'node_modules/@fortawesome/fontawesome-free/svgs/solid/', // Directory with .svg files
+    'path' => ROOT . DS . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json', // For names() method
     'cache' => 'default', // Recommended for file-based mode
 ],
 // Output: <svg>...</svg> (loaded from individual .svg files)
@@ -259,7 +259,7 @@ and forward compatibility.
 ```php
 'lucide' => [
     'class' => \Templating\View\Icon\LucideIcon::class,
-    'path' => WWW_ROOT . 'node_modules/lucide-static/icons/', // For names() method
+    'path' => ROOT . DS . 'node_modules/lucide-static/icons/', // For names() method
 ],
 // Output: <span data-lucide="home"></span>
 ```
@@ -269,7 +269,7 @@ and forward compatibility.
 ```php
 'lucide' => [
     'class' => \Templating\View\Icon\LucideIcon::class,
-    'path' => WWW_ROOT . 'node_modules/lucide-static/icons/', // For names() method
+    'path' => ROOT . DS . 'node_modules/lucide-static/icons/', // For names() method
     'svgPath' => true, // Directory with .svg files (use same as path)
     'cache' => 'default', // Highly recommended
     'inline' => true, // Compress SVG output
@@ -296,7 +296,7 @@ echo $this->Icon->render('lucide:user-circle');
 ```php
 'heroicons' => [
     'class' => \Templating\View\Icon\HeroiconsIcon::class,
-    'path' => WWW_ROOT . 'node_modules/heroicons/24/', // For names() method
+    'path' => ROOT . DS . 'node_modules/heroicons/24/', // For names() method
     'style' => 'outline', // 'outline' or 'solid'
 ],
 // Output: <span class="heroicon-outline"></span>
@@ -307,7 +307,7 @@ echo $this->Icon->render('lucide:user-circle');
 ```php
 'heroicons' => [
     'class' => \Templating\View\Icon\HeroiconsIcon::class,
-    'path' => WWW_ROOT . 'node_modules/heroicons/24/', // For names() method
+    'path' => ROOT . DS . 'node_modules/heroicons/24/', // For names() method
     'svgPath' => true, // Directory with style subdirs (use same as path)
     'style' => 'outline', // 'outline' or 'solid'
     'cache' => 'default',
@@ -321,7 +321,7 @@ echo $this->Icon->render('lucide:user-circle');
 // 24x24 icons (outline and solid styles available)
 'heroicons-24' => [
     'class' => \Templating\View\Icon\HeroiconsIcon::class,
-    'svgPath' => WWW_ROOT . 'node_modules/heroicons/24/', // SVG individual files mode
+    'svgPath' => ROOT . DS . 'node_modules/heroicons/24/', // SVG individual files mode
     'style' => 'outline',
     'cache' => 'default',
 ],
@@ -329,7 +329,7 @@ echo $this->Icon->render('lucide:user-circle');
 // 20x20 icons (solid only)
 'heroicons-20' => [
     'class' => \Templating\View\Icon\HeroiconsIcon::class,
-    'svgPath' => WWW_ROOT . 'node_modules/heroicons/20/', // SVG individual files mode
+    'svgPath' => ROOT . DS . 'node_modules/heroicons/20/', // SVG individual files mode
     'style' => 'solid', // Only solid available for 20px
     'cache' => 'default',
 ],
@@ -343,7 +343,7 @@ echo $this->Icon->render('lucide:user-circle');
 'feather' => [
     'class' => \Templating\View\Icon\FeatherIcon::class,
     // No svgPath - uses data-feather attributes for client-side rendering
-    'path' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json', // For name collection
+    'path' => ROOT . DS . 'node_modules/feather-icons/dist/icons.json', // For name collection
 ],
 ```
 
@@ -352,7 +352,7 @@ echo $this->Icon->render('lucide:user-circle');
 ```php
 'feather' => [
     'class' => \Templating\View\Icon\FeatherIcon::class,
-    'path' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',    // Same file for names
+    'path' => ROOT . DS . 'node_modules/feather-icons/dist/icons.json',    // Same file for names
     'svgPath' => true, // JSON map for rendering (use same as path)
     'svgAttributes' => [
         'width' => '20',
@@ -367,8 +367,8 @@ echo $this->Icon->render('lucide:user-circle');
 ```php
 'feather' => [
     'class' => \Templating\View\Icon\FeatherIcon::class,
-    'path' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',   // JSON file for names
-    'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons/',    // Directory of .svg files
+    'path' => ROOT . DS . 'node_modules/feather-icons/dist/icons.json',   // JSON file for names
+    'svgPath' => ROOT . DS . 'node_modules/feather-icons/dist/icons/',    // Directory of .svg files
     'cache' => 'default',
 ],
 ```
@@ -382,7 +382,7 @@ echo $this->Icon->render('lucide:user-circle');
     'class' => \Templating\View\Icon\MaterialIcon::class,
     'namespace' => 'material-icons', // CSS class name
     // For name collection from TypeScript definitions
-    'path' => WWW_ROOT . 'node_modules/material-symbols/index.d.ts',
+    'path' => ROOT . DS . 'node_modules/material-symbols/index.d.ts',
 ],
 ```
 
@@ -391,8 +391,8 @@ echo $this->Icon->render('lucide:user-circle');
 ```php
 'material' => [
     'class' => \Templating\View\Icon\MaterialIcon::class,
-    'path' => WWW_ROOT . 'node_modules/material-symbols/index.d.ts',     // TypeScript file for names
-    'svgPath' => WWW_ROOT . 'node_modules/material-symbols/svg/',        // Directory of .svg files
+    'path' => ROOT . DS . 'node_modules/material-symbols/index.d.ts',     // TypeScript file for names
+    'svgPath' => ROOT . DS . 'node_modules/material-symbols/svg/',        // Directory of .svg files
     'namespace' => 'material-symbols-outlined', // Used for font fallback
     'cache' => 'default',
 ],
@@ -464,10 +464,10 @@ echo $this->Icon->render('home');
             'class' => \Templating\View\Icon\BootstrapIcon::class,
 
             // Icon name collection (for backend browser, IDE helper)
-            'path' => WWW_ROOT . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
+            'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
 
             // SVG rendering (optional)
-            'svgPath' => WWW_ROOT . 'node_modules/bootstrap-icons/icons/',
+            'svgPath' => ROOT . DS . 'node_modules/bootstrap-icons/icons/',
 
             // Caching (inherits global if not set)
             'cache' => 'icons',
@@ -613,8 +613,8 @@ Enable caching for better performance using global and/or per-set configuration:
 
 **Two-tier caching system:**
 
-1. **In-memory cache** — caches content per request (automatic).
-2. **CakePHP cache** — persists across requests using your cache configuration.
+1. **In-memory cache**, caches content per request (automatic).
+2. **CakePHP cache**, persists across requests using your cache configuration.
 
 ### Cache storage types
 

@@ -171,4 +171,16 @@ class IconCollectionTest extends TestCase {
 		}
 	}
 
+	/**
+	 * @return void
+	 */
+	public function testAutomaticAliasesUseConfiguredSeparator(): void {
+		$collection = new IconCollection([
+			'cache' => false,
+			'separator' => '|',
+			'sets' => ['bs' => ['class' => BootstrapIcon::class, 'svgPath' => TEST_FILES . 'font_icon/bootstrap_svg']],
+		]);
+		$this->assertSame((string)$collection->render('bs|house'), (string)$collection->render('house'));
+	}
+
 }

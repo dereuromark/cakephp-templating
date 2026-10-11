@@ -4,7 +4,7 @@ The `HtmlStringable` interface lets you build any HTML snippet and use it inside
 other helpers or template elements with ease.
 
 The idea is that the snippet knows how to behave (it should not be escaped), and
-your helpers can adjust themselves accordingly — saving you from sprinkling
+your helpers can adjust themselves accordingly, saving you from sprinkling
 `'escapeTitle' => false'` all over your templates.
 
 ## The problem it solves
@@ -77,7 +77,7 @@ $this->addHelper('Templating.Html');
 $this->addHelper('Templating.Form');
 ```
 
-Or add the traits to your app's own helpers — necessary if you already extended
+Or add the traits to your app's own helpers, necessary if you already extended
 or added other helper methods:
 
 ```php
@@ -151,8 +151,8 @@ of transportation (for example an API) through different layers.
 
 Some methods (for example link generation) provide these options:
 
-- `escape` — set to `false` to disable escaping of title and attributes.
-- `escapeTitle` — set to `false` to disable escaping of the title only. Takes
+- `escape`, set to `false` to disable escaping of title and attributes.
+- `escapeTitle`, set to `false` to disable escaping of the title only. Takes
   precedence over the value of `escape`.
 
 ::: warning Prefer escapeTitle over escape

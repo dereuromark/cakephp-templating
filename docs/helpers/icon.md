@@ -9,8 +9,8 @@ optimized for different use cases and performance requirements.
 
 This page covers the overview, quick start, setup, and everyday usage. See also:
 
-- [Icon Configuration](./icon-configuration) — the full configuration reference and per-set setups.
-- [Icon Advanced](./icon-advanced) — backend browser, IDE auto-complete, custom sets, and best practices.
+- [Icon Configuration](./icon-configuration), the full configuration reference and per-set setups.
+- [Icon Advanced](./icon-advanced), backend browser, IDE auto-complete, custom sets, and best practices.
 
 ## Key features
 
@@ -36,9 +36,9 @@ This page covers the overview, quick start, setup, and everyday usage. See also:
 **JSON map (recommended)**
 
 - All icons loaded from a single JSON file.
-- Best performance (single file load).
+- Reads the map once before caching its contents.
 - Full SVG customization plus caching benefits.
-- Most efficient for large icon libraries.
+- The whole map occupies memory even when only one icon is rendered.
 
 **Individual SVG files**
 
@@ -71,7 +71,7 @@ $this->loadHelper('Templating.Icon', [
     'sets' => [
         'feather' => [
             'class' => \Templating\View\Icon\FeatherIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/feather-icons/dist/icons.json',
+            'svgPath' => ROOT . DS . 'node_modules/feather-icons/dist/icons.json',
         ],
     ],
 ]);
@@ -88,7 +88,7 @@ $this->loadHelper('Templating.Icon', [
     'sets' => [
         'lucide' => [
             'class' => \Templating\View\Icon\LucideIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/lucide-static/icons/',
+            'svgPath' => ROOT . DS . 'node_modules/lucide-static/icons/',
         ],
     ],
 ]);
@@ -106,6 +106,8 @@ Add the Icon helper to your `src/View/AppView.php`:
 ```php
 public function initialize(): void
 {
+    parent::initialize();
+
     $this->loadHelper('Templating.Icon', [
         'sets' => [
             'bs' => \Templating\View\Icon\BootstrapIcon::class,
@@ -148,7 +150,7 @@ npm install material-symbols
 
 ::: important Font CSS is your responsibility
 For font-based icons, you must include the necessary CSS/font files in your
-layout yourself. The plugin only generates the HTML markup — it does not handle
+layout yourself. The plugin only generates the HTML markup, it does not handle
 loading stylesheets or font files.
 :::
 
@@ -156,7 +158,7 @@ loading stylesheets or font files.
 When deploying your application, ensure icon files are available in production.
 If using npm-installed icons, include them in your build/deployment process or
 copy them to a permanent location. The plugin expects icon files to exist at the
-configured paths — missing files will cause runtime errors.
+configured paths, missing files will cause runtime errors.
 :::
 
 ### 3. Configuration
@@ -168,11 +170,11 @@ You can store default configurations in `config/app.php`:
     'sets' => [
         'bs' => [
             'class' => \Templating\View\Icon\BootstrapIcon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/bootstrap-icons/icons/',
+            'svgPath' => ROOT . DS . 'node_modules/bootstrap-icons/icons/',
         ],
         'fa6' => [
             'class' => \Templating\View\Icon\FontAwesome6Icon::class,
-            'svgPath' => WWW_ROOT . 'node_modules/@fortawesome/fontawesome-free/svgs/solid/',
+            'svgPath' => ROOT . DS . 'node_modules/@fortawesome/fontawesome-free/svgs/solid/',
         ],
     ],
     'map' => [
@@ -185,19 +187,21 @@ You can store default configurations in `config/app.php`:
 
 See [Icon Configuration](./icon-configuration) for the full reference.
 
+Run npm commands from the application root. SVG and metadata examples below read from that root's `node_modules` directory. Copy font CSS and referenced font files into `webroot`, or serve them through your application's asset build.
+
 ## Supported icon sets
 
-| Icon Set | Class | Icons | License | NPM Package |
-|----------|-------|-------|---------|-------------|
-| **Bootstrap Icons** | `BootstrapIcon` | 1,800+ | MIT | `bootstrap-icons` |
-| **FontAwesome v7** | `FontAwesome7Icon` | 2,000+ | Font Awesome | `@fortawesome/fontawesome-free` |
-| **FontAwesome v6** | `FontAwesome6Icon` | 2,000+ | Font Awesome | `@fortawesome/fontawesome-free` |
-| **FontAwesome v5** | `FontAwesome5Icon` | 1,600+ | Font Awesome | `fontawesome-free` |
-| **FontAwesome v4** | `FontAwesome4Icon` | 800+ | Font Awesome | `font-awesome` |
-| **Lucide** | `LucideIcon` | 1,000+ | ISC | `lucide-static` |
-| **Heroicons** | `HeroiconsIcon` | 300+ | MIT | `heroicons` |
-| **Feather** | `FeatherIcon` | 280+ | MIT | `feather-icons` |
-| **Material Icons** | `MaterialIcon` | 2,000+ | Apache 2.0 | `material-symbols` |
+| Icon Set | Class | NPM Package |
+|----------|-------|-------------|
+| **Bootstrap Icons** | `BootstrapIcon` | `bootstrap-icons` |
+| **FontAwesome v7** | `FontAwesome7Icon` | `@fortawesome/fontawesome-free` |
+| **FontAwesome v6** | `FontAwesome6Icon` | `@fortawesome/fontawesome-free` |
+| **FontAwesome v5** | `FontAwesome5Icon` | `fontawesome-free` |
+| **FontAwesome v4** | `FontAwesome4Icon` | `font-awesome` |
+| **Lucide** | `LucideIcon` | `lucide-static` |
+| **Heroicons** | `HeroiconsIcon` | `heroicons` |
+| **Feather** | `FeatherIcon` | `feather-icons` |
+| **Material Icons** | `MaterialIcon` | `material-symbols` |
 
 Besides these out-of-the-box ones, you can easily create your own Icon class —
 see [Creating custom icon sets](./icon-advanced#creating-custom-icon-sets).
@@ -315,9 +319,9 @@ echo $this->Icon->render('settings',
 
 **Available options:**
 
-- `translate` (bool) — whether to translate the title attribute.
-- `titleField` (string) — attribute name for auto-generated titles.
-- `title` (string|false) — custom title, or `false` to disable the auto-title.
+- `translate` (bool), whether to translate the title attribute.
+- `titleField` (string), attribute name for auto-generated titles.
+- `title` (string|false), custom title, or `false` to disable the auto-title.
 
 ### Auto-title translation
 

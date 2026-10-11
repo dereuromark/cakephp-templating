@@ -255,7 +255,7 @@ class IconCollection {
 					continue;
 				}
 
-				$this->map[$icon] = $set . ':' . $icon;
+				$this->map[$icon] = $set . $this->getConfig('separator') . $icon;
 			}
 		}
 	}

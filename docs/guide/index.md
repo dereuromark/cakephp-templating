@@ -24,8 +24,8 @@ You can use one or many of the following icon sets out of the box:
 - [FontAwesome](https://fontawesome.com/icons) v4/v5/v6/v7
 - [Material](https://fonts.google.com/icons)
 - [Feather](https://feathericons.com/)
-- [Lucide](https://lucide.dev/) — a modern Feather fork with 1000+ icons
-- [Heroicons](https://heroicons.com/) — by the Tailwind CSS team
+- [Lucide](https://lucide.dev/), a modern Feather fork with 1000+ icons
+- [Heroicons](https://heroicons.com/), by the Tailwind CSS team
 
 You can also add your own custom icon set.
 
@@ -42,9 +42,9 @@ You can also add your own custom icon set.
 
 ## Next steps
 
-- [Installation](./installation) — install the plugin and load helpers.
-- [HtmlStringable](/helpers/html-stringable) — the core concept behind the helpers.
-- [Icon helper](/helpers/icon) — render icons from any configured set.
+- [Installation](./installation), install the plugin and load helpers.
+- [HtmlStringable](/helpers/html-stringable), the core concept behind the helpers.
+- [Icon helper](/helpers/icon), render icons from any configured set.
 
 ## Demo
 
