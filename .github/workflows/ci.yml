@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - cake6
   pull_request:
   workflow_dispatch:
 
@@ -16,10 +16,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.2', '8.5']
+        php-version: ['8.5']
         prefer-lowest: ['']
         include:
-          - php-version: '8.2'
+          - php-version: '8.5'
             prefer-lowest: 'prefer-lowest'
 
     steps:
@@ -31,7 +31,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl
+          extensions: mbstring, intl, yaml
           coverage: pcov
 
       - name: Get composer cache directory
@@ -56,7 +56,7 @@ jobs:
           fi
       - name: Run PHPUnit
         run: |
-          if [[ ${{ matrix.php-version }} == '8.2' ]]
+          if [[ ${{ matrix.php-version }} == '8.5' ]]
           then
             vendor/bin/phpunit --coverage-clover=coverage.xml
           else
@@ -67,7 +67,7 @@ jobs:
         run: vendor/bin/validate-prefer-lowest -m
 
       - name: Upload coverage reports to Codecov
-        if: success() && matrix.php-version == '8.2'
+        if: success() && matrix.php-version == '8.5'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -84,8 +84,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
-          extensions: mbstring, intl
+          php-version: '8.5'
+          extensions: mbstring, intl, yaml
           coverage: none
 
       - name: Get composer cache directory

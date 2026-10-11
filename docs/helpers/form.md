@@ -33,13 +33,13 @@ Creates a button element with optional icon or HTML content.
 // With icon
 echo $this->Form->button(
     $this->Icon->render('save'),
-    // ['escapeTitle' => false] is not necessary as it handles this internally
+    // ['escape' => false] is not necessary as it handles this internally
 );
 
 // With text
 echo $this->Form->button(
     $this->Html->string('<b>Save</b>'),
-    // ['escapeTitle' => false] is not necessary as it handles this internally
+    // ['escape' => false] is not necessary as it handles this internally
 );
 
 // With multiple elements or string concat requires wrapping
@@ -85,17 +85,17 @@ echo $this->Form->postButton(
 When you pass an `HtmlStringable` object (like an Icon) as the title parameter,
 the helper:
 
-1. automatically sets `escapeTitle` to `false`,
+1. automatically sets `escape` to `false`,
 2. converts the `HtmlStringable` to a string,
 3. passes it to the parent `FormHelper` method.
 
-This means you do not need to manually set `'escapeTitle' => false` when using
+This means you do not need to manually set `'escape' => false` when using
 icons or other HTML content.
 
 ## Example usage
 
 ```php
-// Icon only - automatic handling (no escapeTitle needed)
+// Icon only - automatic handling (no escape needed)
 echo $this->Form->button(
     $this->Icon->render('save'),
     ['type' => 'submit']
@@ -114,7 +114,7 @@ echo $this->Form->postLink(
 
 ## Benefits
 
-- Cleaner code, no need to remember the `escapeTitle` option when using pure
+- Cleaner code, no need to remember the `escape` option when using pure
   `HtmlStringable` objects.
 - Works seamlessly with the [Icon helper](./icon).
 - Compatible with all existing `FormHelper` functionality.

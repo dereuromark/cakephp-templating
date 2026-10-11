@@ -8,36 +8,36 @@ use Templating\View\HtmlStringable;
 trait HtmlHelperTrait {
 
 	/**
-	 * @param \Templating\View\HtmlStringable|array|string $title
+	 * @param \Templating\View\HtmlStringable|array|string $content
 	 * @param array|string|null $url
 	 * @param array<string, mixed> $options
 	 *
 	 * @return string
 	 */
-	public function link(HtmlStringable|array|string $title, array|string|null $url = null, array $options = []): string {
-		if ($title instanceof HtmlStringable) {
-			$options['escapeTitle'] = false;
-			$title = (string)$title;
+	public function link(HtmlStringable|array|string $content, array|string|null $url = null, array $options = []): string {
+		if ($content instanceof HtmlStringable) {
+			$options['escape'] = false;
+			$content = (string)$content;
 		}
 
-		return parent::link($title, $url, $options);
+		return parent::link($content, $url, $options);
 	}
 
 	/**
-	 * @param \Templating\View\HtmlStringable|string $title
+	 * @param \Templating\View\HtmlStringable|string $content
 	 * @param string $path
 	 * @param array $params
 	 * @param array<string, mixed> $options
 	 *
 	 * @return string
 	 */
-	public function linkFromPath(HtmlStringable|string $title, string $path, array $params = [], array $options = []): string {
-		if ($title instanceof HtmlStringable) {
-			$options['escapeTitle'] = false;
-			$title = (string)$title;
+	public function linkFromPath(HtmlStringable|string $content, string $path, array $params = [], array $options = []): string {
+		if ($content instanceof HtmlStringable) {
+			$options['escape'] = false;
+			$content = (string)$content;
 		}
 
-		return parent::linkFromPath($title, $path, $params, $options);
+		return parent::linkFromPath($content, $path, $params, $options);
 	}
 
 	/**
