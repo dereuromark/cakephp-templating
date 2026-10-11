@@ -24,6 +24,8 @@ You can also add your own custom icon set.
 
 This branch targets CakePHP 6 and PHP 8.5 or later. Development dependencies use the IDE Helper `cake6` branch.
 
+Composer applications consuming this development branch must set `minimum-stability` to `dev` and `prefer-stable` to `true`, then require this plugin as `dev-cake6`. Companion plugins also use their `cake6` branches. The published documentation website covers stable CakePHP 5 releases; use this branch's `docs/` directory for the upgrade documentation.
+
 ## Documentation
 
 Full documentation lives at **[dereuromark.github.io/cakephp-templating](https://dereuromark.github.io/cakephp-templating/)**.
