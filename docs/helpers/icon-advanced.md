@@ -1,7 +1,7 @@
 # Icon Advanced
 
 This page covers the backend icon browser, IDE auto-complete, creating your own
-icon sets, and best practices. For everyday usage see the [Icon helper](./icon),
+icon sets, and configuration tips. For everyday usage see the [Icon helper](./icon),
 and for the configuration reference see [Icon Configuration](./icon-configuration).
 
 ## Backend browser
@@ -125,7 +125,7 @@ class CustomIcon extends AbstractIcon {
 echo $this->Icon->render('custom:icon1');
 ```
 
-## Tips and best practices
+## Tips and configuration tips
 
 ### Icon mapping strategy
 

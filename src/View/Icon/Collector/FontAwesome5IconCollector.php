@@ -33,7 +33,13 @@ class FontAwesome5IconCollector extends AbstractCollector {
 
 					break;
 				case 'yml':
+					if (!function_exists('yaml_parse')) {
+						throw new RuntimeException('YAML metadata requires ext-yaml. Use JSON metadata or an SVG directory instead.');
+					}
 					$array = yaml_parse($content);
+					if (!is_array($array)) {
+						throw new RuntimeException('Cannot parse YML: ' . $path);
+					}
 					/** @var array<string> $icons */
 					$icons = array_keys($array);
 

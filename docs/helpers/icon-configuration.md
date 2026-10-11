@@ -569,7 +569,10 @@ When `autoPrefix` is enabled, icons are resolved in this order:
     'autoPrefix' => true,
     'map' => ['home' => 'fa6:house'],           // 1. Manual mapping wins
     'sets' => [
-        'bs' => \Templating\View\Icon\BootstrapIcon::class,    // 4. Default set
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
+        ], // Default set
         'fa6' => \Templating\View\Icon\FontAwesome6Icon::class,
     ],
 ],
@@ -668,7 +671,7 @@ Enable caching for better performance using global and/or per-set configuration:
         'bs' => [
             'class' => \Templating\View\Icon\BootstrapIcon::class,
             'svgPath' => ROOT . DS . 'node_modules/bootstrap-icons/icons', // Individual fill-based SVG files
-            'inline' => true, // Enable compression
+            'inline' => true, // Enable whitespace/comment removal
             'cache' => 'default',
         ],
     ],

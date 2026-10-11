@@ -10,7 +10,7 @@ optimized for different use cases and performance requirements.
 This page covers the overview, quick start, setup, and everyday usage. See also:
 
 - [Icon Configuration](./icon-configuration), the full configuration reference and per-set setups.
-- [Icon Advanced](./icon-advanced), backend browser, IDE auto-complete, custom sets, and best practices.
+- [Icon Advanced](./icon-advanced), backend browser, IDE auto-complete, custom sets, and configuration tips.
 
 ## Key features
 
@@ -55,7 +55,10 @@ This page covers the overview, quick start, setup, and everyday usage. See also:
 // In your AppView.php
 $this->loadHelper('Templating.Icon', [
     'sets' => [
-        'bs' => \Templating\View\Icon\BootstrapIcon::class,
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
+        ],
     ],
 ]);
 
@@ -110,8 +113,14 @@ public function initialize(): void
 
     $this->loadHelper('Templating.Icon', [
         'sets' => [
-            'bs' => \Templating\View\Icon\BootstrapIcon::class,
-            'fa6' => \Templating\View\Icon\FontAwesome6Icon::class,
+            'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
+        ],
+            'fa6' => [
+            'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+            'path' => ROOT . DS . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json',
+        ],
         ],
     ]);
 }
@@ -238,17 +247,23 @@ aliases for all icons:
 'Icon' => [
     'autoPrefix' => true, // Default - creates automatic mappings
     'sets' => [
-        'bs' => \Templating\View\Icon\BootstrapIcon::class,
-        'fa6' => \Templating\View\Icon\FontAwesome6Icon::class,
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
+        ],
+        'fa6' => [
+            'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+            'path' => ROOT . DS . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json',
+        ],
     ],
 ],
 ```
 
 ```php
 // All these work without prefixes (first match wins)
-echo $this->Icon->render('home');     // Uses bs:home (first set)
+echo $this->Icon->render('home');     // Uses fa6:home (metadata alias)
 echo $this->Icon->render('house');    // Uses bs:house
-echo $this->Icon->render('user');     // Uses bs:user or fa6:user (whichever is found first)
+echo $this->Icon->render('user');     // Uses fa6:user
 
 // Explicit prefixes always work
 echo $this->Icon->render('bs:house');
@@ -263,8 +278,14 @@ Disable automatic alias generation. Unprefixed names still fall back to the firs
 'Icon' => [
     'autoPrefix' => false, // Disable automatic mappings
     'sets' => [
-        'bs' => \Templating\View\Icon\BootstrapIcon::class,
-        'fa6' => \Templating\View\Icon\FontAwesome6Icon::class,
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
+        ],
+        'fa6' => [
+            'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+            'path' => ROOT . DS . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json',
+        ],
     ],
     'map' => [
         'home' => 'bs:house',   // Manual aliases only
@@ -288,17 +309,23 @@ When multiple sets have the same icon name:
 ```php
 'Icon' => [
     'sets' => [
-        'bs' => \Templating\View\Icon\BootstrapIcon::class,    // First set (default)
-        'fa6' => \Templating\View\Icon\FontAwesome6Icon::class,
+        'bs' => [
+            'class' => \Templating\View\Icon\BootstrapIcon::class,
+            'path' => ROOT . DS . 'node_modules/bootstrap-icons/font/bootstrap-icons.json',
+        ],    // First set (default)
+        'fa6' => [
+            'class' => \Templating\View\Icon\FontAwesome6Icon::class,
+            'path' => ROOT . DS . 'node_modules/@fortawesome/fontawesome-free/metadata/icons.json',
+        ],
     ],
 ],
 ```
 
 ```php
-// Both sets have a "home" icon
-echo $this->Icon->render('home');     // Uses Bootstrap (first set)
-echo $this->Icon->render('bs:home');  // Explicitly Bootstrap
-echo $this->Icon->render('fa6:home'); // Explicitly FontAwesome
+// Both sets have a "house" icon
+echo $this->Icon->render('house');    // Uses Bootstrap (first set)
+echo $this->Icon->render('bs:house'); // Explicitly Bootstrap
+echo $this->Icon->render('fa6:house'); // Explicitly FontAwesome
 ```
 
 Use manual mapping to resolve conflicts:
